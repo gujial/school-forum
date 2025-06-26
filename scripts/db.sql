@@ -1,3 +1,12 @@
+drop table if exists Users;
+drop table if exists Tweets;
+drop table if exists Follows;
+drop table if exists Likes;
+drop table if exists Retweets;
+drop table if exists Comments;
+drop table if exists Media;
+drop table if exists Avatar;
+
 CREATE TABLE Users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,

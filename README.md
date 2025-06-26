@@ -6,13 +6,13 @@
 ## 部署
 
 ```shell
-npm install
+pnpm install
 ```
 
 先设置好图片服务器再构建
 
 ```shell
-npm run build
+pnpm run build
 cp -r .data .output
 cd .output
 mkdir dynamic

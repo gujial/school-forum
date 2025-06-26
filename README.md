@@ -1,7 +1,15 @@
-# Twitter Clone
+# “可圈可点”校园论坛平台
 
 ![icon](./public/icon.png)<br/>
-推特山寨版
+“可圈可点”校园论坛平台
+> 以下内容根据开发进程可能会有所变动
+
+## 运行
+
+```shell
+pnpm install
+pnpm run dev
+```
 
 ## 部署
 
@@ -50,42 +58,6 @@ runtimeConfig: {
 - [mdi](https://pictogrammers.com/library/mdi/)
 - [nuxt/i18n](https://i18n.nuxtjs.org/)
 
-## 功能需求
-
-### 用户管理
-
-- [x] 登陆
-- [x] 注册
-- [x] 注销
-- [x] 用户资料
-  - [x] 头像
-  - [x] 邮箱
-  - [x] 名称
-  - [x] id
-- [ ] 关注
-- [ ] 粉丝
-- [ ] 修改用户资料
-
-### 推文管理
-
-- [x] 发布
-- [ ] 删除
-- [ ] 修改
-- [x] 评论
-- [x] 点赞
-- [ ] 获取推荐
-
-### 推文组成
-
-- [x] 正文
-- [x] 多媒体
-  - [x] 图片
-  - [x] 视频
-- [x] 评论区
-- [ ] 相关数据
-  - [x] 喜欢
-  - [ ] 转发
-
-### 杂项小功能
-
-- [x] 深色模式主题切换
+## 相关文档
+- [产品文档](https://github.com/gujial/school-forum/blob/dev/“可圈可点”校园论坛平台产品文档.md)
+- [开发文档](https://github.com/gujial/school-forum/blob/dev/“可圈可点”校园论坛平台开发文档.md)

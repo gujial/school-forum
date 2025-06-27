@@ -26,6 +26,7 @@
     "semver": "^7.7.2",
     "ts-node": "^10.9.2",
     "vue": "latest",
+    "vuetify": "^3.8.11",
     "vuetify-nuxt-module": "^0.14.1"
   },
   "devDependencies": {

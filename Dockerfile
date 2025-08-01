@@ -35,8 +35,4 @@ RUN pnpm run build
 
 EXPOSE 3000
 
-# 健康检查
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/api/tweets || exit 1
-
 CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]

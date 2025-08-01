@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'school-forum',
-    script: 'server/index.mjs',
+    script: './.output/server/index.mjs',
     exec_mode: 'cluster',
     instances: 'max',
     watch: false,

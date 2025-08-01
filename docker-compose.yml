@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # OceanBase 数据库服务
   oceanbase:
-    image: oceanbase/oceanbase-ce:4.2.1
+    image: oceanbase/oceanbase-ce:latest
     container_name: school-forum-oceanbase
     restart: unless-stopped
     environment:
@@ -20,10 +20,6 @@ services:
       - ob_data:/root/data
     networks:
       - school-forum-network
-    healthcheck:
-      test: ["CMD", "obclient", "-h127.0.0.1", "-uroot@sys", "-P2881", "-prootpassword", "-e", "select 1"]
-      timeout: 20s
-      retries: 10
 
   # 应用服务
   app:
@@ -43,16 +39,9 @@ services:
     volumes:
       - app_data:/app/dynamic
     depends_on:
-      oceanbase:
-        condition: service_healthy
+      - oceanbase
     networks:
       - school-forum-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/tweets"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
 volumes:
   ob_data:

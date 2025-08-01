@@ -10,7 +10,6 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "postbuild": "node scripts/init-db.js",
     "db:init": "node scripts/init-db.js",
     "db:init:advanced": "node scripts/init-db-advanced.js",
     "db:test": "node scripts/simple-db-test.js",

@@ -19,15 +19,19 @@ async function initDatabase() {
         const statements = sql.split(';').filter(stmt => stmt.trim());
         const queries = statements.map(stmt => ({ sql: stmt.trim() }));
         
+        console.log(`📝 准备执行 ${queries.length} 条SQL语句...`);
+        
         const result = await executeTransaction(queries);
         
         if (result.success) {
             console.log('✅ MySQL数据库初始化成功');
+            console.log('📊 执行的语句数量:', queries.length);
         } else {
             throw new Error(result.error);
         }
     } catch (error) {
         console.error('❌ 数据库初始化失败:', error);
+        console.log('💡 提示: 如果表已存在，这是正常现象，可以忽略此错误');
         process.exit(1);
     }
 }

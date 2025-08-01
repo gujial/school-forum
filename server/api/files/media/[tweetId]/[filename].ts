@@ -16,13 +16,13 @@ export default defineEventHandler(async (event) => {
   // URL解码文件名
   const decodedFilename = decodeURIComponent(filename)
   
-  console.log('原始文件名:', filename)
-  console.log('解码后文件名:', decodedFilename)
-  console.log('推文ID:', tweetId)
+  // console.log('原始文件名:', filename)
+  // console.log('解码后文件名:', decodedFilename)
+  // console.log('推文ID:', tweetId)
   
   try {
     const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, decodedFilename)
-    console.log('完整文件路径:', filePath)
+    // console.log('完整文件路径:', filePath)
     
     if (!existsSync(filePath)) {
       throw createError({

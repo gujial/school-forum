@@ -12,7 +12,15 @@
     "lint:fix": "eslint . --fix",
     "postbuild": "node scripts/init-db.js",
     "db:init": "node scripts/init-db.js",
-    "db:test": "node scripts/simple-db-test.js"
+    "db:init:advanced": "node scripts/init-db-advanced.js",
+    "db:test": "node scripts/simple-db-test.js",
+    "db:status": "node scripts/check-db-status.js",
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.override.yml up",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:deploy": "./scripts/docker-deploy.sh"
   },
   "dependencies": {
     "@nuxt/types": "^2.18.1",

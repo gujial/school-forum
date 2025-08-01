@@ -23,7 +23,7 @@ services:
 
   # 应用服务
   app:
-    build: .
+    image: 127.0.0.1:8080/school-forum/school_forum:latest
     container_name: school-forum-app
     restart: unless-stopped
     environment:

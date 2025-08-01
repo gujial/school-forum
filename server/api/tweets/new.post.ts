@@ -1,4 +1,6 @@
+import { defineEventHandler, readBody, createError } from 'h3'
 import authMiddleware from '../../util/auth';
+import { useDatabase } from '../../util/database';
 
 export default defineEventHandler(async (event) => {
     const db = useDatabase()

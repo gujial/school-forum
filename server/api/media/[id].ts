@@ -1,3 +1,6 @@
+import { defineEventHandler, getRouterParam } from 'h3'
+import { useDatabase } from '../../util/database'
+
 // Define the API endpoint
 export default defineEventHandler(async (event) => {
     const db = useDatabase();

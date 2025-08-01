@@ -3,7 +3,7 @@ import { executeQuery, executeTransaction } from '../config/database'
 // 数据库工具类，提供与原来useDatabase()兼容的接口
 export class Database {
   // 执行SQL查询，返回与原来db0兼容的格式
-  async sql(strings: TemplateStringsArray, ...values: any[]) {
+  async sql<T = any>(strings: TemplateStringsArray, ...values: any[]): Promise<{ rows: T[], success: boolean }> {
     // 构建SQL语句
     let sql = ''
     const params: any[] = []
@@ -24,7 +24,7 @@ export class Database {
     
     // 返回与原来db0兼容的格式
     return {
-      rows: result.rows,
+      rows: Array.isArray(result.rows) ? result.rows as T[] : [result.rows] as T[],
       success: true
     }
   }

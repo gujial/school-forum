@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
+import { defineEventHandler, getRouterParam, createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
   const tweetId = getRouterParam(event, 'tweetId')
@@ -12,8 +13,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // URL解码文件名
+  const decodedFilename = decodeURIComponent(filename)
+  
+  console.log('原始文件名:', filename)
+  console.log('解码后文件名:', decodedFilename)
+  console.log('推文ID:', tweetId)
+  
   try {
-    const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, filename)
+    const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, decodedFilename)
+    console.log('完整文件路径:', filePath)
     
     if (!existsSync(filePath)) {
       throw createError({
@@ -48,9 +57,9 @@ export default defineEventHandler(async (event) => {
     }
     
     // 设置响应头
-    setHeader(event, 'Content-Type', contentType)
-    setHeader(event, 'Content-Length', fileBuffer.length.toString())
-    setHeader(event, 'Cache-Control', 'public, max-age=31536000') // 缓存1年
+    event.node.res.setHeader('Content-Type', contentType)
+    event.node.res.setHeader('Content-Length', fileBuffer.length.toString())
+    event.node.res.setHeader('Cache-Control', 'public, max-age=31536000') // 缓存1年
     
     return fileBuffer
   } catch (error) {

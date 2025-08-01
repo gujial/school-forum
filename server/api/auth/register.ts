@@ -2,6 +2,7 @@
 
 import { defineEventHandler, readBody, createError } from 'h3'
 import bcrypt from 'bcrypt'
+import { useDatabase } from '../../util/database'
 
 interface RegisterBody {
   username: string

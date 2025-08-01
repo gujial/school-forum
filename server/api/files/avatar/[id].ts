@@ -1,5 +1,7 @@
-import { readFileSync, existsSync, readdir } from 'fs'
+import { readFileSync, existsSync } from 'fs'
+import { readdir } from 'fs/promises'
 import { join } from 'path'
+import { defineEventHandler, getRouterParam, createError, setHeader } from 'h3'
 
 export default defineEventHandler(async (event) => {
   const userId = getRouterParam(event, 'id')
@@ -38,9 +40,9 @@ export default defineEventHandler(async (event) => {
     const fileBuffer = readFileSync(filePath)
     
     // 设置响应头
-    setHeader(event, 'Content-Type', 'image/jpeg')
-    setHeader(event, 'Content-Length', fileBuffer.length.toString())
-    setHeader(event, 'Cache-Control', 'public, max-age=31536000') // 缓存1年
+    event.node.res.setHeader('Content-Type', 'image/jpeg')
+    event.node.res.setHeader('Content-Length', fileBuffer.length.toString())
+    event.node.res.setHeader('Cache-Control', 'public, max-age=31536000') // 缓存1年
     
     return fileBuffer
   } catch (error) {

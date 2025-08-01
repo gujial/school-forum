@@ -1,3 +1,6 @@
+import { defineEventHandler, getRouterParam } from 'h3'
+import { useDatabase } from '../../util/database'
+
 export default defineEventHandler(async (event) => {
   const db = useDatabase();
   const tweetId = getRouterParam(event, 'id');

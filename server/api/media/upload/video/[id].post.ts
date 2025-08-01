@@ -1,6 +1,7 @@
 import { IncomingForm } from 'formidable'
 import { mkdirSync, copyFileSync, unlinkSync } from 'fs'
 import { join } from 'path'
+import { useDatabase } from '../../../../util/database'
 
 export default defineEventHandler(async (event) => {
   const tweetId = getRouterParam(event, 'id')

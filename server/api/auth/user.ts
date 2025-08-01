@@ -2,6 +2,7 @@
 
 import { defineEventHandler } from 'h3';
 import authMiddleware from '../../util/auth';
+import { useDatabase } from '../../util/database';
 
 export default defineEventHandler(async (event) => {
   await authMiddleware(event); // Apply authentication middleware

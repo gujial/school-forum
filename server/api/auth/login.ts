@@ -3,6 +3,7 @@
 import { defineEventHandler, readBody, createError, setCookie } from 'h3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { useDatabase } from '../../util/database';
 
 interface LoginBody {
   email: string;

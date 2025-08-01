@@ -50,14 +50,13 @@ export default defineEventHandler(async (event) => {
         return reject(copyError)
       }
 
-      const runtimeConfig = useRuntimeConfig()
-      await db.sql`UPDATE Avatar SET avatar_url = ${`${runtimeConfig.image_server}/avatars/${userId}/${newFilename}`} WHERE user_id = ${userId}`
+      await db.sql`UPDATE Avatar SET avatar_url = ${`/api/files/avatar/${userId}`} WHERE user_id = ${userId}`
 
       resolve({
         statusCode: 200,
         data: {
           userId,
-          filePath: `${runtimeConfig.image_server}/avatars/${userId}/${newFilename}`
+          filePath: `/api/files/avatar/${userId}`
         }
       })
     })

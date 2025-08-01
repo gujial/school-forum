@@ -47,14 +47,13 @@ export default defineEventHandler(async (event) => {
         return reject(copyError)
       }
 
-      const runtimeConfig = useRuntimeConfig()
-      await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`${runtimeConfig.image_server}/media/${tweetId}/${file.originalFilename}`}, ${'video'})`
+      await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`/api/files/media/${tweetId}/${file.originalFilename}`}, ${'video'})`
 
       resolve({
         statusCode: 200,
         body: JSON.stringify({
           tweetId,
-          filePath: `/media/${tweetId}/${file.originalFilename}`
+          filePath: `/api/files/media/${tweetId}/${file.originalFilename}`
         })
       })
     })

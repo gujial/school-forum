@@ -20,7 +20,7 @@ export default {
   // ],
 
   runtimeConfig: {
-    image_server: "http://localhost:3001"
+    // 文件服务现在由Node.js服务器直接提供
   },
 
   auth: {
@@ -48,9 +48,7 @@ export default {
   },
 
   nitro: {
-    experimental: {
-      database: true
-    }
+    // 使用自定义MySQL连接池
   },
 
   i18n: {

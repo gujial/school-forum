@@ -50,9 +50,8 @@ export default defineEventHandler(async (event) => {
           return reject(copyError)
         }
 
-        const runtimeConfig = useRuntimeConfig()
-        await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`${runtimeConfig.image_server}/media/${tweetId}/${f.originalFilename}`}, ${'image'})`
-        data.push(`/media/${tweetId}/${f.originalFilename}`)
+        await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`/api/files/media/${tweetId}/${f.originalFilename}`}, ${'image'})`
+        data.push(`/api/files/media/${tweetId}/${f.originalFilename}`)
       }
 
       resolve({

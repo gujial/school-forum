@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS Users (
                        username VARCHAR(50) NOT NULL UNIQUE,
                        email VARCHAR(100) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
+                       bg_url TEXT,
                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -47,7 +47,9 @@ export default defineI18nConfig(() => ({
       reply: 'Reply',
       submit: 'Submit',
       cancel: 'Cancel',
+      changeBg: 'Change Background',
       userTweets: 'User posted tweets',
+      inputBg: 'Choose Background Image',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -118,6 +120,8 @@ export default defineI18nConfig(() => ({
       submit: '提交',
       cancel: '取消',
       userTweets: '用户发布的推文',
+      changeBg: '更改背景图',
+      inputBg: '选择背景图片',
       $vuetify: {
         input: {
           prependAction: '添加图片',

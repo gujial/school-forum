@@ -38,7 +38,7 @@ onMounted(async () => {
         const data = await $fetch('/api/auth/user');
         user.value = data.user;
         const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
-        avatar_url.value = avatar_data.data
+        avatar_url.value = avatar_data.data + '?t=' + new Date().getTime()
     } catch (err) {
         error.value = err
     }

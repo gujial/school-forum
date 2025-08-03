@@ -53,7 +53,7 @@ const updateComments = async () => {
         const avatarsData = await Promise.all(avatarPromises)
 
         users.value = usersData.map(userResponse => userResponse.user)
-        avatars.value = avatarsData.map(avatarResponse => avatarResponse.data)
+        avatars.value = avatarsData.map(avatarResponse => avatarResponse.data + '?t=' + new Date().getTime())
 
         ready.value = true
     } catch (err) {

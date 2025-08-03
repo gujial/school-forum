@@ -76,7 +76,7 @@ onMounted(async () => {
     const user_data = await $fetch(`/api/user/${tweet.value.user_id}`)
     user.value = user_data.user
     const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
-    avatar_url.value = avatar_data.data
+    avatar_url.value = avatar_data.data + '?t=' + new Date().getTime()
 
     const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`)
     if (media_data.data.length > 0) {

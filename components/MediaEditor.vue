@@ -21,6 +21,7 @@
                 <v-file-input
                     v-if="selectedMedia == 2" v-model="videoFile" :label="$t('uploadvideo')"
                     accept="video/*"/>
+                <p>附件大小最大为200M</p>
             </v-col>
         </v-row>
     </v-container>
@@ -43,6 +44,8 @@ const items = ref([
 
 const selectedMedia = ref(0)
 
+const MAX_SIZE = 200 * 1024 * 1024 // 200M
+
 const upload = async (tweet_id) => {
     if (selectedMedia.value == 0) {
         return
@@ -50,9 +53,15 @@ const upload = async (tweet_id) => {
         if (imageFiles.value.length == 0) {
             return
         }
+        // 检查所有图片文件大小
+        for (const file of imageFiles.value) {
+            if (file.size > MAX_SIZE) {
+                alert('有图片文件超过200M，无法上传！')
+                return
+            }
+        }
 
         const formData = new FormData();
-
         imageFiles.value.forEach(file => {
             formData.append('file', file);
         });
@@ -78,6 +87,11 @@ const upload = async (tweet_id) => {
         }
     } else {
         if (!videoFile.value) {
+            return
+        }
+        // 检查视频文件大小
+        if (videoFile.value.size > MAX_SIZE) {
+            alert('视频文件超过200M，无法上传！')
             return
         }
         const formData = new FormData()

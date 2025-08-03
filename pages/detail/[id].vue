@@ -16,13 +16,10 @@
                     <v-card-text>{{ tweet.content }}</v-card-text>
                     <v-card-text>
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
-                            <v-carousel-item
-                                v-for="image in images" :key="image.media_id"
-                                :src="image.media_url"/>
+                            <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
-                        <video
-                                v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
-                                @click.stop/>
+                        <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
+                            @click.stop />
                     </v-card-text>
                     <v-card-actions class="d-flex justify-end">
                         <v-btn icon @click.stop="likeTweet">
@@ -33,6 +30,9 @@
                                 mdi-thumb-up-outline
                             </v-icon>
                         </v-btn>
+                        <span class="mr-4">{{ likeCount }}</span>
+                        <v-icon small class="mr-1">mdi-comment-outline</v-icon>
+                        <span>{{ commentCount }}</span>
                     </v-card-actions>
                     <CommentEditor :tweet-id="$route.params.id" />
                 </v-card>
@@ -54,25 +54,39 @@ const tweet = ref(null)
 const images = ref([])
 const video = ref(null)
 const isLike = ref(false)
+const likeCount = ref(0)
+const commentCount = ref(0)
 const localePath = useLocalePath();
 
 const likeTweet = async () => {
-  try {
-      await $fetch(`/api/tweets/like/${route.params.id}`)
-      updateLike()
-    } catch(err) {
-      if (err.statusCode == 401) {
-        navigateTo(localePath('/login'))
-      }
+    try {
+        await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
+        updateLike()
+        await fetchCounts()
+    } catch (err) {
+        if (err.statusCode == 401) {
+            navigateTo(localePath('/login'))
+        }
     }
 };
 
 const updateLike = async () => {
     try {
-      const data = await $fetch(`/api/tweets/like/check/${route.params.id}`)
-      isLike.value = data.like
-    } catch(err) {
-      console.log(err)
+        const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
+        isLike.value = data.like
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const fetchCounts = async () => {
+    try {
+        const likeRes = await $fetch(`/api/tweets/like/count/${tweet.value.tweet_id}`)
+        likeCount.value = likeRes.count || 0
+        const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
+        commentCount.value = commentRes.count || 0
+    } catch (e) {
+        console.error('Error fetching counts:', e);
     }
 }
 
@@ -98,8 +112,9 @@ try {
     error.value = err
 }
 
-onMounted(() => {
+onMounted(async () => {
     updateLike()
+    await fetchCounts()
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -60,7 +60,7 @@ const likeTweet = async () => {
   try {
     await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
     updateLike()
-    await fetchCounts() // 点赞后自动刷新点赞数
+    await fetchCounts()
   } catch(err) {
     if (err.statusCode == 401) {
       navigateTo(localePath('/login'))
@@ -84,7 +84,7 @@ const fetchCounts = async () => {
     const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
     commentCount.value = commentRes.count || 0
   } catch (e) {
-    // 可选：处理错误
+    console.error('Error fetching counts:', e);
   }
 }
 

@@ -27,10 +27,11 @@ const tweets = ref([])
 const error = ref(null)
 const currentPage = ref(1)
 const pageCount = ref(1)
+const pageSize = 9
 
 const fetchTweets = async () => {
   try {
-    const res = await $fetch(`/api/tweets/user/${props.userId}?page=${currentPage.value}?pageSize=9`)
+    const res = await $fetch(`/api/tweets/user/${props.userId}?page=${currentPage.value}&pageSize=${pageSize}`)
     tweets.value = res.data || []
     pageCount.value = res.maxPages || 1
     error.value = null

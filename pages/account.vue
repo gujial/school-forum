@@ -15,7 +15,7 @@
             </v-card-actions>
         </v-card>
         <v-divider class="my-4" />
-        <h2>{{ $t('userTweets') }}</h2>
+        <h2 style="margin-bottom: 20px;">{{ $t('userTweets') }}</h2>
         <v-row>
             <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
                 <v-card>
@@ -27,6 +27,10 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
+            <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
+            <v-alert v-if="error != null" type="error">
+                {{ error }}
+            </v-alert>
         </v-row>
         <!-- 删除确认对话框 -->
         <v-dialog v-model="deleteDialog" max-width="400">
@@ -40,16 +44,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
-        <v-pagination
-            v-if="total > pageSize"
-            v-model="page"
-            :length="Math.ceil(total / pageSize)"
-            class="my-4"
-        />
-        <v-alert v-if="error != null" type="error">
-            {{ error }}
-        </v-alert>
+        <v-pagination v-if="total > pageSize" v-model="page" :length="Math.ceil(total / pageSize)" class="my-4" />
     </v-container>
 </template>
 

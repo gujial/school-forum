@@ -22,6 +22,9 @@
           mdi-thumb-up-outline
         </v-icon>
       </v-btn>
+      <span class="mr-4">{{ likeCount }}</span>
+      <v-icon small class="mr-1">mdi-comment-outline</v-icon>
+      <span>{{ commentCount }}</span>
     </v-card-actions>
   </v-card>
 </template>
@@ -46,6 +49,8 @@ const avatar_url = ref('/icon.png')
 const error = ref(null)
 const images = ref([])
 const video = ref(null)
+const likeCount = ref(0)
+const commentCount = ref(0)
 
 const goToDetail = () => {
   router.push(localePath(`/detail/${tweet.value.tweet_id}`));
@@ -53,13 +58,14 @@ const goToDetail = () => {
 
 const likeTweet = async () => {
   try {
-      await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
-      updateLike()
-    } catch(err) {
-      if (err.statusCode == 401) {
-        navigateTo(localePath('/login'))
-      }
+    await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
+    updateLike()
+    await fetchCounts() // 点赞后自动刷新点赞数
+  } catch(err) {
+    if (err.statusCode == 401) {
+      navigateTo(localePath('/login'))
     }
+  }
 };
 
 const updateLike = async () => {
@@ -69,6 +75,17 @@ const updateLike = async () => {
     } catch(err) {
       console.log(err)
     }
+}
+
+const fetchCounts = async () => {
+  try {
+    const likeRes = await $fetch(`/api/tweets/like/count/${tweet.value.tweet_id}`)
+    likeCount.value = likeRes.count || 0
+    const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
+    commentCount.value = commentRes.count || 0
+  } catch (e) {
+    // 可选：处理错误
+  }
 }
 
 onMounted(async () => {
@@ -92,6 +109,7 @@ onMounted(async () => {
     error.value = err
   }
   updateLike()
+  await fetchCounts()
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -50,6 +50,9 @@ export default defineI18nConfig(() => ({
       changeBg: 'Change Background',
       userTweets: 'User posted tweets',
       inputBg: 'Choose Background Image',
+      confirmDelete: 'Confirm to delete?',
+      confirmDeleteMsg: 'Are you sure you want to delete this?',
+      delete: 'Delete',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -122,6 +125,9 @@ export default defineI18nConfig(() => ({
       userTweets: '用户发布的推文',
       changeBg: '更改背景图',
       inputBg: '选择背景图片',
+      delete: '删除',
+      confirmDelete: '确认删除？',
+      confirmDeleteMsg: '你确定要删除这个吗？',
       $vuetify: {
         input: {
           prependAction: '添加图片',

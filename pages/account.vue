@@ -18,11 +18,29 @@
         <h2>{{ $t('userTweets') }}</h2>
         <v-row>
             <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
-                <TweetCard :tweet="tweet" />
+                <v-card>
+                    <TweetCard :tweet="tweet" />
+                    <v-card-actions>
+                        <v-btn color="error" text @click="openDeleteDialog(tweet.tweet_id)">
+                            {{ $t('delete') }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-col>
         </v-row>
+        <!-- 删除确认对话框 -->
+        <v-dialog v-model="deleteDialog" max-width="400">
+            <v-card>
+                <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
+                <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
+                    <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
-        <!-- 分页组件 -->
         <v-pagination
             v-if="total > pageSize"
             v-model="page"
@@ -46,10 +64,12 @@ const localePath = useLocalePath()
 const userTime = ref('')
 const tweets = ref([])
 
-// 分页相关变量
 const page = ref(1)
 const pageSize = 6
 const total = ref(0)
+
+const deleteDialog = ref(false)
+const deleteId = ref(null)
 
 const fetchTweets = async () => {
     if (!user.value) return
@@ -60,6 +80,37 @@ const fetchTweets = async () => {
     } catch (err) {
         error.value = err
     }
+}
+
+const deleteTweet = async (tweetId) => {
+    try {
+        const res = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' })
+        if (res.success) {
+            // 删除后如果当前页无数据且不是第一页，自动跳转上一页
+            await fetchTweets()
+            if (tweets.value.length === 0 && page.value > 1) {
+                page.value--
+                await fetchTweets()
+            }
+        } else {
+            error.value = res.message || '删除失败'
+        }
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const openDeleteDialog = (tweetId) => {
+    deleteId.value = tweetId
+    deleteDialog.value = true
+}
+
+const confirmDelete = async () => {
+    if (deleteId.value) {
+        await deleteTweet(deleteId.value)
+    }
+    deleteDialog.value = false
+    deleteId.value = null
 }
 
 onMounted(async () => {
@@ -82,7 +133,6 @@ onMounted(async () => {
     }
 });
 
-// 监听页码变化
 watch(page, fetchTweets)
 
 const logout = async () => {

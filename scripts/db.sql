@@ -50,4 +50,16 @@ CREATE TABLE IF NOT EXISTS Likes (
                        UNIQUE KEY unique_user_tweet (user_id, tweet_id)
 );
 
- 
+DELIMITER $$
+
+CREATE TRIGGER before_tweet_delete
+BEFORE DELETE ON Tweets
+FOR EACH ROW
+BEGIN
+    DELETE FROM Comments WHERE tweet_id = OLD.tweet_id;
+    DELETE FROM Media WHERE tweet_id = OLD.tweet_id;
+    DELETE FROM Likes WHERE tweet_id = OLD.tweet_id;
+END$$
+
+DELIMITER ;
+

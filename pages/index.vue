@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-card :image="bgSrc" class="d-flex align-center head-card" color="black">
+    <v-card :image="bgSrc" class="d-flex align-center head-card avatar-bg-mask" color="black">
+      <div class="bg-mask"></div>
       <v-avatar v-if="src.length > 0" size="200">
         <v-img cover :src='src' />
       </v-avatar>
@@ -81,5 +82,21 @@ onMounted(async () => {
 <style scoped>
 .head-card {
   margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.bg-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  transition: background 0.3s;
+  z-index: -1;
+  pointer-events: none;
+}
+.avatar-bg-mask:hover .bg-mask {
+  background: rgba(0,0,0,0);
+}
+.v-avatar {
+  z-index: 2;
 }
 </style>

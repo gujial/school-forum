@@ -1,6 +1,7 @@
 <template>
-  <v-card :image="bgSrc" class="d-flex justify-space-between align-center card">
-    <v-avatar size="200" class="avatar-border">
+  <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
+    <div class="bg-mask"></div>
+    <v-avatar size="200">
       <v-img cover :src='src'/>
     </v-avatar>
     <v-card-actions>
@@ -8,6 +9,7 @@
         variant="flat"
         color="yellow-darken-2"
         class="mx-2"
+        style="z-index: 99;"
         @click="sheet = !sheet"
       >
         {{ $t('changeAvatar') }}
@@ -16,6 +18,7 @@
         variant="flat"
         color="blue-darken-2"
         class="mx-2"
+        style="z-index: 99;"
         @click="bgSheet = !bgSheet"
       >
         {{ $t('changeBg') }}
@@ -136,9 +139,21 @@ onMounted(() => {
 <style scoped>
 .card {
   padding: 10px;
+  position: relative;
+  overflow: hidden;
 }
-.avatar-border {
-  border: 4px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.bg-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45); /* 黑色半透明 */
+  transition: background 0.3s;
+  z-index: 1;
+  pointer-events: none;
+}
+.avatar-bg-mask:hover .bg-mask {
+  background: rgba(0,0,0,0); /* 悬浮时透明 */
+}
+.v-avatar {
+  z-index: 2;
 }
 </style>

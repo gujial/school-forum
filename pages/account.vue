@@ -22,6 +22,13 @@
             </v-col>
         </v-row>
         <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
+        <!-- 分页组件 -->
+        <v-pagination
+            v-if="total > pageSize"
+            v-model="page"
+            :length="Math.ceil(total / pageSize)"
+            class="my-4"
+        />
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>
@@ -29,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Avatar from '~/components/AvatarEditor.vue';
 import moment from 'moment-timezone';
 
@@ -38,6 +45,22 @@ const error = ref(null)
 const localePath = useLocalePath()
 const userTime = ref('')
 const tweets = ref([])
+
+// 分页相关变量
+const page = ref(1)
+const pageSize = 6
+const total = ref(0)
+
+const fetchTweets = async () => {
+    if (!user.value) return
+    try {
+        const tweetRes = await $fetch(`/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`);
+        tweets.value = tweetRes.data || []
+        total.value = tweetRes.total || 0
+    } catch (err) {
+        error.value = err
+    }
+}
 
 onMounted(async () => {
     try {
@@ -49,8 +72,7 @@ onMounted(async () => {
         } else {
             navigateTo(localePath('/login'))
         }
-        const tweetRes = await $fetch(`/api/tweets/user/${user.value.user_id}`);
-        tweets.value = tweetRes.data || []
+        await fetchTweets()
     } catch (err) {
         if (err.statusCode == 401) {
             navigateTo(localePath('/login'))
@@ -59,6 +81,9 @@ onMounted(async () => {
         }
     }
 });
+
+// 监听页码变化
+watch(page, fetchTweets)
 
 const logout = async () => {
     try {

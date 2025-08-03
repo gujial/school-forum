@@ -12,14 +12,7 @@
       </v-card-text>
     </v-card>
     <v-divider class="my-4"/>
-    <h2>{{ $t('userTweets') }}</h2>
-    <v-row>
-      <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
-        <TweetCard :tweet="tweet" />
-      </v-col>
-    </v-row>
-    <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
-    <v-alert v-if="error" type="error">{{ error }}</v-alert>
+    <UserTweetList :user-id="user.user_id" />
   </v-container>
 </template>
 
@@ -27,12 +20,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Avatar from '~/components/Avatar.vue'
-import TweetCard from '~/components/TweetCard.vue'
+import UserTweetList from '~/components/UserTweetList.vue'
 import moment from 'moment-timezone'
 
 const route = useRoute()
 const user = ref(null)
-const tweets = ref([])
 const error = ref(null)
 const userTime = ref('')
 
@@ -46,8 +38,6 @@ onMounted(async () => {
     } else {
       error.value = userRes.message || '用户不存在'
     }
-    const tweetRes = await $fetch(`/api/tweets/user/${route.params.id}`)
-    tweets.value = tweetRes.data || []
   } catch (err) {
     error.value = err.message || err
   }

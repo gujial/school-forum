@@ -1,5 +1,5 @@
 import { IncomingForm } from 'formidable'
-import { mkdirSync, copyFileSync, unlinkSync } from 'fs'
+import { mkdirSync, copyFileSync, unlinkSync, existsSync } from 'fs'
 import { join } from 'path'
 import { useDatabase } from '../../../util/database'
 
@@ -40,10 +40,29 @@ export default defineEventHandler(async (event) => {
         }))
       }
 
-      const newFilename = `${userId}${file.originalFilename.slice(file.originalFilename.lastIndexOf('.'))}`
+      // 查询旧头像路径并删除
+      const { rows } = await db.sql`SELECT avatar_url FROM Avatar WHERE user_id = ${userId}`
+      if (rows && rows[0] && rows[0].avatar_url) {
+        const oldUrl = rows[0].avatar_url
+        // 解析出旧文件名
+        const parts = oldUrl.split('/')
+        const oldFilename = parts[parts.length - 1]
+        const oldFilePath = join(uploadDir, oldFilename)
+        if (existsSync(oldFilePath)) {
+          try {
+            unlinkSync(oldFilePath)
+          } catch (e) {
+            // 可以选择忽略删除失败
+            console.error('删除旧头像失败:', e)
+          }
+        }
+      }
+
+      const ext = file.originalFilename.slice(file.originalFilename.lastIndexOf('.'))
+      const unique = Date.now() // 或用 uuid
+      const newFilename = `${userId}_${unique}${ext}`
       const filePath = join(uploadDir, newFilename)
 
-      // Copy file instead of renaming it, then delete the original
       try {
         copyFileSync(file.filepath, filePath)
         unlinkSync(file.filepath) // Delete the temporary file after copying
@@ -51,13 +70,13 @@ export default defineEventHandler(async (event) => {
         return reject(copyError)
       }
 
-      await db.sql`UPDATE Avatar SET avatar_url = ${`/api/files/avatar/${userId}`} WHERE user_id = ${userId}`
+      await db.sql`UPDATE Avatar SET avatar_url = ${`/api/files/avatar/${userId}/${newFilename}`} WHERE user_id = ${userId}`
 
       resolve({
         statusCode: 200,
         data: {
           userId,
-          filePath: `/api/files/avatar/${userId}`
+          filePath: `/api/files/avatar/${userId}/${newFilename}`
         }
       })
     })

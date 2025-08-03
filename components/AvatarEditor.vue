@@ -61,7 +61,7 @@ const submit = async () => {
 const updateAvatar = async () => {
   try {
     const data = await $fetch('/api/avatar/' + props.user.user_id);
-    src.value = data.data+ '?t=' + new Date().getTime();
+    src.value = data.data;
   } catch (err) {
     console.log(err)
   }

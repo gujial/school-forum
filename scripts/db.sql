@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS Comments (
                       tweet_id BIGINT NOT NULL,
                       user_id BIGINT NOT NULL,
                       content TEXT NOT NULL,
+                      parent_id INTEGER,
                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                       FOREIGN KEY (tweet_id) REFERENCES Tweets(tweet_id),
                       FOREIGN KEY (user_id) REFERENCES Users(user_id)

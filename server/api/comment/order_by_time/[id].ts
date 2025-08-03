@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const offset = (page - 1) * limit
   
     try {
-      const result = await db.sql`SELECT COUNT(*) AS total FROM Comments WHERE tweet_id = ${tweetId}`
+      const result = await db.sql`SELECT COUNT(*) AS total FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL`
       if (result.rows === undefined) {
         throw new Error('Failed to retrieve tweet count')
       }
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       const maxPages = Math.ceil(total / limit);
   
       const { rows } =
-        await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+        await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
   
       if (rows === undefined) {
         throw new Error('Query returned undefined')

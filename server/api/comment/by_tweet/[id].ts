@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const tweetId = getRouterParam(event, 'id');
 
     try {
-        const { rows } = await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} ORDER BY created_at`;
+        const { rows } = await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL ORDER BY created_at`;
 
         if (rows == undefined) {
             throw createError({

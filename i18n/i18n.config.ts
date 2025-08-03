@@ -42,6 +42,7 @@ export default defineI18nConfig(() => ({
       inputComments: 'Input your comment',
       follow: 'Follow',
       profile: 'Profile',
+      pleaseLogin: 'Please login first to use more features',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -106,6 +107,7 @@ export default defineI18nConfig(() => ({
       inputComments: '输入你的点评',
       follow: '关注',
       profile: '个人资料',
+      pleaseLogin: '请先登录以使用更多功能',
       $vuetify: {
         input: {
           prependAction: '添加图片',

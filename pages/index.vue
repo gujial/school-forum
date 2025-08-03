@@ -20,7 +20,10 @@
     </v-row>
     <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
     <v-pagination v-model="currentPage" :length="pageCount" />
-    <v-alert v-if="error != null" type="error">
+    <v-alert v-if="authError">
+      {{ $t('pleaseLogin') }}
+    </v-alert>
+    <v-alert v-if="error != null" type="error" v-show="!authError">
       {{ error }}
     </v-alert>
   </v-container>
@@ -36,6 +39,7 @@ const localePath = useLocalePath()
 const currentPage = useState('currentPage', () => 1)
 const pageCount = ref(1)
 const error = ref(null)
+const authError = ref(false)
 
 const updateTweets = async () => {
   const data = await $fetch(`/api/tweets/order_by_time/${currentPage.value}`)
@@ -50,7 +54,12 @@ onMounted(async () => {
     const data = await $fetch('/api/auth/user');
     username.value = data.user.username;
   } catch(err) {
-    error.value = err
+    // 检查是否为 401 未认证错误
+    if (err?.status === 401 || (err?.response && err.response.status === 401)) {
+      authError.value = true
+    } else {
+      error.value = err
+    }
   }
   updateTweets()
 });

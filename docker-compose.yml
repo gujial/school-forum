@@ -23,7 +23,7 @@ services:
 
   # 应用服务
   app:
-    image: school_forum:latest
+    image: school-forum:latest
     container_name: school-forum-app
     restart: unless-stopped
     environment:

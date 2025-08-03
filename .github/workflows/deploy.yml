@@ -47,3 +47,4 @@ jobs:
             docker-compose down
             docker-compose up -d
             rm school-forum.tar
+            docker image prune -f

@@ -1,9 +1,13 @@
 <template>
   <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
     <div class="bg-mask"></div>
-    <v-avatar size="200">
-      <v-img cover :src='src'/>
-    </v-avatar>
+    <v-row class="align-center" no-gutters>
+      <v-col cols="12" sm="auto" class="d-flex">
+        <v-avatar size="120" class="mx-2">
+          <v-img cover :src="src" />
+        </v-avatar>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

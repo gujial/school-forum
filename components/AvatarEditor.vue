@@ -1,29 +1,35 @@
 <template>
-  <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
+  <v-card :image="bgSrc" class="card avatar-bg-mask">
     <div class="bg-mask"></div>
-    <v-avatar size="200">
-      <v-img cover :src='src'/>
-    </v-avatar>
-    <v-card-actions>
-      <v-btn
-        variant="flat"
-        color="yellow-darken-2"
-        class="mx-2"
-        style="z-index: 99;"
-        @click="sheet = !sheet"
-      >
-        {{ $t('changeAvatar') }}
-      </v-btn>
-      <v-btn
-        variant="flat"
-        color="blue-darken-2"
-        class="mx-2"
-        style="z-index: 99;"
-        @click="bgSheet = !bgSheet"
-      >
-        {{ $t('changeBg') }}
-      </v-btn>
-    </v-card-actions>
+    <v-row class="align-center" no-gutters>
+      <v-col cols="12" sm="auto" class="d-flex">
+        <v-avatar size="120" class="mx-2">
+          <v-img cover :src="src" />
+        </v-avatar>
+      </v-col>
+      <v-col cols="12" sm="auto" class="d-flex">
+        <v-btn
+          variant="text"
+          color="yellow-darken-2"
+          class="mx-2"
+          style="z-index: 99;"
+          @click="sheet = !sheet"
+        >
+          {{ $t('changeAvatar') }}
+        </v-btn>
+        <v-btn
+          variant="text"
+          color="blue-darken-2"
+          class="mx-2"
+          style="z-index: 99;"
+          @click="bgSheet = !bgSheet"
+        >
+          {{ $t('changeBg') }}
+        </v-btn>
+      </v-col>
+    </v-row>
+    <!-- 其余内容保持不变 -->
+    <v-card-actions style="display:none"></v-card-actions>
   </v-card>
   <!-- 头像上传 -->
   <v-bottom-sheet v-model="sheet" inset>

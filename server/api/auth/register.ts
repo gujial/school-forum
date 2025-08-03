@@ -1,7 +1,7 @@
 // server/api/auth/register.ts
 
 import { defineEventHandler, readBody, createError } from 'h3'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { useDatabase } from '../../util/database'
 
 interface RegisterBody {
@@ -19,6 +19,7 @@ interface User {
 }
 
 interface UserRows {
+  user_id: any
   rows: User[]
 }
 

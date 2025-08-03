@@ -1,7 +1,7 @@
 // server/api/auth/login.ts
 
 import { defineEventHandler, readBody, createError, setCookie } from 'h3';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { useDatabase } from '../../util/database';
 
@@ -19,6 +19,9 @@ interface User {
 }
 
 interface UserRows {
+  username: any;
+  user_id: any;
+  password: string;
   rows: User[]
 }
 

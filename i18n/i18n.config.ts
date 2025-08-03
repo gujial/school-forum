@@ -47,6 +47,7 @@ export default defineI18nConfig(() => ({
       reply: 'Reply',
       submit: 'Submit',
       cancel: 'Cancel',
+      userTweets: 'User posted tweets',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -116,6 +117,7 @@ export default defineI18nConfig(() => ({
       reply: '回复',
       submit: '提交',
       cancel: '取消',
+      userTweets: '用户发布的推文',
       $vuetify: {
         input: {
           prependAction: '添加图片',

@@ -10,7 +10,7 @@
                         <v-card-actions>
                             <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
                             <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('follow') }}</v-btn>
-                            <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('profile') }}</v-btn>
+                            <v-btn @click="navigateTo(`/profile/${user.user_id}`)">{{ $t('profile') }}</v-btn>
                         </v-card-actions>
                     </template>
                     <v-card-text>{{ tweet.content }}</v-card-text>

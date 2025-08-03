@@ -1,7 +1,7 @@
 <template>
     <v-container v-if="user != null">
         <v-card>
-            <Avatar :user="user"/>
+            <Avatar :user="user" />
             <v-card-title class="headline">
                 {{ user.username }}
             </v-card-title>
@@ -14,6 +14,14 @@
                 <v-btn text @click.stop="logout">{{ $t('logout') }}</v-btn>
             </v-card-actions>
         </v-card>
+        <v-divider class="my-4" />
+        <h2>{{ $t('userTweets') }}</h2>
+        <v-row>
+            <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
+                <TweetCard :tweet="tweet" />
+            </v-col>
+        </v-row>
+        <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>
@@ -29,6 +37,7 @@ const user = ref(null);
 const error = ref(null)
 const localePath = useLocalePath()
 const userTime = ref('')
+const tweets = ref([])
 
 onMounted(async () => {
     try {
@@ -40,6 +49,8 @@ onMounted(async () => {
         } else {
             navigateTo(localePath('/login'))
         }
+        const tweetRes = await $fetch(`/api/tweets/user/${user.value.user_id}`);
+        tweets.value = tweetRes.data || []
     } catch (err) {
         if (err.statusCode == 401) {
             navigateTo(localePath('/login'))

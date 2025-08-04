@@ -4,28 +4,27 @@
     </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
-        <v-card
-            v-for="(comment, index) in comments" :key="comment.comment_id" :prepend-avatar="avatars[index]"
+        <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :prepend-avatar="avatars[index]"
             :title="users[index].username"
             :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
             <template #append>
                 <v-card-actions>
-                    <v-btn :href="`mailto:${users[index].email}?subject=Re:${comment.content}`">{{ $t('email') }}</v-btn>
+                    <v-btn :href="`mailto:${users[index].email}?subject=Re:${comment.content}`">{{ $t('email')
+                        }}</v-btn>
                     <v-btn>{{ $t('profile') }}</v-btn>
                     <v-btn @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
+                    <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
+                        @click="showDeleteDialog(comment)">
+                        {{ $t('delete') }}
+                    </v-btn>
                 </v-card-actions>
             </template>
             <v-card-text>
                 {{ comment.content }}
                 <!-- 二级评论展示 -->
                 <div v-if="comment.replies && comment.replies.length > 0" class="reply-list">
-                    <v-card
-                        v-for="reply in comment.replies"
-                        :key="reply.comment_id"
-                        class="ml-6 mb-2"
-                        variant="tonal"
-                        density="compact"
-                    >
+                    <v-card v-for="reply in comment.replies" :key="reply.comment_id" class="ml-6 mb-2" variant="tonal"
+                        density="compact">
                         <v-card-title class="text-caption d-flex align-center">
                             <v-avatar size="24" class="mr-2">
                                 <v-img v-if="reply.avatar" :src="reply.avatar" />
@@ -36,6 +35,12 @@
                             </span>
                         </v-card-title>
                         <v-card-text class="text-body-2">{{ reply.content }}</v-card-text>
+                        <v-card-actions>
+                            <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
+                                @click="showDeleteDialog(reply)">
+                                {{ $t('delete') }}
+                            </v-btn>
+                        </v-card-actions>
                     </v-card>
                 </div>
                 <!-- 回复输入框 -->
@@ -46,8 +51,22 @@
                 </div>
             </v-card-text>
         </v-card>
-        <v-pagination v-model="currentPage" :length="pageCount"/>
+        <v-pagination v-model="currentPage" :length="pageCount" />
     </div>
+
+    <v-dialog v-model="showDelete" max-width="400">
+        <v-card>
+            <v-card-title>{{ $t('deleteComment') }}</v-card-title>
+            <v-card-text>{{ commentToDelete.content }} ({{
+                moment.utc(commentToDelete.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss') }})</v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red" @click="handleDeleteConfirm">{{ $t('confirm') }}</v-btn>
+                <v-btn text @click="showDelete = false">{{ $t('cancel') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -63,14 +82,36 @@ const avatars = ref([])
 const ready = ref(false)
 const currentPage = ref(1)
 const pageCount = ref(1)
-
+const currentUserId = ref(null);
 const replyBoxVisible = ref(null)
 const replyContent = ref('')
+const showDelete = ref(false)
+const commentToDelete = ref(null)
 
 const showReplyBox = (commentId) => {
     replyBoxVisible.value = commentId
     replyContent.value = ''
 }
+
+const handleDelete = async (commentId) => {
+    try {
+        await $fetch(`/api/comment/${commentId}`, {
+            method: 'DELETE'
+        });
+        updateComments();
+    } catch (err) {
+        error.value = err.message || err;
+    }
+};
+
+const getCurrentUser = async () => {
+    try {
+        const { user } = await $fetch('/api/auth/user');
+        currentUserId.value = user.user_id;
+    } catch (err) {
+        error.value = err.message || err;
+    }
+};
 
 const submitReply = async (parentCommentId) => {
     if (!replyContent.value.trim()) return
@@ -136,8 +177,23 @@ const updateComments = async () => {
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 watch(currentPage, updateComments)
-onMounted(updateComments)
+onMounted(() => {
+    getCurrentUser()
+    updateComments()
+})
 defineExpose({ updateComments })
+
+const handleDeleteConfirm = () => {
+    if (commentToDelete.value) {
+        handleDelete(commentToDelete.value.comment_id);
+    }
+    showDelete.value = false;
+}
+
+const showDeleteDialog = (comment) => {
+    commentToDelete.value = comment;
+    showDelete.value = true;
+}
 </script>
 
 <style scoped>

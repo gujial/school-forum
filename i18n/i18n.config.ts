@@ -57,6 +57,8 @@ export default defineI18nConfig(() => ({
       editTweet: 'Edit Tweet',
       tweetContent: 'Tweet Content',
       save: 'Save',
+      deleteComment: 'Delete Comment',
+      confirm: 'Confirm',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -136,6 +138,8 @@ export default defineI18nConfig(() => ({
       editTweet: '编辑推文',
       tweetContent: '推文内容',
       save: '保存',
+      deleteComment: '删除评论',
+      confirm: '确认',
       $vuetify: {
         input: {
           prependAction: '添加图片',

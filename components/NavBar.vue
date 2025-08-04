@@ -1,7 +1,6 @@
 <template>
     <v-app-bar app>
         <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>
-        <v-spacer/>
         <v-btn icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
         <v-btn icon="mdi-theme-light-dark" @click="toggleTheme()"/>
         <v-btn icon="mdi-home" :to="localePath('/')"/>
@@ -10,7 +9,6 @@
 </template>
 
 <script setup>
-const router = useRouter();
 const colorMode = useColorMode();
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath();

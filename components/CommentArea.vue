@@ -23,7 +23,7 @@
                         v-for="reply in comment.replies"
                         :key="reply.comment_id"
                         class="ml-6 mb-2"
-                        variant="outlined"
+                        variant="tonal"
                         density="compact"
                     >
                         <v-card-title class="text-caption d-flex align-center">

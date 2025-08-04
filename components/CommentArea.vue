@@ -4,7 +4,7 @@
     </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
-        <v-btn @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc') }}</v-btn>
+        <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc') }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
             :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
             <template #prepend>

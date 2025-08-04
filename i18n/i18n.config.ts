@@ -53,6 +53,10 @@ export default defineI18nConfig(() => ({
       confirmDelete: 'Confirm to delete?',
       confirmDeleteMsg: 'Are you sure you want to delete this?',
       delete: 'Delete',
+      edit: 'Edit',
+      editTweet: 'Edit Tweet',
+      tweetContent: 'Tweet Content',
+      save: 'Save',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -128,6 +132,10 @@ export default defineI18nConfig(() => ({
       delete: '删除',
       confirmDelete: '确认删除？',
       confirmDeleteMsg: '你确定要删除这个吗？',
+      edit: '编辑',
+      editTweet: '编辑推文',
+      tweetContent: '推文内容',
+      save: '保存',
       $vuetify: {
         input: {
           prependAction: '添加图片',

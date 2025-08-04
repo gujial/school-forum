@@ -21,6 +21,9 @@
                 <v-card>
                     <TweetCard :tweet="tweet" />
                     <v-card-actions>
+                        <v-btn color="primary" text @click="openEditDialog(tweet)">
+                            {{ $t('edit') }}
+                        </v-btn>
                         <v-btn color="error" text @click="openDeleteDialog(tweet.tweet_id)">
                             {{ $t('delete') }}
                         </v-btn>
@@ -28,10 +31,10 @@
                 </v-card>
             </v-col>
             <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
-            <v-alert v-if="error != null" type="error">
-                {{ error }}
-            </v-alert>
         </v-row>
+        <v-alert v-if="error != null" type="error">
+            {{ error }}
+        </v-alert>
         <!-- 删除确认对话框 -->
         <v-dialog v-model="deleteDialog" max-width="400">
             <v-card>
@@ -41,6 +44,20 @@
                     <v-spacer />
                     <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
                     <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <!-- 编辑推文对话框 -->
+        <v-dialog v-model="editDialog" max-width="600">
+            <v-card>
+                <v-card-title class="headline">{{ $t('editTweet') }}</v-card-title>
+                <v-card-text>
+                    <v-textarea v-model="editContent" :label="$t('tweetContent')" rows="4" />
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn text @click="editDialog = false">{{ $t('cancel') }}</v-btn>
+                    <v-btn color="primary" text @click="confirmEdit">{{ $t('save') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -65,6 +82,9 @@ const total = ref(0)
 
 const deleteDialog = ref(false)
 const deleteId = ref(null)
+const editDialog = ref(false)
+const editId = ref(null)
+const editContent = ref('')
 
 const fetchTweets = async () => {
     if (!user.value) return
@@ -106,6 +126,32 @@ const confirmDelete = async () => {
     }
     deleteDialog.value = false
     deleteId.value = null
+}
+
+const openEditDialog = (tweet) => {
+    editId.value = tweet.tweet_id
+    editContent.value = tweet.content
+    editDialog.value = true
+}
+
+const confirmEdit = async () => {
+    if (!editId.value) return
+    try {
+        const res = await $fetch(`/api/tweets/${editId.value}`, {
+            method: 'PUT',
+            body: { content: editContent.value }
+        })
+        if (res.success) {
+            await fetchTweets()
+            editDialog.value = false
+            editId.value = null
+            editContent.value = ''
+        } else {
+            error.value = res.message || '修改失败'
+        }
+    } catch (err) {
+        error.value = err
+    }
 }
 
 onMounted(async () => {

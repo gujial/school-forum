@@ -6,8 +6,8 @@
         <TweetCard :tweet="tweet" />
       </v-col>
       <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
-      <v-alert v-if="error" type="error">{{ error }}</v-alert>
     </v-row>
+    <v-alert v-if="error" type="error">{{ error }}</v-alert>
     <v-pagination v-if="pageCount > 1" v-model="currentPage" :length="pageCount" class="my-4" />
   </div>
 </template>

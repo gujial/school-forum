@@ -59,6 +59,8 @@ export default defineI18nConfig(() => ({
       save: 'Save',
       deleteComment: 'Delete Comment',
       confirm: 'Confirm',
+      timeDesc: 'Order by time desc',
+      timeAsc: 'Order by time asc',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -140,6 +142,8 @@ export default defineI18nConfig(() => ({
       save: '保存',
       deleteComment: '删除评论',
       confirm: '确认',
+      timeDesc: '时间倒序',
+      timeAsc: '时间正序',
       $vuetify: {
         input: {
           prependAction: '添加图片',

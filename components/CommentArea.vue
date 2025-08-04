@@ -4,6 +4,7 @@
     </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
+        <v-btn @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc') }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
             :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
             <template #prepend>
@@ -86,6 +87,16 @@ const replyBoxVisible = ref(null)
 const replyContent = ref('')
 const showDelete = ref(false)
 const commentToDelete = ref(null)
+const commentApi = ref('order_by_time')
+
+const toggleApi = () => {
+    if(commentApi.value == 'order_by_time') {
+        commentApi.value = 'by_tweet'
+    } else {
+        commentApi.value = 'order_by_time'
+    }
+    updateComments();
+}
 
 const showReplyBox = (commentId) => {
     replyBoxVisible.value = commentId
@@ -134,7 +145,7 @@ const submitReply = async (parentCommentId) => {
 const updateComments = async () => {
     ready.value = false
     try {
-        const data = await $fetch(`/api/comment/order_by_time/${props['tweetId']}?page=${currentPage.value}`)
+        const data = await $fetch(`/api/comment/${commentApi.value}/${props['tweetId']}?page=${currentPage.value}`)
         if (!data.success) {
             throw createError(data.message)
         }

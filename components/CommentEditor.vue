@@ -10,6 +10,12 @@
         </v-card-text>
         <v-card-actions>
             <v-btn text @click="postComment">{{ $t('postComment') }}</v-btn>
+            <v-dialog v-model="dialog" max-width="500px">
+                <v-card>
+                    <v-card-text>{{ $t('commentCanntBeEmpty') }}</v-card-text>
+                    <v-btn @click="dialog=false">{{ $t('confirm') }}</v-btn>
+                </v-card>
+            </v-dialog>
         </v-card-actions>
         <v-card-title>{{ $t('commentAreaTitle') }}</v-card-title>
         <CommentArea ref="areaRef" :tweet-id="props['tweetId']" />
@@ -23,11 +29,13 @@
 
 <script setup>
 import CommentArea from '~/components/CommentArea.vue';
+import { ref, onMounted } from 'vue';
 
 const user = ref(null)
 const avatar_url = ref('/icon.png')
 const error = ref(null)
 const comment = ref('')
+const dialog = ref(false)
 const props = defineProps({
     tweetId: Number()
 });
@@ -47,6 +55,11 @@ onMounted(async () => {
 });
 
 const postComment = async () => {
+    if (comment.value.trim() === '') {
+        dialog.value = true;
+        return;
+    }
+
     try {
         await $fetch('/api/comment/new', {
             method: 'POST',

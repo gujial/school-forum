@@ -6,13 +6,12 @@
                     {{ error }}
                 </v-alert>
                 <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
-                    <template #append>
-                        <v-card-actions>
-                            <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
-                            <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('follow') }}</v-btn>
-                            <v-btn @click="navigateTo(`/profile/${user.user_id}`)">{{ $t('profile') }}</v-btn>
-                        </v-card-actions>
-                    </template>
+                    <v-card-actions>
+                        <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
+                        <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('follow') }}</v-btn>
+                        <v-btn @click="navigateTo(`/profile/${user.user_id}`)">{{ $t('profile') }}</v-btn>
+                    </v-card-actions>
+                    <hr></hr>
                     <v-card-text>{{ tweet.content }}</v-card-text>
                     <v-card-text>
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
@@ -21,6 +20,7 @@
                         <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
                     </v-card-text>
+                    <hr></hr>
                     <v-card-actions class="d-flex justify-end">
                         <v-btn icon @click.stop="likeTweet">
                             <v-icon v-if="isLike">

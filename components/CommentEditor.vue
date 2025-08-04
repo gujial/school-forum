@@ -33,6 +33,8 @@ const props = defineProps({
 });
 const areaRef = ref(null)
 
+const emit = defineEmits(['comment-posted'])
+
 onMounted(async () => {
     try {
         const data = await $fetch('/api/auth/user');
@@ -59,6 +61,7 @@ const postComment = async () => {
         comment.value = ''
         if (areaRef.value != null) {
             areaRef.value.updateComments()
+            emit('comment-posted')
         }
     } catch (err) {
         error.value = err

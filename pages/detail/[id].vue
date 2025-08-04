@@ -34,7 +34,7 @@
                         <v-icon small class="mr-1">mdi-comment-outline</v-icon>
                         <span>{{ commentCount }}</span>
                     </v-card-actions>
-                    <CommentEditor :tweet-id="$route.params.id" />
+                    <CommentEditor :tweet-id="$route.params.id" @comment-posted="fetchCounts" />
                 </v-card>
                 <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
             </v-col>

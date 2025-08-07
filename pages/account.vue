@@ -69,6 +69,7 @@
 import { ref, onMounted, watch } from 'vue';
 import Avatar from '~/components/AvatarEditor.vue';
 import moment from 'moment-timezone';
+import renderMarkdown from '~/util/renderPreviewMarkdown';
 
 const user = ref(null);
 const error = ref(null)
@@ -92,7 +93,6 @@ const fetchTweets = async () => {
         const tweetRes = await $fetch(`/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`);
         tweets.value = tweetRes.data || []
         total.value = tweetRes.total || 0
-        console.log(tweetRes)
     } catch (err) {
         error.value = err
     }
@@ -144,6 +144,7 @@ const confirmEdit = async () => {
         })
         if (res.success) {
             await fetchTweets()
+            renderMarkdown(editContent.value, `preview${editId.value}`)
             editDialog.value = false
             editId.value = null
             editContent.value = ''

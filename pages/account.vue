@@ -77,7 +77,7 @@ const userTime = ref('')
 const tweets = ref([])
 
 const page = ref(1)
-const pageSize = 6
+const pageSize = 9
 const total = ref(0)
 
 const deleteDialog = ref(false)
@@ -92,6 +92,7 @@ const fetchTweets = async () => {
         const tweetRes = await $fetch(`/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`);
         tweets.value = tweetRes.data || []
         total.value = tweetRes.total || 0
+        console.log(tweetRes)
     } catch (err) {
         error.value = err
     }

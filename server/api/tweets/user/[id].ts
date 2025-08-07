@@ -15,8 +15,7 @@ export default defineEventHandler(async (event) => {
     const { rows: countRows } = await db.sql`
       SELECT COUNT(*) AS count FROM Tweets WHERE user_id = ${userId}
     `
-    const maxPages = Math.ceil(Number(countRows[0].count) / pageSize)
-    return { success: true, data: rows, maxPages }
+    return { success: true, data: rows, total: Number(countRows[0].count) }
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e)
     return { success: false, message }

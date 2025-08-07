@@ -1,17 +1,16 @@
 <template>
-  <v-card
-    v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
-    style="display: flex; flex-direction: column;" @click="goToDetail">
-    <v-divider/>
+  <v-card v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
+    style="display: flex; flex-direction: column;" :height="props.height" @click="goToDetail">
+    <v-divider />
     <v-alert v-if="error != null" type="error">
       {{ error }}
     </v-alert>
-    <v-card-text :class="{'text-content': !hasMedia, 'content': hasMedia}" :id="`preview${tweet.tweet_id}`">
+    <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia }" :id="`preview${tweet.tweet_id}`">
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
-      <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover/>
+      <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
     </v-carousel>
-    <video v-if="video != null" :src="video" height="300px" muted autoplay loop/>
+    <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
     <v-card-actions class="d-flex justify-end">
       <v-btn icon @click.stop="likeTweet">
         <v-icon v-if="isLike">
@@ -24,6 +23,10 @@
       <span class="mr-4">{{ likeCount }}</span>
       <v-icon small class="mr-1">mdi-comment-outline</v-icon>
       <span>{{ commentCount }}</span>
+      <v-btn icon @click.stop="navigateTo(`/edit?parent_id=${tweet.tweet_id}`)">
+        <v-icon>mdi-share</v-icon>
+      </v-btn>
+      <span>{{ shareCount }}</span>
     </v-card-actions>
   </v-card>
 </template>
@@ -40,6 +43,10 @@ const props = defineProps({
   tweet: {
     type: Object,
     required: true
+  },
+  height: {
+    type: String,
+    default: '400px'
   }
 });
 
@@ -53,6 +60,8 @@ const images = ref([])
 const video = ref(null)
 const likeCount = ref(0)
 const commentCount = ref(0)
+const shareCount = ref(0)
+const userTime = ref('')
 
 const goToDetail = () => {
   router.push(localePath(`/detail/${tweet.value.tweet_id}`));
@@ -63,7 +72,7 @@ const likeTweet = async () => {
     await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
     updateLike()
     await fetchCounts()
-  } catch(err) {
+  } catch (err) {
     if (err.statusCode == 401) {
       navigateTo(localePath('/login'))
     }
@@ -71,12 +80,12 @@ const likeTweet = async () => {
 };
 
 const updateLike = async () => {
-    try {
-      const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
-      isLike.value = data.like
-    } catch(err) {
-      console.log(err)
-    }
+  try {
+    const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
+    isLike.value = data.like
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const fetchCounts = async () => {
@@ -107,7 +116,7 @@ onMounted(async () => {
         }
       }
     }
-  } catch(err) {
+  } catch (err) {
     error.value = err
   }
   updateLike()
@@ -116,7 +125,11 @@ onMounted(async () => {
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const userTime = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
+if (tweet.value.created_at) {
+  userTime.value = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
+} else {
+  userTime.value = '未知时间';
+}
 
 const hasMedia = computed(() => images.value.length > 0 || video.value != null);
 </script>
@@ -132,16 +145,14 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   /* 隐藏溢出内容 */
   text-overflow: ellipsis;
   /* 添加省略号 */
-  height: 50px;
 }
 
-::v-deep(.vditor-reset p){
+::v-deep(.vditor-reset p) {
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
 .text-content {
-  height: 350px;
   /* 设置最大高度 */
   overflow-y: auto;
 }

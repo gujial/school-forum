@@ -18,11 +18,12 @@ export default defineEventHandler(async (event) => {
 
     const newTweet = {
         user_id: userInfo.userId,
-        content: body['content']
+        content: body['content'],
+        parent_id: body['parent_id'] || null
     }
 
     try {
-        await db.sql`INSERT INTO Tweets (user_id, content) VALUES (${newTweet.user_id}, ${newTweet.content})`;
+        await db.sql`INSERT INTO Tweets (user_id, parent_id, content) VALUES (${newTweet.user_id}, ${newTweet.parent_id}, ${newTweet.content})`;
         const { rows } = await db.sql`SELECT * FROM Tweets WHERE user_id = ${newTweet.user_id} ORDER BY created_at DESC LIMIT 1`;
         if (rows == undefined) {
             throw createError({

@@ -1,9 +1,3 @@
-/*Oceanbase创建用户*/
-CREATE USER 'forum_user' IDENTIFIED BY 'forum_pass';
-GRANT ALL PRIVILEGES ON *.* TO 'forum_user';
-FLUSH PRIVILEGES;
-/**/
-
 CREATE DATABASE IF NOT EXISTS school_forum;
 USE school_forum;
 
@@ -25,6 +19,7 @@ CREATE TABLE IF NOT EXISTS Avatar (
 CREATE TABLE IF NOT EXISTS Tweets (
                        tweet_id BIGINT PRIMARY KEY AUTO_INCREMENT,
                        user_id BIGINT NOT NULL,
+                       parent_id BIGINT,
                        content TEXT,
                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                        FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -35,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Comments (
                       tweet_id BIGINT NOT NULL,
                       user_id BIGINT NOT NULL,
                       content TEXT NOT NULL,
-                      parent_id INTEGER,
+                      parent_id BIGINT,
                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                       FOREIGN KEY (tweet_id) REFERENCES Tweets(tweet_id),
                       FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -72,6 +67,12 @@ END$$
 
 DELIMITER ;
 
+/*Oceanbase创建用户*/
+CREATE USER 'forum_user' IDENTIFIED BY 'forum_pass';
+GRANT ALL PRIVILEGES ON *.* TO 'forum_user';
+FLUSH PRIVILEGES;
+/**/
+
 /*添加初始用户*/
 INSERT INTO Users (username, email, password) VALUES
-('admin', 'admin', 'admin_pass');
+('admin', 'admin', '$2b$10$Hrl6HxggObHjW2y4aeYJf.AbkqZAfoY34dGjpndRfj8QL5.FKJWhS');

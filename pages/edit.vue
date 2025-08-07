@@ -35,6 +35,8 @@ const vditor = ref(null);
 const { t } = useI18n()
 const colorMode = useColorMode();
 const attachments = ref([])
+const route = useRoute()
+const parent_id = route.query.parent_id || null;
 
 const postTweet = async () => {
     if (!vditor.value || vditor.value.getValue().trim() === '') {
@@ -49,6 +51,7 @@ const postTweet = async () => {
             },
             body: JSON.stringify({
                 content: vditor.value.getValue(),
+                parent_id: parent_id,
                 attachments: attachments.value
             })
         })

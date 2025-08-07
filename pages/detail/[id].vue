@@ -14,6 +14,7 @@
                     <hr>
                     </hr>
                     <v-card-text>
+                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content" />
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
@@ -36,6 +37,10 @@
                         <span class="mr-4">{{ likeCount }}</span>
                         <v-icon small class="mr-1">mdi-comment-outline</v-icon>
                         <span>{{ commentCount }}</span>
+                        <v-btn icon @click="navigateTo(`/edit?parent_id=${tweet.tweet_id}`)">
+                            <v-icon>mdi-share</v-icon>
+                        </v-btn>
+                        <span>{{ shareCount }}</span>
                     </v-card-actions>
                     <CommentEditor :tweet-id="$route.params.id" @comment-posted="fetchCounts" />
                 </v-card>
@@ -49,6 +54,7 @@
 import moment from 'moment-timezone';
 import CommentEditor from '~/components/CommentEditor.vue';
 import renderMarkdown from '~/util/renderMarkdown';
+import TweetCard from '~/components/TweetCard.vue';
 import 'vditor/dist/index.css';
 
 const route = useRoute()
@@ -61,7 +67,10 @@ const video = ref(null)
 const isLike = ref(false)
 const likeCount = ref(0)
 const commentCount = ref(0)
+const shareCount = ref(0)
 const localePath = useLocalePath();
+const { t } = useI18n()
+const parent_tweet_data = ref(null)
 
 const likeTweet = async () => {
     try {
@@ -110,6 +119,18 @@ try {
         } else {
             for (const data of media_data.data) {
                 images.value.push(data)
+            }
+        }
+    }
+
+    if (tweet.value.parent_id) {
+        const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
+        if (parent_data.data) {
+            parent_tweet_data.value = parent_data.data
+        } else {
+            parent_tweet_data.value = {
+                tweet_id: tweet.value.parent_id,
+                content: t('tweetNotFound')
             }
         }
     }

@@ -63,6 +63,7 @@ export default defineI18nConfig(() => ({
       timeAsc: 'Order by time asc',
       commentCanntBeEmpty: 'Comment can not be empty',
       contentRequired: 'Content is required',
+      tweetNotFound: 'Tweet not found',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -148,6 +149,7 @@ export default defineI18nConfig(() => ({
       timeAsc: '时间正序',
       commentCanntBeEmpty: '评论不能为空',
       contentRequired: '内容不能为空',
+      tweetNotFound: '推文未找到',
       $vuetify: {
         input: {
           prependAction: '添加图片',

@@ -64,6 +64,10 @@ watch(currentPage, updateTweets)
 onMounted(async () => {
   try {
     const data = await $fetch('/api/auth/user');
+    if (!data.user) {
+      authError.value = true
+      return
+    }
     username.value = data.user.username;
     user_id.value = data.user.user_id;
     updateBg();

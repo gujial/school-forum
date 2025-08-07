@@ -46,8 +46,8 @@
                 <!-- 回复输入框 -->
                 <div v-if="replyBoxVisible === comment.comment_id" class="mt-2">
                     <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
-                    <v-btn size="small" @click="submitReply(comment.comment_id)">{{ $t('submit') }}</v-btn>
-                    <v-btn size="small" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
+                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id)">{{ $t('submit') }}</v-btn>
+                    <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
                 </div>
             </v-card-text>
         </v-card>

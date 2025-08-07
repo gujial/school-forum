@@ -13,8 +13,7 @@
                     </v-card-actions>
                     <hr>
                     </hr>
-                    <v-card-text>
-                        <div :id="`preview${tweet.tweet_id}`" />
+                    <v-card-text :id="`preview${tweet.tweet_id}`" style="min-height: 300px;">
                     </v-card-text>
                     <v-card-text>
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>

@@ -67,6 +67,7 @@ onMounted(async () => {
         upload: {
             url: '/api/media/upload',
             method: 'POST',
+            accept: 'image/*',
             token: useCookie('token').value,
             async handler(files) {
                 let res;

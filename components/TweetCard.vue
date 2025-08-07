@@ -5,6 +5,9 @@
     <v-alert v-if="error != null" type="error">
       {{ error }}
     </v-alert>
+    <v-card-text v-if="tweet.parent_tweet" class="retweet">
+      <p>{{ tweet.parent_tweet.content }}</p>
+    </v-card-text>
     <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia }" :id="`preview${tweet.tweet_id}`">
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
@@ -46,7 +49,7 @@ const props = defineProps({
   },
   height: {
     type: String,
-    default: '400px'
+    default: '500px'
   }
 });
 
@@ -124,6 +127,18 @@ onMounted(async () => {
         }
       }
     }
+
+    if (tweet.value.parent_id) {
+      const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
+      if (parent_data.success) {
+        tweet.value.parent_tweet = parent_data.data
+      } else {
+        tweet.value.parent_tweet = {
+          tweet_id: tweet.value.parent_id,
+          content: t('tweetNotFound'),
+        }
+      }
+    }
   } catch (err) {
     error.value = err
   }
@@ -161,7 +176,19 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
 }
 
 .text-content {
-  /* 设置最大高度 */
   overflow-y: auto;
+}
+
+.retweet {
+  margin: 5px;
+  height: fit-content;
+}
+
+.retweet p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+  color: #848484;
 }
 </style>

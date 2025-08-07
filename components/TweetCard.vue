@@ -6,8 +6,7 @@
     <v-alert v-if="error != null" type="error">
       {{ error }}
     </v-alert>
-    <v-card-text :class="{'text-content': !hasMedia, 'content': hasMedia}">
-      <div :id="`preview${tweet.tweet_id}`" />
+    <v-card-text :class="{'text-content': !hasMedia, 'content': hasMedia}" :id="`preview${tweet.tweet_id}`">
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover/>
@@ -31,7 +30,8 @@
 
 <script setup>
 import moment from 'moment-timezone';
-import renderMarkdown from '~/util/renderMarkdown';
+import renderMarkdown from '~/util/renderPreviewMarkdown';
+import 'vditor/dist/index.css';
 
 const isLike = ref(false)
 const localePath = useLocalePath();
@@ -133,6 +133,11 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   text-overflow: ellipsis;
   /* 添加省略号 */
   height: 50px;
+}
+
+::v-deep(.vditor-reset p){
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .text-content {

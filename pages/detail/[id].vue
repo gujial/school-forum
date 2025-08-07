@@ -50,6 +50,7 @@
 import moment from 'moment-timezone';
 import CommentEditor from '~/components/CommentEditor.vue';
 import renderMarkdown from '~/util/renderMarkdown';
+import 'vditor/dist/index.css';
 
 const route = useRoute()
 const user = ref(null)

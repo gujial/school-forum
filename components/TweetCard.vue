@@ -7,7 +7,7 @@
       {{ error }}
     </v-alert>
     <v-card-text :class="{'text-content': !hasMedia, 'content': hasMedia}">
-      {{ tweet.content }}
+      <div :id="`preview${tweet.tweet_id}`" />
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover/>
@@ -31,6 +31,8 @@
 
 <script setup>
 import moment from 'moment-timezone';
+import renderMarkdown from '~/util/renderMarkdown';
+
 const isLike = ref(false)
 const localePath = useLocalePath();
 
@@ -110,6 +112,7 @@ onMounted(async () => {
   }
   updateLike()
   await fetchCounts()
+  renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

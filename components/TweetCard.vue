@@ -98,6 +98,8 @@ const fetchCounts = async () => {
     likeCount.value = likeRes.count || 0
     const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
     commentCount.value = commentRes.count || 0
+    const shareRes = await $fetch(`/api/tweets/share/count/${tweet.value.tweet_id}`)
+    shareCount.value = shareRes.count || 0
   } catch (e) {
     console.error('Error fetching counts:', e);
   }

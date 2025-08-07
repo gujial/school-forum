@@ -46,9 +46,7 @@ export default defineEventHandler(async (event) => {
 
       resolve({
         statusCode: 200,
-        body: JSON.stringify({
-          filePath: `/api/files/media/${uuid}.${file.originalFilename.split('.').pop()}`
-        })
+        filePath: `/api/files/media/${uuid}.${file.originalFilename.split('.').pop()}`
       })
     })
   })

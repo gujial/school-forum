@@ -62,6 +62,7 @@ export default defineI18nConfig(() => ({
       timeDesc: 'Order by time desc',
       timeAsc: 'Order by time asc',
       commentCanntBeEmpty: 'Comment can not be empty',
+      contentRequired: 'Content is required',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -146,6 +147,7 @@ export default defineI18nConfig(() => ({
       timeDesc: '时间倒序',
       timeAsc: '时间正序',
       commentCanntBeEmpty: '评论不能为空',
+      contentRequired: '内容不能为空',
       $vuetify: {
         input: {
           prependAction: '添加图片',

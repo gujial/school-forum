@@ -6,12 +6,12 @@
                     <v-card-title>{{ $t('newTweetEdit') }}</v-card-title>
                     <v-card-text>
                         <v-form>
-                            <v-textarea v-model="content" :label="$t('content')" auto-grow/>
+                            <div id="vditor"></div>
                         </v-form>
                     </v-card-text>
-                    <MediaEditor ref="mediaEditorRef"/>
+                    <MediaEditor ref="mediaEditorRef" />
                     <v-card-actions>
-                        <v-btn text :disabled="content == ''" @click="postTweet">{{ $t('post') }}</v-btn>
+                        <v-btn text @click="postTweet">{{ $t('post') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -24,14 +24,22 @@
 
 <script setup>
 import MediaEditor from '~/components/MediaEditor.vue';
+import Vditor from 'vditor';
+import 'vditor/dist/index.css';
 
 const user = ref(null)
 const error = ref(null)
-const content = ref('')
 const mediaEditorRef = ref(null);
 const localePath = useLocalePath()
+const vditor = ref(null);
+const { t } = useI18n()
+const colorMode = useColorMode();
 
 const postTweet = async () => {
+    if (!vditor.value || vditor.value.getValue().trim() === '') {
+        error.value = t('contentRequired');
+        return;
+    }
     try {
         const data = await $fetch('/api/tweets/new', {
             method: 'POST',
@@ -39,7 +47,7 @@ const postTweet = async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                content: content.value
+                content: vditor.value.getValue(),
             })
         })
 
@@ -53,6 +61,38 @@ const postTweet = async () => {
 }
 
 onMounted(async () => {
+    vditor.value = new Vditor('vditor', {
+        placeholder: t('content'),
+        theme: colorMode.value === 'dark' ? 'dark' : 'classic',
+        upload: {
+            url: '/api/media/upload',
+            method: 'POST',
+            token: useCookie('token').value,
+            async handler(files) {
+                let res;
+                for (const file of files) {
+                    const name = file.name;
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    res = await $fetch('/api/media/upload', {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    vditor.value.insertValue(`![${name}](${res.filePath})`);
+                }
+                if (res.filePath) {
+                    return '上传成功';
+                }
+                return '上传失败';
+            },
+        },
+        after: () => {
+            vditor.value.setTheme(
+                colorMode.value === 'dark' ? 'dark' : 'classic',
+                colorMode.value === 'dark' ? 'dark' : 'light'
+            );
+        }
+    });
     try {
         const data = await $fetch('/api/auth/user');
         user.value = data.user;
@@ -64,4 +104,15 @@ onMounted(async () => {
         }
     }
 });
+
+onUnmounted(() => {
+    if (vditor.value) {
+        vditor.value.destroy();
+    }
+});
 </script>
+<style scoped>
+.vditor--fullscreen {
+    margin-top: 70px;
+}
+</style>

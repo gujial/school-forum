@@ -4,6 +4,9 @@ GRANT ALL PRIVILEGES ON *.* TO 'forum_user';
 FLUSH PRIVILEGES;
 /**/
 
+CREATE DATABASE IF NOT EXISTS school_forum;
+USE school_forum;
+
 CREATE TABLE IF NOT EXISTS Users (
                        user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
                        username VARCHAR(50) NOT NULL UNIQUE,
@@ -69,3 +72,6 @@ END$$
 
 DELIMITER ;
 
+/*添加初始用户*/
+INSERT INTO Users (username, email, password) VALUES
+('admin', 'admin', 'admin_pass');

@@ -62,6 +62,7 @@ const likeCount = ref(0)
 const commentCount = ref(0)
 const shareCount = ref(0)
 const userTime = ref('')
+const { t } = useI18n()
 
 const goToDetail = () => {
   router.push(localePath(`/detail/${tweet.value.tweet_id}`));
@@ -102,7 +103,14 @@ const fetchCounts = async () => {
 onMounted(async () => {
   try {
     const user_data = await $fetch(`/api/user/${tweet.value.user_id}`)
-    user.value = user_data.user
+    if (!user_data.user) {
+      user.value = {
+        username: t('unknownUser'),
+        user_id: tweet.value.user_id
+      }
+    } else {
+      user.value = user_data.user
+    }
     const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
     avatar_url.value = avatar_data.data
 
@@ -128,7 +136,7 @@ const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 if (tweet.value.created_at) {
   userTime.value = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
 } else {
-  userTime.value = '未知时间';
+  userTime.value = t('unknownTime');
 }
 
 const hasMedia = computed(() => images.value.length > 0 || video.value != null);

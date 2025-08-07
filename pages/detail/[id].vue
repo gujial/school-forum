@@ -125,12 +125,13 @@ try {
 
     if (tweet.value.parent_id) {
         const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
-        if (parent_data.data) {
+        console.log(parent_data)
+        if (parent_data.success) {
             parent_tweet_data.value = parent_data.data
         } else {
             parent_tweet_data.value = {
                 tweet_id: tweet.value.parent_id,
-                content: t('tweetNotFound')
+                content: t('tweetNotFound'),
             }
         }
     }

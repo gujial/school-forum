@@ -64,6 +64,8 @@ export default defineI18nConfig(() => ({
       commentCanntBeEmpty: 'Comment can not be empty',
       contentRequired: 'Content is required',
       tweetNotFound: 'Tweet not found',
+      unkownUser: 'Unknown User',
+      unknownTime: 'Unknown Time',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -150,6 +152,8 @@ export default defineI18nConfig(() => ({
       commentCanntBeEmpty: '评论不能为空',
       contentRequired: '内容不能为空',
       tweetNotFound: '推文未找到',
+      unknownUser: '未知用户',
+      unknownTime: '未知时间',
       $vuetify: {
         input: {
           prependAction: '添加图片',

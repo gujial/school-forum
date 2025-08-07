@@ -111,7 +111,7 @@ const deleteTweet = async (tweetId) => {
         } else {
             error.value = res.message || '删除失败'
         }
-    } catch (err) {
+    } catch (err) {推文
         error.value = err
     }
 }

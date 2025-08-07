@@ -11,8 +11,11 @@
                         <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('follow') }}</v-btn>
                         <v-btn @click="navigateTo(`/profile/${user.user_id}`)">{{ $t('profile') }}</v-btn>
                     </v-card-actions>
-                    <hr></hr>
-                    <v-card-text>{{ tweet.content }}</v-card-text>
+                    <hr>
+                    </hr>
+                    <v-card-text>
+                        <div :id="`preview${tweet.tweet_id}`" />
+                    </v-card-text>
                     <v-card-text>
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
@@ -20,7 +23,8 @@
                         <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
                     </v-card-text>
-                    <hr></hr>
+                    <hr>
+                    </hr>
                     <v-card-actions class="d-flex justify-end">
                         <v-btn icon @click.stop="likeTweet">
                             <v-icon v-if="isLike">
@@ -45,6 +49,7 @@
 <script setup>
 import moment from 'moment-timezone';
 import CommentEditor from '~/components/CommentEditor.vue';
+import renderMarkdown from '~/util/renderMarkdown';
 
 const route = useRoute()
 const user = ref(null)
@@ -115,6 +120,7 @@ try {
 onMounted(async () => {
     updateLike()
     await fetchCounts()
+    renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

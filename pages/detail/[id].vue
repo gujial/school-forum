@@ -13,14 +13,14 @@
                     </v-card-actions>
                     <hr>
                     </hr>
-                    <v-card-text :id="`preview${tweet.tweet_id}`" style="min-height: 300px;">
-                    </v-card-text>
                     <v-card-text>
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
                         <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
+                    </v-card-text>
+                    <v-card-text :id="`preview${tweet.tweet_id}`" style="min-height: 300px;">
                     </v-card-text>
                     <hr>
                     </hr>

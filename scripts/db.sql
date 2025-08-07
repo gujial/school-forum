@@ -1,3 +1,9 @@
+/*Oceanbase创建用户*/
+CREATE USER 'forum_user' IDENTIFIED BY 'forum_pass';
+GRANT ALL PRIVILEGES ON *.* TO 'forum_user';
+FLUSH PRIVILEGES;
+/**/
+
 CREATE TABLE IF NOT EXISTS Users (
                        user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
                        username VARCHAR(50) NOT NULL UNIQUE,

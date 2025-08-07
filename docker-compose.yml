@@ -1,18 +1,18 @@
-version: '3.8'
-
 services:
   # OceanBase 数据库服务
   oceanbase:
     image: oceanbase/oceanbase-ce:latest
     container_name: school-forum-oceanbase
     restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 655350
+        hard: 655350
     environment:
       # root 用户密码
       - OB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootpassword}
       # 初始化租户名
       - OB_TENANT_NAME=${DB_NAME:-school_forum}
-      # 是否自动初始化
-      - OB_INIT=true
     ports:
       - "2881:2881"   # SQL port
       - "2883:2883"   # RPC port
@@ -23,15 +23,15 @@ services:
 
   # 应用服务
   app:
-    image: school-forum:latest
+    image: gujial114514/school-forum:latest
     container_name: school-forum-app
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - DB_HOST=oceanbase
       - DB_PORT=2881
-      - DB_USER=root@${DB_NAME:-school_forum}
-      - DB_PASSWORD=${DB_ROOT_PASSWORD:-rootpassword}
+      - DB_USER=forum_user@${DB_NAME:-school_forum}
+      - DB_PASSWORD=${DB_PASSWORD:-forum_pass}
       - DB_NAME=${DB_NAME:-school_forum}
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key}
     ports:

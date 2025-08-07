@@ -34,6 +34,7 @@ const localePath = useLocalePath()
 const vditor = ref(null);
 const { t } = useI18n()
 const colorMode = useColorMode();
+const attachments = ref([])
 
 const postTweet = async () => {
     if (!vditor.value || vditor.value.getValue().trim() === '') {
@@ -48,6 +49,7 @@ const postTweet = async () => {
             },
             body: JSON.stringify({
                 content: vditor.value.getValue(),
+                attachments: attachments.value
             })
         })
 
@@ -80,6 +82,7 @@ onMounted(async () => {
                         body: formData,
                     });
                     vditor.value.insertValue(`![${name}](${res.filePath})`);
+                    attachments.value.push(res.filePath);
                 }
                 if (res.filePath) {
                     return '上传成功';

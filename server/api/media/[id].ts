@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const tweetId = getRouterParam(event, 'id');
 
     try {
-        const { rows } = await db.sql`SELECT * FROM Media WHERE tweet_id = ${tweetId}`
+        const { rows } = await db.sql`SELECT * FROM Media WHERE tweet_id = ${tweetId} AND media_type != ${'all'}`;
 
         if (rows === undefined) {
             throw new Error('Query returned undefined');

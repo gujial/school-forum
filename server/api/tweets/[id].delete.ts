@@ -6,12 +6,21 @@ const removeFile = async (mediaUrl: string): Promise<void> => {
     try {
         // mediaUrl 格式为 /api/files/media/{tweetId}/{filename}
         const parts = mediaUrl.split('/')
-        const tweetId = parts[4]
-        const filename = decodeURIComponent(parts.slice(5).join('/'))
-        if (!tweetId || !filename) return
+        console.log('Removing file:', parts)
+        if (parts.length = 5) {
+            const filename = decodeURIComponent(parts.slice(4).join('/'))
+            if (!filename) return
 
-        const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, filename)
-        await unlink(filePath)
+            const filePath = join(process.cwd(), 'dynamic', 'media', filename)
+            await unlink(filePath)
+        } else {
+            const tweetId = parts[4]
+            const filename = decodeURIComponent(parts.slice(5).join('/'))
+            if (!tweetId || !filename) return
+
+            const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, filename)
+            await unlink(filePath)
+        }
     } catch (e) {
         // 文件不存在等错误可忽略
     }
@@ -33,9 +42,9 @@ export default defineEventHandler(async (event) => {
         for (const media of mediaRows) {
             await removeFile(media.media_url)
         }
-        
+
         if (mediaRows.length > 0) {
-            await rm(join(process.cwd(), 'dynamic', 'media', tweetId),{ recursive: true, force: true })
+            await rm(join(process.cwd(), 'dynamic', 'media', tweetId), { recursive: true, force: true })
         }
 
         await db.sql`DELETE FROM Tweets WHERE tweet_id = ${tweetId}`

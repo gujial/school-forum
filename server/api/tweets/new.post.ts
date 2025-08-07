@@ -31,6 +31,10 @@ export default defineEventHandler(async (event) => {
             })
         }
 
+        for (const file of body['attachments'] || []) {
+            await db.sql`UPDATE Media SET tweet_id = ${rows[0].tweet_id} WHERE tweet_id IS NULL AND media_type = ${'all'} AND media_url = ${file}`
+        }
+
         return {
             success: true,
             tweet_id: rows[0].tweet_id,

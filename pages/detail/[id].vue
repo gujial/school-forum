@@ -20,7 +20,7 @@
                         <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
                     </v-card-text>
-                    <v-card-text :id="`preview${tweet.tweet_id}`" style="min-height: 300px;">
+                    <v-card-text :id="`preview${tweet.tweet_id}`">
                     </v-card-text>
                     <hr>
                     </hr>

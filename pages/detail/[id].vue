@@ -14,7 +14,7 @@
                     <hr>
                     </hr>
                     <v-card-text>
-                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content" />
+                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content" max-height="500px" />
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>

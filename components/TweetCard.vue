@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
-    style="display: flex; flex-direction: column;" :height="props.height" @click="goToDetail">
+    style="display: flex; flex-direction: column;" :height="props.height" :max-height="props.maxHeight" @click="goToDetail">
     <v-divider />
     <v-alert v-if="error != null" type="error">
       {{ error }}
@@ -50,6 +50,9 @@ const props = defineProps({
   height: {
     type: String,
     default: '500px'
+  },
+  maxHeight: {
+    type: String
   }
 });
 

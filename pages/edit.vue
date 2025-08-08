@@ -32,7 +32,7 @@ const error = ref(null)
 const mediaEditorRef = ref(null);
 const localePath = useLocalePath()
 const vditor = ref(null);
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const colorMode = useColorMode();
 const attachments = ref([])
 const route = useRoute()
@@ -69,6 +69,7 @@ onMounted(async () => {
     vditor.value = new Vditor('vditor', {
         placeholder: t('content'),
         theme: colorMode.value === 'dark' ? 'dark' : 'classic',
+        lang: locale.value === 'en' ? 'en_US' : 'zh_CN',
         upload: {
             url: '/api/media/upload',
             method: 'POST',

@@ -14,7 +14,8 @@
                     <hr>
                     </hr>
                     <v-card-text>
-                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content" max-height="500px" />
+                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content"
+                            max-height="500px" />
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
@@ -42,11 +43,13 @@
                         </v-btn>
                         <span>{{ shareCount }}</span>
                     </v-card-actions>
-                    <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id" @comment-posted="fetchCounts" />
+                    <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id"
+                        @comment-posted="fetchCounts" />
                 </v-card>
                 <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
             </v-col>
         </v-row>
+        <v-btn v-show="showScrollTop" icon="mdi-arrow-up" color="primary" class="scroll-top-btn" @click="scrollToTop" />
     </v-container>
 </template>
 
@@ -71,6 +74,27 @@ const shareCount = ref(0)
 const localePath = useLocalePath();
 const { t } = useI18n()
 const parent_tweet_data = ref(null)
+
+const showScrollTop = ref(false)
+
+const handleScroll = () => {
+    showScrollTop.value = window.scrollY > 300
+}
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
 
 const likeTweet = async () => {
     try {
@@ -150,3 +174,11 @@ onMounted(async () => {
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const userTime = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
 </script>
+<style scoped>
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 2000;
+}
+</style>

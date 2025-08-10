@@ -120,6 +120,10 @@ onMounted(async () => {
       user.value = user_data.user
     }
     const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
+    if (!avatar_data.data) {
+      avatar_url.value = '/icon.png'
+      return
+    }
     avatar_url.value = avatar_data.data
 
     const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`)

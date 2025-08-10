@@ -121,6 +121,10 @@ const submitBg = async () => {
 const updateAvatar = async () => {
   try {
     const data = await $fetch('/api/avatar/' + props.user.user_id);
+    if (!data.data) {
+      src.value = '/icon.png';
+      return;
+    }
     src.value = data.data;
   } catch (err) {
     console.log(err)

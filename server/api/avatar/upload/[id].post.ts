@@ -56,6 +56,8 @@ export default defineEventHandler(async (event) => {
             console.error('删除旧头像失败:', e)
           }
         }
+      } else {
+        await db.sql`INSERT INTO Avatar (avatar_url, user_id) VALUES (${''}, ${userId})`
       }
 
       const ext = file.originalFilename.slice(file.originalFilename.lastIndexOf('.'))

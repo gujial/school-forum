@@ -83,6 +83,7 @@ export default defineI18nConfig(() => ({
       receiverId: "Receiver ID",
       deleteAllMessages: "Delete All Messages",
       searchIdContentTime: "Search by ID, Content or Time",
+      actions: 'Actions',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -205,6 +206,7 @@ export default defineI18nConfig(() => ({
       comment: "评论",
       deleteAllMessages: "删除所有消息",
       searchIdContentTime: "按ID、内容或时间搜索",
+      actions: '操作',
       $vuetify: {
         input: {
           prependAction: '添加图片',

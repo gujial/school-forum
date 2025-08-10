@@ -7,8 +7,8 @@
             </v-tabs>
 
             <template v-slot:text>
-                <v-text-field v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify" variant="outlined"
-                    hide-details single-line></v-text-field>
+                <v-text-field v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify"
+                    variant="outlined" hide-details single-line></v-text-field>
             </template>
             <v-card-text>
                 <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="id" :search="search"
@@ -23,9 +23,15 @@
                     <template #item.receiver="{ item }">
                         <span>{{ usernames[item.receiver_id] || 'Loading...' }}</span>
                     </template>
+
+                    <template v-slot:item.actions="{ item }">
+                        <div class="d-flex ga-2 justify-end">
+                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteMessage(item.message_id)"></v-icon>
+                        </div>
+                    </template>
                 </v-data-table>
                 <v-btn class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
-                    :text="$t('deleteAllMessages')"></v-btn>
+                    :text="$t('deleteAllMessages')" @click="deleteAllMessages"></v-btn>
             </v-card-text>
 
             <v-card-actions class="justify-center">
@@ -51,14 +57,16 @@ const usernames = ref<Record<number, string>>({})
 const search = ref('')
 
 const headers = [
-    { title: t('senderId'), value: 'sender_id' },
-    { title: t('receiverId'), value: 'receiver_id' },
-    { title: t('sender'), value: 'sender' },
-    { title: t('receiver'), value: 'receiver' },
-    { title: t('tweetId'), value: 'tweet_id' },
-    { title: t('commentId'), value: 'comment_id' },
-    { title: t('content'), value: 'content' },
-    { title: t('createdAt'), value: 'created_at' }
+    { title: t('id'), value: 'message_id', sortable: true },
+    { title: t('senderId'), value: 'sender_id', sortable: true },
+    { title: t('receiverId'), value: 'receiver_id', sortable: true },
+    { title: t('sender'), value: 'sender', sortable: true },
+    { title: t('receiver'), value: 'receiver', sortable: true },
+    { title: t('tweetId'), value: 'tweet_id', sortable: true },
+    { title: t('commentId'), value: 'comment_id', sortable: true },
+    { title: t('content'), value: 'content', sortable: true },
+    { title: t('createdAt'), value: 'created_at', sortable: true },
+    { title: t('actions'), value: 'actions', sortable: false }
 ]
 
 async function fetchMessages() {
@@ -101,6 +109,25 @@ async function loadUsername(id: number) {
         usernames.value[id] = user.username || 'Unknown User'
     } catch {
         usernames.value[id] = 'Unknown User'
+    }
+}
+
+const deleteAllMessages = async () => {
+    try {
+        await $fetch('/api/message/deleteAll', { method: 'DELETE' })
+        messages.value = []
+        maxPages.value = 1
+    } catch (error) {
+        console.error('Error deleting messages:', error)
+    }
+}
+
+const deleteMessage = async (messageId: number) => {
+    try {
+        await $fetch(`/api/message/${messageId}`, { method: 'DELETE' })
+        fetchMessages()
+    } catch (error) {
+        console.error('Error deleting message:', error)
     }
 }
 

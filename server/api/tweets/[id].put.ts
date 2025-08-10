@@ -1,6 +1,8 @@
 import { useDatabase } from '../../util/database'
+import authMiddleware from '../../util/auth';
 
 export default defineEventHandler(async (event) => {
+    authMiddleware(event); 
     const tweetId = getRouterParam(event, 'id')
     const db = useDatabase()
 

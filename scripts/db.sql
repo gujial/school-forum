@@ -54,6 +54,20 @@ CREATE TABLE IF NOT EXISTS Likes (
                        UNIQUE KEY unique_user_tweet (user_id, tweet_id)
 );
 
+CREATE TABLE IF NOT EXISTS Messages (
+                            message_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                            sender_id BIGINT NOT NULL,
+                            receiver_id BIGINT NOT NULL,
+                            tweet_id BIGINT,
+                            comment_id BIGINT,
+                            content TEXT NOT NULL,
+                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY (sender_id) REFERENCES Users(user_id),
+                            FOREIGN KEY (receiver_id) REFERENCES Users(user_id),
+                            FOREIGN KEY (tweet_id) REFERENCES Tweets(tweet_id),
+                            FOREIGN KEY (comment_id) REFERENCES Comments(comment_id)
+);
+
 DELIMITER $$
 
 CREATE TRIGGER before_tweet_delete

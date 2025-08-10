@@ -6,10 +6,9 @@ export default defineEventHandler(async (event) => {
     authMiddleware(event);
     const userInfo = event.context.auth
     const db = useDatabase()
-    const messageId = getRouterParam(event, 'id');
 
     try {
-        await db.sql`DELETE FROM Messages WHERE receiver_id = ${userInfo.userId}`;
+        await db.sql`DELETE FROM Messages WHERE sender_id = ${userInfo.userId}`;
 
         return {
             success: true,

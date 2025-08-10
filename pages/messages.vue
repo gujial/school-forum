@@ -114,7 +114,10 @@ async function loadUsername(id: number) {
 
 const deleteAllMessages = async () => {
     try {
-        await $fetch('/api/message/deleteAll', { method: 'DELETE' })
+        const ep = activeTab.value === 'received'
+            ? '/api/message/deleteAllReceive'
+            : '/api/message/deleteAllSend'
+        await $fetch(ep, { method: 'DELETE' })
         messages.value = []
         maxPages.value = 1
     } catch (error) {

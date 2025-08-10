@@ -81,6 +81,17 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+CREATE TRIGGER before_comment_delete
+BEFORE DELETE ON Comments
+FOR EACH ROW
+BEGIN
+    DELETE FROM Messages WHERE comment_id = OLD.comment_id;
+END$$
+
+DELIMITER ;
+
 /*Oceanbase创建用户*/
 CREATE USER 'forum_user' IDENTIFIED BY 'forum_pass';
 GRANT ALL PRIVILEGES ON *.* TO 'forum_user';

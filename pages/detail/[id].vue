@@ -42,7 +42,7 @@
                         </v-btn>
                         <span>{{ shareCount }}</span>
                     </v-card-actions>
-                    <CommentEditor :tweet-id="$route.params.id" @comment-posted="fetchCounts" />
+                    <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id" @comment-posted="fetchCounts" />
                 </v-card>
                 <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
             </v-col>

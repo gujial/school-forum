@@ -69,6 +69,14 @@ export default defineI18nConfig(() => ({
       account: 'Account',
       messages: 'Messages',
       home: 'Home',
+      received: "Received Messages",
+      sent: "Sent Messages",
+      id: "ID",
+      createdAt: "Created At",
+      sender: "Sender",
+      receiver: "Receiver",
+      tweetId: "Tweet ID",
+      commentId: "Comment ID",
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -89,6 +97,23 @@ export default defineI18nConfig(() => ({
             root: 'Root',
             previous: 'Previous'
           }
+        },
+        noDataText: 'No data available',
+        open: 'Open',
+        close: 'Close',
+        dataFooter: {
+          itemsPerPageText: 'Items per page',
+          pageText: '{0}-{1} of {2}',
+          nextPage: 'Next Page',
+          prevPage: 'Previous Page',
+          firstPage: 'First Page',
+          lastPage: 'Last Page',
+          pageAriaLabel: 'Page',
+          currentPageAriaLabel: 'Current Page',
+          rootAriaLabel: 'Root',
+          previousAriaLabel: 'Previous Page',
+          nextAriaLabel: 'Next Page',
+          itemsPerPageAll: 'All'
         }
       }
     },
@@ -160,6 +185,14 @@ export default defineI18nConfig(() => ({
       account: '账户',
       messages: '消息',
       home: '首页',
+      received: "收到的消息",
+      sent: "发送的消息",
+      id: "ID",
+      createdAt: "创建时间",
+      sender: "发送者",
+      receiver: "接收者",
+      tweetId: "推文ID",
+      commentId: "评论ID",
       $vuetify: {
         input: {
           prependAction: '添加图片',
@@ -180,6 +213,23 @@ export default defineI18nConfig(() => ({
             root: '根',
             previous: '上一页'
           }
+        },
+        noDataText: '没有可用数据',
+        open: '打开',
+        close: '关闭',
+        dataFooter: {
+          itemsPerPageText: '每页显示',
+          pageText: '{0}-{1} 共 {2} 条',
+          nextPage: '下一页',
+          prevPage: '上一页',
+          firstPage: '第一页',
+          lastPage: '最后一页',
+          pageAriaLabel: '页',
+          currentPageAriaLabel: '当前页',
+          rootAriaLabel: '根',
+          previousAriaLabel: '上一页',
+          nextAriaLabel: '下一页',
+          itemsPerPageAll: '全部'
         }
       }
     }

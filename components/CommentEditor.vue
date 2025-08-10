@@ -5,7 +5,7 @@
         </v-alert>
         <v-card-text>
             <v-form>
-                <v-textarea v-model="comment" :label="$t('inputComments')" auto-grow/>
+                <v-textarea v-model="comment" :label="$t('inputComments')" auto-grow />
             </v-form>
         </v-card-text>
         <v-card-actions>
@@ -13,7 +13,7 @@
             <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
                     <v-card-text>{{ $t('commentCanntBeEmpty') }}</v-card-text>
-                    <v-btn @click="dialog=false">{{ $t('confirm') }}</v-btn>
+                    <v-btn @click="dialog = false">{{ $t('confirm') }}</v-btn>
                 </v-card>
             </v-dialog>
         </v-card-actions>
@@ -37,7 +37,8 @@ const error = ref(null)
 const comment = ref('')
 const dialog = ref(false)
 const props = defineProps({
-    tweetId: Number()
+    tweetId: Number(),
+    receiverId: Number()
 });
 const areaRef = ref(null)
 
@@ -71,6 +72,19 @@ const postComment = async () => {
                 content: comment.value
             })
         })
+
+        await $fetch('/api/message/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tweet_id: props['tweetId'],
+                receiver_id: props['receiverId'],
+                content: comment.value
+            })
+        })
+
         comment.value = ''
         if (areaRef.value != null) {
             areaRef.value.updateComments()

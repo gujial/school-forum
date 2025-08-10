@@ -2,10 +2,8 @@
     <v-app-bar app>
         <v-btn icon="mdi-menu" @click="() => { if (navOpen) { navOpen = false } else { navOpen = true } }"></v-btn>
         <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>
-        <v-btn icon="mdi-home" :to="localePath('/')" />
-        <v-btn icon="mdi-account" :to="localePath('/account')" />
     </v-app-bar>
-    <v-navigation-drawer v-model="navOpen" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary elevation="">
+    <v-navigation-drawer v-model="navOpen" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>
         <v-card>
             <v-img class="text-white avatar-bg-mask" height="150px" :src="bgSrc" cover>
                 <div class="bg-mask"></div>
@@ -75,7 +73,6 @@ const updateBg = async () => {
 }
 
 const toggleTheme = () => {
-    console.log(colorMode.value)
     if (colorMode.value === 'light') {
         colorMode.preference = 'dark'
     } else if (colorMode.value === 'dark') {

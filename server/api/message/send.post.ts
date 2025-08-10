@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        await db.sql`INSERT INTO Messages (sender_id, receiver_id, tweet_id, comment_id, content) VALUES (${userInfo.userId}, ${body['receiver_id']}, ${body['tweet_id']}, ${body['comment_id']}, ${body['content']})`
+        await db.sql`INSERT INTO Messages (sender_id, receiver_id, tweet_id, comment_id, content) VALUES (${userInfo.userId}, ${body['receiver_id']}, ${body['tweet_id']?body['tweet_id']:null}, ${body['comment_id']?body['comment_id']:null}, ${body['content']})`
 
         return {
             success: true,

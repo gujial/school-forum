@@ -66,6 +66,9 @@ export default defineI18nConfig(() => ({
       tweetNotFound: 'Tweet not found',
       unkownUser: 'Unknown User',
       unknownTime: 'Unknown Time',
+      account: 'Account',
+      messages: 'Messages',
+      home: 'Home',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -154,6 +157,9 @@ export default defineI18nConfig(() => ({
       tweetNotFound: '推文未找到',
       unknownUser: '未知用户',
       unknownTime: '未知时间',
+      account: '账户',
+      messages: '消息',
+      home: '首页',
       $vuetify: {
         input: {
           prependAction: '添加图片',

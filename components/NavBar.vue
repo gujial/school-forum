@@ -1,17 +1,78 @@
 <template>
     <v-app-bar app>
+        <v-btn icon="mdi-menu" @click="() => { if (navOpen) { navOpen = false } else { navOpen = true } }"></v-btn>
         <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>
-        <v-btn icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
-        <v-btn icon="mdi-theme-light-dark" @click="toggleTheme()"/>
-        <v-btn icon="mdi-home" :to="localePath('/')"/>
-        <v-btn icon="mdi-account" :to="localePath('/account')"/>
+        <v-btn icon="mdi-home" :to="localePath('/')" />
+        <v-btn icon="mdi-account" :to="localePath('/account')" />
     </v-app-bar>
+    <v-navigation-drawer v-model="navOpen" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary elevation="">
+        <v-card>
+            <v-img class="text-white avatar-bg-mask" height="150px" :src="bgSrc" cover>
+                <div class="bg-mask"></div>
+                <v-avatar style="z-index: 99; position: relative;" size="80" class="mx-2">
+                    <v-img cover :src="src" />
+                </v-avatar>
+                <v-card-title style="z-index: 99; position: relative;">{{ user ? user.username : 'Guest'
+                    }}</v-card-title>
+                <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user.email }}</v-card-subtitle>
+            </v-img>
+        </v-card>
+
+        <v-divider></v-divider>
+
+        <v-list :lines="false" density="compact" nav>
+            <v-list-item :to="localePath('/')" @click="navOpen = false">
+                <template v-slot:prepend>
+                    <v-icon>mdi-home</v-icon>
+                </template>
+                <v-list-item-title>{{ $t('home') }}</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item :to="localePath('/account')" @click="navOpen = false">
+                <template v-slot:prepend>
+                    <v-icon>mdi-account</v-icon>
+                </template>
+                <v-list-item-title>{{ $t('account') }}</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item :to="localePath('/messages')" @click="navOpen = false">
+                <template v-slot:prepend>
+                    <v-icon>mdi-message-text</v-icon>
+                </template>
+                <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
+            </v-list-item>
+        </v-list>
+        <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
+        <v-btn flat icon="mdi-theme-light-dark" @click="toggleTheme()" />
+    </v-navigation-drawer>
 </template>
 
 <script setup>
 const colorMode = useColorMode();
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath();
+const navOpen = shallowRef(false);
+const src = ref('/icon.png')
+const bgSrc = ref('/card-image.jpg')
+const user = ref(null)
+
+const updateAvatar = async () => {
+    try {
+        const data = await $fetch('/api/avatar/' + user.value.user_id);
+        src.value = data.data;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const updateBg = async () => {
+    try {
+        const data = await $fetch('/api/bg/' + user.value.user_id);
+        bgSrc.value = data.data || '/card-image.jpg';
+    } catch (err) {
+        bgSrc.value = '/card-image.jpg'
+    }
+}
 
 const toggleTheme = () => {
     console.log(colorMode.value)
@@ -21,5 +82,36 @@ const toggleTheme = () => {
         colorMode.preference = 'light'
     }
 }
+
+onMounted(async () => {
+    try {
+        const data = await $fetch('/api/auth/user');
+        user.value = data.user;
+        updateAvatar();
+        updateBg();
+    } catch (err) {
+        console.error('Error updating avatar or background:', err);
+    }
+});
 </script>
 
+<style scoped>
+.background-image {
+    position: relative;
+}
+
+.bg-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    /* 黑色半透明 */
+    transition: background 0.3s;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.avatar-bg-mask:hover .bg-mask {
+    background: rgba(0, 0, 0, 0);
+    /* 悬浮时透明 */
+}
+</style>

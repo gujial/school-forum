@@ -46,7 +46,7 @@
                 <!-- 回复输入框 -->
                 <div v-if="replyBoxVisible === comment.comment_id" class="mt-2">
                     <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
-                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id)">{{ $t('submit') }}</v-btn>
+                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id, comment.user_id)">{{ $t('submit') }}</v-btn>
                     <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
                 </div>
             </v-card-text>
@@ -123,7 +123,7 @@ const getCurrentUser = async () => {
     }
 };
 
-const submitReply = async (parentCommentId) => {
+const submitReply = async (parentCommentId, parentUserId) => {
     if (!replyContent.value.trim()) return
     try {
         await $fetch('/api/comment/reply', {
@@ -134,6 +134,20 @@ const submitReply = async (parentCommentId) => {
                 content: replyContent.value
             }
         })
+
+        await $fetch('/api/message/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tweet_id: props.tweetId,
+                comment_id: parentCommentId,
+                receiver_id: parentUserId,
+                content: replyContent.value
+            })
+        })
+
         replyBoxVisible.value = null
         replyContent.value = ''
         updateComments()

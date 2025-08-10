@@ -12,6 +12,13 @@
                     <template #item.created_at="{ item }">
                         {{ new Date(item.created_at).toLocaleString() }}
                     </template>
+                    <template #item.sender_id="{ item }">
+                        <span>{{ usernames[item.sender_id] || 'Loading...' }}</span>
+                    </template>
+
+                    <template #item.receiver_id="{ item }">
+                        <span>{{ usernames[item.receiver_id] || 'Loading...' }}</span>
+                    </template>
                 </v-data-table>
             </v-card-text>
 
@@ -34,13 +41,13 @@ const pageSize = 20
 const maxPages = ref(1)
 const messages = ref<any[]>([])
 const loading = ref(false)
+const usernames = ref<Record<number, string>>({})
 
 const headers = [
-    { title: t('id'), value: 'message_id' },
     { title: t('sender'), value: 'sender_id' },
     { title: t('receiver'), value: 'receiver_id' },
-    { title: t('tweetId'), value: 'tweet_id' },
-    { title: t('commentId'), value: 'comment_id' },
+    { title: t('tweet'), value: 'tweet_id' },
+    { title: t('comment'), value: 'comment_id' },
     { title: t('content'), value: 'content' },
     { title: t('createdAt'), value: 'created_at' }
 ]
@@ -78,8 +85,25 @@ async function fetchMessages() {
     loading.value = false
 }
 
+async function loadUsername(id: number) {
+    if (usernames.value[id]) return
+    try {
+        const {user} = <any>await $fetch(`/api/user/${id}`)
+        usernames.value[id] = user.username || 'Unknown User'
+    } catch {
+        usernames.value[id] = 'Unknown User'
+    }
+}
+
 watch([activeTab, page], () => {
     fetchMessages()
+})
+
+watch(messages, (msgs) => {
+    msgs.forEach(msg => {
+        loadUsername(msg.sender_id)
+        loadUsername(msg.receiver_id)
+    })
 })
 
 onMounted(() => {

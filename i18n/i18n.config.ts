@@ -77,6 +77,8 @@ export default defineI18nConfig(() => ({
       receiver: "Receiver",
       tweetId: "Tweet ID",
       commentId: "Comment ID",
+      tweet: "Tweet",
+      comment: "Comment",
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -193,6 +195,8 @@ export default defineI18nConfig(() => ({
       receiver: "接收者",
       tweetId: "推文ID",
       commentId: "评论ID",
+      tweet: "推文",
+      comment: "评论",
       $vuetify: {
         input: {
           prependAction: '添加图片',

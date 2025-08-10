@@ -37,7 +37,7 @@
                         <span class="mr-4">{{ likeCount }}</span>
                         <v-icon small class="mr-1">mdi-comment-outline</v-icon>
                         <span>{{ commentCount }}</span>
-                        <v-btn icon @click="navigateTo(`/edit?parent_id=${tweet.tweet_id}`)">
+                        <v-btn icon @click="navigateTo(localePath(`/edit?parent_id=${tweet.tweet_id}`))">
                             <v-icon>mdi-share</v-icon>
                         </v-btn>
                         <span>{{ shareCount }}</span>

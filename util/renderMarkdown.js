@@ -7,6 +7,9 @@ const renderMarkdown = (md, id) => {
     hljs: { style: colorMode.value === 'dark' ? 'github-dark' : 'github' },
     theme: {
       current: colorMode.value === 'dark' ? 'dark' : 'classic',
+    },
+    markdown: {
+      toc: true
     }
   });
 }

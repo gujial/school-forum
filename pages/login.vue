@@ -58,7 +58,8 @@ const login = async () => {
     }
 
     if (response.success) {
-      router.push('/')
+      await fetchAuthUser()
+      navigateTo(localePath('/'))
     } else {
       error.value = response.message
     }

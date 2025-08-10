@@ -2,9 +2,13 @@
     <v-alert v-if="error != null" type="error">
         {{ error }}
     </v-alert>
+    <v-alert v-if="authError">
+        {{ $t('pleaseLogin') }}
+    </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
-        <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc') }}</v-btn>
+        <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
+        }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
             :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
             <template #prepend>
@@ -15,7 +19,7 @@
             <v-card-text>
                 {{ comment.content }}
                 <v-card-actions>
-                    <v-btn @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
+                    <v-btn v-if="!authError" @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
                     <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
                         @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
@@ -46,7 +50,9 @@
                 <!-- 回复输入框 -->
                 <div v-if="replyBoxVisible === comment.comment_id" class="mt-2">
                     <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
-                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id, comment.user_id)">{{ $t('submit') }}</v-btn>
+                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id, comment.user_id)">{{
+                        $t('submit')
+                    }}</v-btn>
                     <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
                 </div>
             </v-card-text>
@@ -88,9 +94,10 @@ const replyContent = ref('')
 const showDelete = ref(false)
 const commentToDelete = ref(null)
 const commentApi = ref('order_by_time')
+const authError = ref(false)
 
 const toggleApi = () => {
-    if(commentApi.value == 'order_by_time') {
+    if (commentApi.value == 'order_by_time') {
         commentApi.value = 'by_tweet'
     } else {
         commentApi.value = 'order_by_time'
@@ -119,7 +126,11 @@ const getCurrentUser = async () => {
         const { user } = await $fetch('/api/auth/user');
         currentUserId.value = user.user_id;
     } catch (err) {
-        error.value = err.message || err;
+        if (err?.status === 401 || (err?.response && err.response.status === 401)) {
+            authError.value = true
+        } else {
+            error.value = err
+        }
     }
 };
 

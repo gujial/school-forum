@@ -13,9 +13,9 @@
                 <v-avatar style="z-index: 99; position: relative;" size="80" class="mx-2">
                     <v-img cover :src="src" />
                 </v-avatar>
-                <v-card-title style="z-index: 99; position: relative;">{{ user ? user.username : 'Guest'
+                <v-card-title style="z-index: 99; position: relative;">{{ user ? user.username : $t('guestUser')
                     }}</v-card-title>
-                <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user.email }}</v-card-subtitle>
+                <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user ? user.email : $t('clickAccountToLogin') }}</v-card-subtitle>
             </v-img>
         </v-card>
 
@@ -55,7 +55,7 @@ const localePath = useLocalePath();
 const navOpen = shallowRef(false);
 const src = ref('/icon.png')
 const bgSrc = ref('/card-image.jpg')
-const user = ref(null)
+const user = useAuthUser()
 
 const updateAvatar = async () => {
     try {
@@ -83,15 +83,18 @@ const toggleTheme = () => {
     }
 }
 
+watch(user, (val) => {
+  if (val) {
+    updateAvatar()
+    updateBg()
+  } else {
+    src.value = '/icon.png'
+    bgSrc.value = '/card-image.jpg'
+  }
+}, { immediate: true })
+
 onMounted(async () => {
-    try {
-        const data = await $fetch('/api/auth/user');
-        user.value = data.user;
-        updateAvatar();
-        updateBg();
-    } catch (err) {
-        console.error('Error updating avatar or background:', err);
-    }
+    fetchAuthUser();
 });
 </script>
 

@@ -182,6 +182,7 @@ const logout = async () => {
     try {
         const result = await $fetch('/api/auth/logout');
         if (result.success) {
+            await fetchAuthUser()
             navigateTo(localePath('/'))
         } else {
             error.value = result.message

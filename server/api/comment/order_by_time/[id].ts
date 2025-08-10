@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
         message: 'Wrong page number'
       }
     }
-    const limit = 20
+    const limit = query.pageSize ? parseInt(query.pageSize as string) : 20
     const offset = (page - 1) * limit
   
     try {

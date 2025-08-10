@@ -122,5 +122,6 @@ onUnmounted(() => {
 <style scoped>
 .vditor--fullscreen {
     margin-top: 70px;
+    height: 92vh !important;
 }
 </style>

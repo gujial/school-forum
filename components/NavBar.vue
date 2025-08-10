@@ -1,6 +1,9 @@
 <template>
     <v-app-bar app>
         <v-btn icon="mdi-menu" @click="() => { if (navOpen) { navOpen = false } else { navOpen = true } }"></v-btn>
+        <v-avatar size="40" class="mx-2" @click="navigateTo(localePath('/'))">
+          <v-img cover src="/icon.png" />
+        </v-avatar>
         <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="navOpen" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>

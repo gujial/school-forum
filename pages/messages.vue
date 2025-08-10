@@ -6,20 +6,26 @@
                 <v-tab :value="'sent'">{{ $t('sent') }}</v-tab>
             </v-tabs>
 
+            <template v-slot:text>
+                <v-text-field v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify" variant="outlined"
+                    hide-details single-line></v-text-field>
+            </template>
             <v-card-text>
-                <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="id"
+                <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="id" :search="search"
                     class="elevation-1">
                     <template #item.created_at="{ item }">
                         {{ new Date(item.created_at).toLocaleString() }}
                     </template>
-                    <template #item.sender_id="{ item }">
+                    <template #item.sender="{ item }">
                         <span>{{ usernames[item.sender_id] || 'Loading...' }}</span>
                     </template>
 
-                    <template #item.receiver_id="{ item }">
+                    <template #item.receiver="{ item }">
                         <span>{{ usernames[item.receiver_id] || 'Loading...' }}</span>
                     </template>
                 </v-data-table>
+                <v-btn class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
+                    :text="$t('deleteAllMessages')"></v-btn>
             </v-card-text>
 
             <v-card-actions class="justify-center">
@@ -42,12 +48,15 @@ const maxPages = ref(1)
 const messages = ref<any[]>([])
 const loading = ref(false)
 const usernames = ref<Record<number, string>>({})
+const search = ref('')
 
 const headers = [
-    { title: t('sender'), value: 'sender_id' },
-    { title: t('receiver'), value: 'receiver_id' },
-    { title: t('tweet'), value: 'tweet_id' },
-    { title: t('comment'), value: 'comment_id' },
+    { title: t('senderId'), value: 'sender_id' },
+    { title: t('receiverId'), value: 'receiver_id' },
+    { title: t('sender'), value: 'sender' },
+    { title: t('receiver'), value: 'receiver' },
+    { title: t('tweetId'), value: 'tweet_id' },
+    { title: t('commentId'), value: 'comment_id' },
     { title: t('content'), value: 'content' },
     { title: t('createdAt'), value: 'created_at' }
 ]
@@ -88,7 +97,7 @@ async function fetchMessages() {
 async function loadUsername(id: number) {
     if (usernames.value[id]) return
     try {
-        const {user} = <any>await $fetch(`/api/user/${id}`)
+        const { user } = <any>await $fetch(`/api/user/${id}`)
         usernames.value[id] = user.username || 'Unknown User'
     } catch {
         usernames.value[id] = 'Unknown User'

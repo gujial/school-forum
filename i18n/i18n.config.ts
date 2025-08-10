@@ -79,6 +79,10 @@ export default defineI18nConfig(() => ({
       commentId: "Comment ID",
       tweet: "Tweet",
       comment: "Comment",
+      senderId: "Sender ID",
+      receiverId: "Receiver ID",
+      deleteAllMessages: "Delete All Messages",
+      searchIdContentTime: "Search by ID, Content or Time",
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -195,8 +199,12 @@ export default defineI18nConfig(() => ({
       receiver: "接收者",
       tweetId: "推文ID",
       commentId: "评论ID",
+      senderId: "发送者ID",
+      receiverId: "接收者ID",
       tweet: "推文",
       comment: "评论",
+      deleteAllMessages: "删除所有消息",
+      searchIdContentTime: "按ID、内容或时间搜索",
       $vuetify: {
         input: {
           prependAction: '添加图片',

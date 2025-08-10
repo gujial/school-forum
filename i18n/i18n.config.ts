@@ -122,7 +122,10 @@ export default defineI18nConfig(() => ({
           rootAriaLabel: 'Root',
           previousAriaLabel: 'Previous Page',
           nextAriaLabel: 'Next Page',
-          itemsPerPageAll: 'All'
+          itemsPerPageAll: 'All',
+        },
+        dataIterator: {
+          loadingText: 'Loading...'
         }
       }
     },
@@ -247,7 +250,10 @@ export default defineI18nConfig(() => ({
           rootAriaLabel: '根',
           previousAriaLabel: '上一页',
           nextAriaLabel: '下一页',
-          itemsPerPageAll: '全部'
+          itemsPerPageAll: '全部',
+        },
+        dataIterator: {
+          loadingText: '加载中'
         }
       }
     }

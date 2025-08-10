@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     const offset = (page - 1) * limit
 
     try {
-        const result = await db.sql`SELECT COUNT(*) AS total FROM Messages WHERE receiver_id = ${userInfo.userId}`
+        const result = await db.sql`SELECT COUNT(*) AS total FROM Messages WHERE receiver_id = ${userInfo.userId} AND sender_id != ${userInfo.userId}`
         if (result.rows === undefined) {
             throw new Error('Failed to retrieve message count')
         }
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
         const maxPages = Math.ceil(total / limit);
 
         const { rows } =
-            await db.sql`SELECT * FROM Messages WHERE receiver_id = ${userInfo.userId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+            await db.sql`SELECT * FROM Messages WHERE receiver_id = ${userInfo.userId} AND sender_id != ${userInfo.userId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
 
         if (rows === undefined) {
             throw new Error('Query returned undefined')

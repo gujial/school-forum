@@ -10,7 +10,7 @@
         <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
         }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
-            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
+            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'" :id="`comment-${comment.comment_id}`">
             <template #prepend>
                 <v-avatar size="40" @click="navigateTo(`/profile/${users[index].user_id}`)">
                     <v-img v-if="avatars[index]" :src="avatars[index]" />
@@ -204,6 +204,18 @@ const updateComments = async () => {
         }
 
         ready.value = true
+
+        nextTick(() => {
+            const hash = window.location.hash
+            if (hash && hash.startsWith('#comment-')) {
+                const target = document.querySelector(hash)
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    target.classList.add('highlight-comment')
+                    setTimeout(() => target.classList.remove('highlight-comment'), 2000)
+                }
+            }
+        })
     } catch (err) {
         error.value = err.message || err
     }
@@ -234,5 +246,14 @@ const showDeleteDialog = (comment) => {
 <style scoped>
 .reply-list {
     margin-top: 8px;
+}
+
+.highlight-comment {
+    animation: flash-bg 1s ease-in-out 2;
+}
+
+@keyframes flash-bg {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(255, 255, 0, 0.3); }
 }
 </style>

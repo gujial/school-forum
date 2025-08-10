@@ -24,6 +24,16 @@
                         <span>{{ usernames[item.receiver_id] || 'Loading...' }}</span>
                     </template>
 
+                    <template #item.tweet_id="{ item }">
+                        <v-btn v-if="item.tweet_id" :to="`/detail/${item.tweet_id}`" text>{{ item.tweet_id }}</v-btn>
+                        <span v-else>-</span>
+                    </template>
+
+                    <template #item.comment_id="{ item }">
+                        <v-btn v-if="item.comment_id" :to="`/detail/${item.tweet_id}#comment-${item.comment_id}`" text>{{ item.comment_id }}</v-btn>
+                        <span v-else>-</span>
+                    </template>
+
                     <template v-slot:item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
                             <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteMessage(item.message_id)"></v-icon>

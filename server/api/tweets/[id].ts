@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     try {
         const { rows } = await db.sql`SELECT t.*, GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
        FROM Tweets t LEFT JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
-       LEFT JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id WHERE t.tweet_id = ${tweetId}`;
+       LEFT JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id WHERE t.tweet_id = ${tweetId} GROUP BY t.tweet_id`;
 
         if (rows === undefined) {
             throw new Error('Query returned undefined');

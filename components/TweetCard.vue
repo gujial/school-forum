@@ -225,19 +225,6 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   align-items: center;
 }
 
-.tag-list-wrapper::after {
-  content: '...';
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  padding-left: 12px;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  color: #555;
-}
-
 .no-interaction {
   pointer-events: none;
   user-select: none;

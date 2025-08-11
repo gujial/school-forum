@@ -90,6 +90,7 @@ export default defineI18nConfig(() => ({
       school: 'School',
       more: 'More',
       presetTags: 'Preset Tags',
+      filter: 'Filter',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -222,6 +223,7 @@ export default defineI18nConfig(() => ({
       school: '校园',
       more: '更多',
       presetTags: '预设标签',
+      filter: '筛选',
       $vuetify: {
         input: {
           prependAction: '添加图片',

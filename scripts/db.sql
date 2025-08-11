@@ -194,11 +194,11 @@ BEGIN
         WHERE FIND_IN_SET(tag2.name, p_tags_text)
         GROUP BY t2.tweet_id
         HAVING COUNT(DISTINCT tag2.name) = v_tag_count
-        ORDER BY t2.created_at DESC
+        ORDER BY t2.created_at
         LIMIT p_limit OFFSET p_offset
     )
     GROUP BY t.tweet_id
-    ORDER BY t.created_at;
+    ORDER BY t.created_at DESC;
 END$$
 
 DELIMITER ;

@@ -16,7 +16,10 @@
     <v-tabs v-model="tab" background-color="primary">
       <v-tab key="all">{{ $t('all') }}</v-tab>
       <v-tab key="school">{{ $t('school') }}</v-tab>
-      <v-tab key="more" @click="()=>{tab=0;navigateTo(localePath('/tags'))}">{{ $t('more') }}</v-tab>
+      <v-tab key="school">{{ $t('biaobai') }}</v-tab>
+      <v-tab key="school">{{ $t('help') }}</v-tab>
+      <v-tab key="school">{{ $t('news') }}</v-tab>
+      <v-tab key="more" @click="() => { tab = 0; navigateTo(localePath('/tags')) }">{{ $t('more') }}</v-tab>
     </v-tabs>
     <v-row v-if="tweets != null">
       <v-alert v-if="tweets.length == 0" type="info" style="margin: 20px;">{{ $t('noTweets') }}</v-alert>
@@ -57,6 +60,18 @@ const updateTweets = async () => {
     pageCount.value = data.maxPages
   } else if (tab.value === 1) {
     const data = await $fetch(`/api/tweets/by_tags_desc?tags=school&page=${currentPage.value}?pageSize=20`)
+    tweets.value = data.data
+    pageCount.value = data.maxPages
+  } else if (tab.value === 2) {
+    const data = await $fetch(`/api/tweets/by_tags_desc?tags=school,biaobai&page=${currentPage.value}?pageSize=20`)
+    tweets.value = data.data
+    pageCount.value = data.maxPages
+  } else if (tab.value === 3) {
+    const data = await $fetch(`/api/tweets/by_tags_desc?tags=school,help&page=${currentPage.value}?pageSize=20`)
+    tweets.value = data.data
+    pageCount.value = data.maxPages
+  } else if (tab.value === 4) {
+    const data = await $fetch(`/api/tweets/by_tags_desc?tags=school,news&page=${currentPage.value}?pageSize=20`)
     tweets.value = data.data
     pageCount.value = data.maxPages
   }

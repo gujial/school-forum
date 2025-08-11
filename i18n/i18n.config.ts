@@ -93,6 +93,9 @@ export default defineI18nConfig(() => ({
       filter: 'Filter',
       ascending: 'Ascending',
       descending: 'Descending',
+      biaobai: 'Biaobai wall',
+      help: 'Help',
+      news: 'News',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -228,6 +231,9 @@ export default defineI18nConfig(() => ({
       filter: '筛选',
       ascending: '升序',
       descending: '降序',
+      biaobai: '表白墙',
+      help: '帮帮墙',
+      news: '资讯',
       $vuetify: {
         input: {
           prependAction: '添加图片',

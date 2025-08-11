@@ -96,6 +96,7 @@ export default defineI18nConfig(() => ({
       biaobai: 'Biaobai wall',
       help: 'Help',
       news: 'News',
+      tags: 'Tags',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -234,6 +235,7 @@ export default defineI18nConfig(() => ({
       biaobai: '表白墙',
       help: '帮帮墙',
       news: '资讯',
+      tags: '标签',
       $vuetify: {
         input: {
           prependAction: '添加图片',

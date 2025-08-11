@@ -2,6 +2,8 @@
     <div class="tag-editor">
         <v-text-field v-model="inputTag" :label="$t('tags')" @keydown.enter.prevent="addTag" @blur="addTag"
             placeholder="请输入标签，按回车或逗号添加" clearable />
+            <span>{{ $t('presetTags') }}: </span>
+        <v-btn @click="()=>{tags.push('school');emit('update:modelValue', tags)}">{{ $t('school') }}</v-btn>
         <div class="tag-list" v-if="tags.length > 0">
             <v-chip v-for="(tag, index) in tags" :key="index" close @click:close="removeTag(index)" class="ma-1"
                 color="primary" text-color="white">

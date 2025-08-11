@@ -9,6 +9,9 @@
                             <div id="vditor"></div>
                         </v-form>
                     </v-card-text>
+                    <v-card-text>
+                        <TagEditor v-model="tags" />
+                    </v-card-text>
                     <MediaEditor ref="mediaEditorRef" />
                     <v-card-actions>
                         <v-btn text @click="postTweet">{{ $t('post') }}</v-btn>
@@ -25,6 +28,7 @@
 <script setup>
 import MediaEditor from '~/components/MediaEditor.vue';
 import Vditor from 'vditor';
+import TagEditor from '~/components/TagEditor.vue';
 import 'vditor/dist/index.css';
 
 const user = ref(null)
@@ -37,6 +41,7 @@ const colorMode = useColorMode();
 const attachments = ref([])
 const route = useRoute()
 const parent_id = route.query.parent_id || null;
+const tags = ref([]);
 
 const postTweet = async () => {
     if (!vditor.value || vditor.value.getValue().trim() === '') {
@@ -52,7 +57,8 @@ const postTweet = async () => {
             body: JSON.stringify({
                 content: vditor.value.getValue(),
                 parent_id: parent_id,
-                attachments: attachments.value
+                attachments: attachments.value,
+                tags: tags.value
             })
         })
 

@@ -136,40 +136,32 @@ DELIMITER $$
 
 CREATE PROCEDURE add_tweet_tags(
     IN p_tweet_id BIGINT,
-    IN p_tags_text TEXT -- 逗号分隔的标签，比如 'news,tech,ai'
+    IN p_tags_text VARCHAR(255) CHARACTER SET utf8mb4
 )
 BEGIN
-    DECLARE v_tag_name VARCHAR(50);
+    DECLARE v_tags_text VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT p_tags_text;
+    DECLARE v_tag_name VARCHAR(50) CHARACTER SET utf8mb4;
     DECLARE v_tag_id BIGINT;
 
-    WHILE LENGTH(p_tags_text) > 0 DO
-        -- 取出第一个标签（去掉前后空格）
-        SET v_tag_name = TRIM(SUBSTRING_INDEX(p_tags_text, ',', 1));
+    WHILE LENGTH(v_tags_text) > 0 DO
+        SET v_tag_name = TRIM(SUBSTRING_INDEX(v_tags_text, ',', 1));
+        SET v_tag_id = NULL;
 
-        -- 如果标签非空才处理
         IF v_tag_name <> '' THEN
-            -- 1. 检查是否存在
-            SELECT tag_id INTO v_tag_id
-            FROM TAGS
-            WHERE name = v_tag_name
-            LIMIT 1;
+            SELECT tag_id INTO v_tag_id FROM TAGS WHERE name = v_tag_name LIMIT 1;
 
-            -- 2. 如果不存在就创建
             IF v_tag_id IS NULL THEN
                 INSERT INTO TAGS (name) VALUES (v_tag_name);
                 SET v_tag_id = LAST_INSERT_ID();
             END IF;
 
-            -- 3. 插入 TweetTags（避免重复）
-            INSERT IGNORE INTO TweetTags (tweet_id, tag_id)
-            VALUES (p_tweet_id, v_tag_id);
+            INSERT IGNORE INTO TweetTags (tweet_id, tag_id) VALUES (p_tweet_id, v_tag_id);
         END IF;
 
-        -- 删除已处理的标签
-        IF p_tags_text LIKE '%,%' THEN
-            SET p_tags_text = SUBSTRING(p_tags_text, LENGTH(SUBSTRING_INDEX(p_tags_text, ',', 1)) + 2);
+        IF v_tags_text LIKE '%,%' THEN
+            SET v_tags_text = SUBSTRING(v_tags_text, LENGTH(SUBSTRING_INDEX(v_tags_text, ',', 1)) + 2);
         ELSE
-            SET p_tags_text = '';
+            SET v_tags_text = '';
         END IF;
     END WHILE;
 END$$
@@ -179,25 +171,34 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE get_tweets_by_tags_desc(
-    IN p_tags_text TEXT,
+    IN p_tags_text VARCHAR(255) CHARACTER SET utf8mb4,
     IN p_limit INT,
     IN p_offset INT
 )
 BEGIN
     DECLARE v_tag_count INT DEFAULT 0;
 
-    -- 计算标签数量 = 逗号数 + 1
     SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
 
-    SELECT t.*
+    SELECT 
+        t.*,
+        GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
     FROM Tweets t
     JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
-    JOIN TAGS tag ON tt.tag_id = tag.tag_id
-    WHERE FIND_IN_SET(tag.name, p_tags_text)
+    JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id
+    WHERE t.tweet_id IN (
+        SELECT t2.tweet_id
+        FROM Tweets t2
+        JOIN TweetTags tt2 ON t2.tweet_id = tt2.tweet_id
+        JOIN TAGS tag2 ON tt2.tag_id = tag2.tag_id
+        WHERE FIND_IN_SET(tag2.name, p_tags_text)
+        GROUP BY t2.tweet_id
+        HAVING COUNT(DISTINCT tag2.name) = v_tag_count
+        ORDER BY t2.created_at DESC
+        LIMIT p_limit OFFSET p_offset
+    )
     GROUP BY t.tweet_id
-    HAVING COUNT(DISTINCT tag.name) = v_tag_count
-    ORDER BY t.created_at DESC
-    LIMIT p_limit OFFSET p_offset;
+    ORDER BY t.created_at;
 END$$
 
 DELIMITER ;
@@ -205,7 +206,7 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE get_tweets_by_tags_asc(
-    IN p_tags_text TEXT,
+    IN p_tags_text VARCHAR(255) CHARACTER SET utf8mb4,
     IN p_limit INT,
     IN p_offset INT
 )
@@ -214,15 +215,25 @@ BEGIN
 
     SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
 
-    SELECT t.*
+    SELECT 
+        t.*,
+        GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
     FROM Tweets t
     JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
-    JOIN TAGS tag ON tt.tag_id = tag.tag_id
-    WHERE FIND_IN_SET(tag.name, p_tags_text)
+    JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id
+    WHERE t.tweet_id IN (
+        SELECT t2.tweet_id
+        FROM Tweets t2
+        JOIN TweetTags tt2 ON t2.tweet_id = tt2.tweet_id
+        JOIN TAGS tag2 ON tt2.tag_id = tag2.tag_id
+        WHERE FIND_IN_SET(tag2.name, p_tags_text)
+        GROUP BY t2.tweet_id
+        HAVING COUNT(DISTINCT tag2.name) = v_tag_count
+        ORDER BY t2.created_at
+        LIMIT p_limit OFFSET p_offset
+    )
     GROUP BY t.tweet_id
-    HAVING COUNT(DISTINCT tag.name) = v_tag_count
-    ORDER BY t.created_at
-    LIMIT p_limit OFFSET p_offset;
+    ORDER BY t.created_at;
 END$$
 
 DELIMITER ;

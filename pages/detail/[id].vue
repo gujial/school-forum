@@ -43,6 +43,12 @@
                         </v-btn>
                         <span>{{ shareCount }}</span>
                     </v-card-actions>
+                    <div class="tag-list" v-if="tweet.tags.length > 0">
+                        <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary"
+                            text-color="white" @click="navigateTo(localePath(`/tags?tags=${tag}`))">
+                            {{ tag }}
+                        </v-chip>
+                    </div>
                     <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id"
                         @comment-posted="fetchCounts" />
                 </v-card>

@@ -15,12 +15,15 @@
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
     </v-carousel>
     <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
-    <div class="tag-list" v-if="tweet.tags.length > 0">
-      <v-chip v-for="(tag, index) in tweet.tags" :key="index" close @click:close="removeTag(index)" class="ma-1"
-        color="primary" text-color="white">
-        {{ tag }}
-      </v-chip>
-    </div>
+    <v-card-text style="flex: none;" v-if="tweet.tags.length > 0">
+      <div class="tag-list-wrapper">
+        <div class="tag-list">
+          <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary" text-color="white">
+            {{ tag }}
+          </v-chip>
+        </div>
+      </div>
+    </v-card-text>
     <v-card-actions class="d-flex justify-end">
       <v-btn icon @click.stop="likeTweet">
         <v-icon v-if="isLike">
@@ -192,12 +195,14 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
 }
 
 .text-content {
-  overflow-y: auto;
+  overflow-y: hidden;
+  max-height: 80%;
 }
 
 .retweet {
   margin: 5px;
   height: fit-content;
+  flex: none;
 }
 
 .retweet p {
@@ -208,11 +213,28 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   color: #848484;
 }
 
+.tag-list-wrapper {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
-    margin-top: 4px;
-    max-height: 20%;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.tag-list-wrapper::after {
+  content: '...';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #555;
 }
 </style>

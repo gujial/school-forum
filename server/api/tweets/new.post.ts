@@ -39,7 +39,6 @@ export default defineEventHandler(async (event) => {
 
         if (body['tags'] && body['tags'].length > 0) {
             const tagStr = Array.isArray(body['tags']) ? body['tags'].join(',') : body['tags'];
-            console.log('Adding tags:', tagStr);
             await db.sql`CALL add_tweet_tags(${tweetId}, ${tagStr})`;
         }
 

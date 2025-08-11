@@ -9,7 +9,7 @@
     <v-card-text v-if="tweet.parent_tweet" class="retweet">
       <p>{{ tweet.parent_tweet.content }}</p>
     </v-card-text>
-    <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia }" :id="`preview${tweet.tweet_id}`">
+    <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true  }" :id="`preview${tweet.tweet_id}`">
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
@@ -236,5 +236,10 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   align-items: center;
   font-weight: bold;
   color: #555;
+}
+
+.no-interaction {
+  pointer-events: none;
+  user-select: none;
 }
 </style>

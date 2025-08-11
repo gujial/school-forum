@@ -32,7 +32,15 @@ export default defineEventHandler(async (event) => {
     const maxPages = Math.ceil(total / limit);
 
     const { rows } =
-      await db.sql`SELECT * FROM Tweets ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+      await db.sql`SELECT 
+        t.*,
+        GROUP_CONCAT(tag.name ORDER BY tag.name SEPARATOR ',') AS tags
+      FROM Tweets t
+      LEFT JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
+      LEFT JOIN TAGS tag ON tt.tag_id = tag.tag_id
+      GROUP BY t.tweet_id
+      ORDER BY t.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}`
 
     if (rows === undefined) {
       throw new Error('Query returned undefined')

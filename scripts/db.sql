@@ -81,6 +81,13 @@ CREATE TABLE IF NOT EXISTS TweetTags (
                             FOREIGN KEY (tag_id) REFERENCES TAGS(tag_id)
 );
 
+drop trigger if exists before_tweet_tags_delete;
+drop trigger if exists before_tweet_delete;
+drop trigger if exists before_comment_delete;
+drop procedure if exists add_tweet_tags;
+drop procedure if exists get_tweets_by_tags_desc;
+drop procedure if exists get_tweets_by_tags_asc;
+
 DELIMITER $$
 
 CREATE TRIGGER before_tweet_tags_delete
@@ -172,42 +179,25 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE get_tweets_by_tags_desc(
-    IN p_tags_text TEXT
+    IN p_tags_text TEXT,
+    IN p_limit INT,
+    IN p_offset INT
 )
 BEGIN
-    DECLARE v_tag_name VARCHAR(50);
     DECLARE v_tag_count INT DEFAULT 0;
 
-    -- 临时表保存匹配到的 tag_id
-    CREATE TEMPORARY TABLE tmp_tag_ids (tag_id BIGINT PRIMARY KEY);
+    -- 计算标签数量 = 逗号数 + 1
+    SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
 
-    -- 解析标签字符串
-    WHILE LENGTH(p_tags_text) > 0 DO
-        SET v_tag_name = TRIM(SUBSTRING_INDEX(p_tags_text, ',', 1));
-
-        IF v_tag_name <> '' THEN
-            INSERT IGNORE INTO tmp_tag_ids (tag_id)
-            SELECT tag_id FROM TAGS WHERE name = v_tag_name;
-            SET v_tag_count = v_tag_count + 1;
-        END IF;
-
-        IF p_tags_text LIKE '%,%' THEN
-            SET p_tags_text = SUBSTRING(p_tags_text, LENGTH(SUBSTRING_INDEX(p_tags_text, ',', 1)) + 2);
-        ELSE
-            SET p_tags_text = '';
-        END IF;
-    END WHILE;
-
-    -- 查询必须包含所有标签的推文
     SELECT t.*
     FROM Tweets t
     JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
-    JOIN tmp_tag_ids ti ON tt.tag_id = ti.tag_id
+    JOIN TAGS tag ON tt.tag_id = tag.tag_id
+    WHERE FIND_IN_SET(tag.name, p_tags_text)
     GROUP BY t.tweet_id
-    HAVING COUNT(DISTINCT tt.tag_id) = v_tag_count
-    ORDER BY t.created_at DESC;
-
-    DROP TEMPORARY TABLE tmp_tag_ids;
+    HAVING COUNT(DISTINCT tag.name) = v_tag_count
+    ORDER BY t.created_at DESC
+    LIMIT p_limit OFFSET p_offset;
 END$$
 
 DELIMITER ;
@@ -215,42 +205,24 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE get_tweets_by_tags_asc(
-    IN p_tags_text TEXT
+    IN p_tags_text TEXT,
+    IN p_limit INT,
+    IN p_offset INT
 )
 BEGIN
-    DECLARE v_tag_name VARCHAR(50);
     DECLARE v_tag_count INT DEFAULT 0;
 
-    -- 临时表保存匹配到的 tag_id
-    CREATE TEMPORARY TABLE tmp_tag_ids (tag_id BIGINT PRIMARY KEY);
+    SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
 
-    -- 解析标签字符串
-    WHILE LENGTH(p_tags_text) > 0 DO
-        SET v_tag_name = TRIM(SUBSTRING_INDEX(p_tags_text, ',', 1));
-
-        IF v_tag_name <> '' THEN
-            INSERT IGNORE INTO tmp_tag_ids (tag_id)
-            SELECT tag_id FROM TAGS WHERE name = v_tag_name;
-            SET v_tag_count = v_tag_count + 1;
-        END IF;
-
-        IF p_tags_text LIKE '%,%' THEN
-            SET p_tags_text = SUBSTRING(p_tags_text, LENGTH(SUBSTRING_INDEX(p_tags_text, ',', 1)) + 2);
-        ELSE
-            SET p_tags_text = '';
-        END IF;
-    END WHILE;
-
-    -- 查询必须包含所有标签的推文
     SELECT t.*
     FROM Tweets t
     JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
-    JOIN tmp_tag_ids ti ON tt.tag_id = ti.tag_id
+    JOIN TAGS tag ON tt.tag_id = tag.tag_id
+    WHERE FIND_IN_SET(tag.name, p_tags_text)
     GROUP BY t.tweet_id
-    HAVING COUNT(DISTINCT tt.tag_id) = v_tag_count
-    ORDER BY t.created_at;
-
-    DROP TEMPORARY TABLE tmp_tag_ids;
+    HAVING COUNT(DISTINCT tag.name) = v_tag_count
+    ORDER BY t.created_at
+    LIMIT p_limit OFFSET p_offset;
 END$$
 
 DELIMITER ;

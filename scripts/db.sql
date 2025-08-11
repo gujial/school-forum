@@ -127,28 +127,44 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE add_tweet_tag(
+CREATE PROCEDURE add_tweet_tags(
     IN p_tweet_id BIGINT,
-    IN p_tag_name VARCHAR(50)
+    IN p_tags_text TEXT -- 逗号分隔的标签，比如 'news,tech,ai'
 )
 BEGIN
+    DECLARE v_tag_name VARCHAR(50);
     DECLARE v_tag_id BIGINT;
 
-    -- 检查标签是否存在
-    SELECT tag_id INTO v_tag_id
-    FROM TAGS
-    WHERE name = p_tag_name
-    LIMIT 1;
+    WHILE LENGTH(p_tags_text) > 0 DO
+        -- 取出第一个标签（去掉前后空格）
+        SET v_tag_name = TRIM(SUBSTRING_INDEX(p_tags_text, ',', 1));
 
-    -- 如果不存在，则创建
-    IF v_tag_id IS NULL THEN
-        INSERT INTO TAGS (name) VALUES (p_tag_name);
-        SET v_tag_id = LAST_INSERT_ID();
-    END IF;
+        -- 如果标签非空才处理
+        IF v_tag_name <> '' THEN
+            -- 1. 检查是否存在
+            SELECT tag_id INTO v_tag_id
+            FROM TAGS
+            WHERE name = v_tag_name
+            LIMIT 1;
 
-    -- 插入 TweetTags 关联
-    INSERT IGNORE INTO TweetTags (tweet_id, tag_id)
-    VALUES (p_tweet_id, v_tag_id);
+            -- 2. 如果不存在就创建
+            IF v_tag_id IS NULL THEN
+                INSERT INTO TAGS (name) VALUES (v_tag_name);
+                SET v_tag_id = LAST_INSERT_ID();
+            END IF;
+
+            -- 3. 插入 TweetTags（避免重复）
+            INSERT IGNORE INTO TweetTags (tweet_id, tag_id)
+            VALUES (p_tweet_id, v_tag_id);
+        END IF;
+
+        -- 删除已处理的标签
+        IF p_tags_text LIKE '%,%' THEN
+            SET p_tags_text = SUBSTRING(p_tags_text, LENGTH(SUBSTRING_INDEX(p_tags_text, ',', 1)) + 2);
+        ELSE
+            SET p_tags_text = '';
+        END IF;
+    END WHILE;
 END$$
 
 DELIMITER ;

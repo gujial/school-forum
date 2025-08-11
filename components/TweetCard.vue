@@ -1,6 +1,7 @@
 <template>
   <v-card v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
-    style="display: flex; flex-direction: column;" :height="props.height" :max-height="props.maxHeight" @click="goToDetail">
+    style="display: flex; flex-direction: column;" :height="props.height" :max-height="props.maxHeight"
+    @click="goToDetail">
     <v-divider />
     <v-alert v-if="error != null" type="error">
       {{ error }}
@@ -14,6 +15,12 @@
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
     </v-carousel>
     <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
+    <div class="tag-list" v-if="tweet.tags.length > 0">
+      <v-chip v-for="(tag, index) in tweet.tags" :key="index" close @click:close="removeTag(index)" class="ma-1"
+        color="primary" text-color="white">
+        {{ tag }}
+      </v-chip>
+    </div>
     <v-card-actions class="d-flex justify-end">
       <v-btn icon @click.stop="likeTweet">
         <v-icon v-if="isLike">
@@ -199,5 +206,11 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   text-overflow: ellipsis;
   font-style: italic;
   color: #848484;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 4px;
 }
 </style>

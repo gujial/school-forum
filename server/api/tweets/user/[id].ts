@@ -22,7 +22,15 @@ export default defineEventHandler(async (event) => {
     const { rows: countRows } = await db.sql`
       SELECT COUNT(*) AS count FROM Tweets WHERE user_id = ${userId}
     `
-    return { success: true, data: rows, total: Number(countRows[0].count) }
+
+    const tweets = Array.isArray(rows) && Array.isArray(rows[0]) ? rows[0] : rows;
+
+    const processedTweets = tweets.map(tweet => ({
+      ...tweet,
+      tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : []
+    }));
+
+    return { success: true, data: processedTweets, total: Number(countRows[0].count) }
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e)
     return { success: false, message }

@@ -50,9 +50,14 @@ export default defineEventHandler(async (event) => {
 
         const tweets = Array.isArray(rows) && Array.isArray(rows[0]) ? rows[0] : rows;
 
+        const processedTweets = tweets.map(tweet => ({
+            ...tweet,
+            tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : []
+        }));
+
         return {
             success: true,
-            data: tweets,
+            data: processedTweets,
             maxPages: maxPages
         };
     } catch (error) {

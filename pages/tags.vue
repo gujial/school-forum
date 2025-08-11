@@ -19,8 +19,8 @@
                 <TweetCard :tweet="tweet" />
             </v-col>
         </v-row>
-        <v-alert v-else-if="!loading" type="info" v-if="loaded">{{ $t('noTweets') }}</v-alert>
-        <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
+        <v-alert v-else-if="!loading&&!error" type="info" v-if="loaded">{{ $t('noTweets') }}</v-alert>
+        <v-alert v-else-if="!error" type="info">{{ $t('loading') }}</v-alert>
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>
@@ -30,7 +30,6 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
 import TweetCard from '~/components/TweetCard.vue'
 
 const tagInput = ref('')
@@ -59,8 +58,15 @@ async function fetchTweets() {
                 : `/api/tweets/by_tags_desc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
 
         const res = await $fetch(url)
-        tweets.value = res.data || []
-        maxPages.value = res.maxPages || 1
+        if (res.success) {
+            tweets.value = res.data
+            maxPages.value = res.maxPages
+            loaded.value = true
+        } else {
+            error.value = res.message || 'Failed to fetch tweets'
+            tweets.value = []
+            maxPages.value = 1
+        }
     } catch (e) {
         tweets.value = []
         maxPages.value = 1
@@ -83,4 +89,14 @@ function applyFilter() {
 
 watch(currentPage, fetchTweets)
 watch(order, fetchTweets)
+
+const route = useRoute()
+
+onMounted(() => {
+  const queryTags = route.query.tags
+  if (queryTags && typeof queryTags === 'string' && queryTags.trim()) {
+    tagInput.value = queryTags
+    applyFilter()
+  }
+})
 </script>

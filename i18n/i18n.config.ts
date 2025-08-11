@@ -91,6 +91,8 @@ export default defineI18nConfig(() => ({
       more: 'More',
       presetTags: 'Preset Tags',
       filter: 'Filter',
+      ascending: 'Ascending',
+      descending: 'Descending',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -224,6 +226,8 @@ export default defineI18nConfig(() => ({
       more: '更多',
       presetTags: '预设标签',
       filter: '筛选',
+      ascending: '升序',
+      descending: '降序',
       $vuetify: {
         input: {
           prependAction: '添加图片',

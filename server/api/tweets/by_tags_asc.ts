@@ -26,6 +26,16 @@ export default defineEventHandler(async (event) => {
 
     const tagStr = Array.isArray(tags) ? tags.join(',') : tags;
 
+    const tagArray = tagStr.split(',').map((t: string) => t.trim()).filter((t: string | any[]) => t.length > 0);
+    const uniqueTags = new Set(tagArray);
+
+    if (uniqueTags.size !== tagArray.length) {
+        return {
+            success: false,
+            message: 'Tags parameter contains duplicate tags'
+        };
+    }
+
     // 计算 LIMIT OFFSET
     const offset = (page - 1) * pageSize;
     const tagCount = (tagStr.match(/,/g) || []).length + 1;

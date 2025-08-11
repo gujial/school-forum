@@ -211,6 +211,8 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
 .tag-list {
     display: flex;
     flex-wrap: wrap;
+    overflow: hidden;
     margin-top: 4px;
+    max-height: 20%;
 }
 </style>

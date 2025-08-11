@@ -180,6 +180,91 @@ BEGIN
 
     SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
 
+    CREATE TEMPORARY TABLE IF NOT EXISTS temp_tweet_ids (tweet_id BIGINT PRIMARY KEY);
+
+    TRUNCATE TABLE temp_tweet_ids;
+
+    INSERT INTO temp_tweet_ids (tweet_id)
+    SELECT t2.tweet_id
+    FROM Tweets t2
+    JOIN TweetTags tt2 ON t2.tweet_id = tt2.tweet_id
+    JOIN TAGS tag2 ON tt2.tag_id = tag2.tag_id
+    WHERE FIND_IN_SET(tag2.name, p_tags_text)
+    GROUP BY t2.tweet_id
+    HAVING COUNT(DISTINCT tag2.name) = v_tag_count
+    ORDER BY t2.created_at DESC
+    LIMIT p_limit OFFSET p_offset;
+
+    SELECT 
+        t.*,
+        GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
+    FROM Tweets t
+    JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
+    JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id
+    JOIN temp_tweet_ids temp ON t.tweet_id = temp.tweet_id
+    GROUP BY t.tweet_id
+    ORDER BY t.created_at DESC;
+
+    DROP TEMPORARY TABLE IF EXISTS temp_tweet_ids;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE get_tweets_by_tags_asc(
+    IN p_tags_text VARCHAR(255) CHARACTER SET utf8mb4,
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    DECLARE v_tag_count INT DEFAULT 0;
+
+    SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
+
+    CREATE TEMPORARY TABLE IF NOT EXISTS temp_tweet_ids (tweet_id BIGINT PRIMARY KEY);
+
+    TRUNCATE TABLE temp_tweet_ids;
+
+    INSERT INTO temp_tweet_ids (tweet_id)
+    SELECT t2.tweet_id
+    FROM Tweets t2
+    JOIN TweetTags tt2 ON t2.tweet_id = tt2.tweet_id
+    JOIN TAGS tag2 ON tt2.tag_id = tag2.tag_id
+    WHERE FIND_IN_SET(tag2.name, p_tags_text)
+    GROUP BY t2.tweet_id
+    HAVING COUNT(DISTINCT tag2.name) = v_tag_count
+    ORDER BY t2.created_at ASC
+    LIMIT p_limit OFFSET p_offset;
+
+    SELECT 
+        t.*,
+        GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
+    FROM Tweets t
+    JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
+    JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id
+    JOIN temp_tweet_ids temp ON t.tweet_id = temp.tweet_id
+    GROUP BY t.tweet_id
+    ORDER BY t.created_at ASC;
+
+    DROP TEMPORARY TABLE IF EXISTS temp_tweet_ids;
+END$$
+
+DELIMITER ;
+
+/* Oceanbase LIMIT 子查询版本 */
+DELIMITER $$
+
+CREATE PROCEDURE get_tweets_by_tags_desc(
+    IN p_tags_text VARCHAR(255) CHARACTER SET utf8mb4,
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    DECLARE v_tag_count INT DEFAULT 0;
+
+    SET v_tag_count = LENGTH(p_tags_text) - LENGTH(REPLACE(p_tags_text, ',', '')) + 1;
+
     SELECT 
         t.*,
         GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags

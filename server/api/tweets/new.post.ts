@@ -31,9 +31,15 @@ export default defineEventHandler(async (event) => {
                 message: 'Create tweet failed'
             })
         }
+        const tweetId = rows[0].tweet_id;
 
         for (const file of body['attachments'] || []) {
             await db.sql`UPDATE Media SET tweet_id = ${rows[0].tweet_id} WHERE tweet_id IS NULL AND media_type = ${'all'} AND media_url = ${file}`
+        }
+
+        if (body['tags'] && body['tags'].length > 0) {
+            const tagStr = Array.isArray(body['tags']) ? body['tags'].join(',') : body['tags'];
+            await db.sql`CALL add_tweet_tags(${tweetId}, ${tagStr})`;
         }
 
         return {

@@ -3,15 +3,12 @@
         <v-text-field v-model="inputTag" :label="$t('tags')" @keydown.enter.prevent="addTag" @blur="addTag"
             placeholder="请输入标签，按回车或逗号添加" clearable />
         <span>{{ $t('presetTags') }}: </span>
-        <v-btn @click="() => { tags.push('school'); emit('update:modelValue', tags) }">{{ $t('school') }}</v-btn>
-        <v-btn @click="() => { tags.push('school'); tags.push('biaobai'); emit('update:modelValue', tags) }">{{ $t('biaobai')
-            }}</v-btn>
-        <v-btn @click="() => { tags.push('school'); tags.push('help'); emit('update:modelValue', tags) }">{{ $t('help')
-            }}</v-btn>
-        <v-btn @click="() => { tags.push('school'); tags.push('news'); emit('update:modelValue', tags) }">{{ $t('news')
-            }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school'])">{{ $t('school') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'biaobai'])">{{ $t('biaobai') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'help'])">{{ $t('help') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'news'])">{{ $t('news') }}</v-btn>
         <div class="tag-list" v-if="tags.length > 0">
-            <v-chip v-for="(tag, index) in tags" :key="index" close @click:close="removeTag(index)" class="ma-1"
+            <v-chip v-for="(tag, index) in tags" :key="tag" closable @click:close="removeTag(index)" class="ma-1"
                 color="primary" text-color="white">
                 {{ tag }}
             </v-chip>
@@ -53,6 +50,14 @@ function addTag() {
     emit('update:modelValue', tags.value);
 }
 
+function addTagFromPreset(presetTags) {
+    presetTags.forEach(tag => {
+        if (!tags.value.includes(tag)) {
+            tags.value.push(tag);
+        }
+    });
+    emit('update:modelValue', tags.value);
+}
 function removeTag(index) {
     tags.value.splice(index, 1);
     emit('update:modelValue', tags.value);

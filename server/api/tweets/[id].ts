@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
         }
 
         const tweet = rows[0];
-        console.log(rows)
 
         const processedTweet = {
             ...tweet,

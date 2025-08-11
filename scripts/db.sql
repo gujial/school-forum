@@ -77,6 +77,7 @@ BEGIN
     DELETE FROM Comments WHERE tweet_id = OLD.tweet_id;
     DELETE FROM Media WHERE tweet_id = OLD.tweet_id;
     DELETE FROM Likes WHERE tweet_id = OLD.tweet_id;
+    DELETE FROM Messages WHERE tweet_id = OLD.tweet_id;
 END$$
 
 DELIMITER ;

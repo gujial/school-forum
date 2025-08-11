@@ -86,6 +86,9 @@ export default defineI18nConfig(() => ({
       clickAccountToLogin: 'Click "Account" to login',
       guestUser: 'Guest User',
       actions: 'Actions',
+      all: 'All',
+      school: 'School',
+      more: 'More',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -214,6 +217,9 @@ export default defineI18nConfig(() => ({
       actions: '操作',
       guestUser: '游客用户',
       clickAccountToLogin: '点击"账户"登录',
+      all: '全部',
+      school: '校园',
+      more: '更多',
       $vuetify: {
         input: {
           prependAction: '添加图片',

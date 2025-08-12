@@ -1,3 +1,7 @@
+<!--
+这段Vue代码实现了一个登录页面，包含邮箱和密码输入框及验证逻辑。
+用户提交后调用API进行登录验证，成功则跳转首页，失败显示错误信息。
+使用了国际化（$t）处理多语言文本。-->
 <template>
   <v-container>
     <v-row class="d-flex justify-center">

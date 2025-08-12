@@ -1,3 +1,6 @@
+<!--
+这段Vue代码实现了一个用户注册页面，包含用户名、邮箱和密码输入框，使用Vuetify组件构建界面。
+用户提交表单后，前端会验证信息并调用后端API进行注册，成功则跳转至登录页，失败则显示错误信息。-->
 <template>
     <v-container>
         <v-row class="d-flex justify-center">

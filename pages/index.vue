@@ -1,3 +1,10 @@
+<!--
+这段Vue代码实现了一个用户主页，包含用户信息展示、背景图设置、推文列表分页显示及错误处理。主要功能有：
+
+  1、展示用户头像、欢迎语和发推按钮；
+  2、请求并展示用户推文，支持分页；
+  3、加载用户背景图，失败时使用默认图；
+  4、处理未登录和请求错误提示。-->
 <template>
   <v-container>
     <v-card :image="bgSrc" class="d-flex align-center head-card avatar-bg-mask" color="black">

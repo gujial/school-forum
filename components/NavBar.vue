@@ -1,3 +1,10 @@
+<!--
+ 这段Vue代码实现了一个应用顶部导航栏，包含以下功能：
+ 1、显示应用标题"TwitterClone"
+ 2、提供中英文切换按钮，点击切换语言
+ 3、提供深浅主题切换按钮，点击切换主题模式
+ 4、包含首页和账户页面的导航链接
+-->
 <template>
     <v-app-bar app>
         <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>

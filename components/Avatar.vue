@@ -1,3 +1,12 @@
+<!--
+ 这段Vue代码实现了一个用户信息卡片组件。主要功能包括：
+
+  1、展示用户头像和背景图：通过v-avatar和v-card显示用户头像及背景图片
+  2、动态获取图片资源：挂载时调用API获取用户头像和背景图URL
+  3、悬停效果：鼠标悬停时背景遮罩变透明，增强交互体验
+  4、错误处理：图片加载失败时使用默认图片
+-->
+
 <template>
   <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
     <div class="bg-mask"></div>

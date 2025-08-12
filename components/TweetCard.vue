@@ -1,3 +1,4 @@
+<!--推文卡片组件，展示用户信息、发布时间、内容及媒体（图片/视频）。-->
 <template>
   <v-card
     v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"

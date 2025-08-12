@@ -1,3 +1,12 @@
+<!--
+  这段Vue代码实现了一个评论组件。主要功能包括：
+  1、判断用户是否登录，未登录则提示先登录；
+  2、登录用户可输入评论内容并提交；
+  3、提交前校验评论不能为空，为空则弹窗提示；
+  4、评论成功后清空输入框并刷新评论列表；
+  5、使用CommentArea子组件展示评论内容。
+-->
+
 <template>
     <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="user.email">
         <v-alert v-if="error != null" type="error">

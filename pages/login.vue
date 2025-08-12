@@ -10,7 +10,7 @@
           <v-card-title class="headline">{{ $t('login') }}</v-card-title>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="email" :label="$t('email')" :rules="[required]" autocomplete="username"/>
+              <v-text-field v-model="email" :label="$t('email')" :rules="[required]" autocomplete="email"/>
               <v-text-field v-model="password" :label="$t('password')" type="password" :rules="[required]" autocomplete="current-password"/>
             </v-form>
             <v-alert v-if="error != null" type="error">
@@ -62,7 +62,8 @@ const login = async () => {
     }
 
     if (response.success) {
-      router.push('/')
+      await fetchAuthUser()
+      navigateTo(localePath('/'))
     } else {
       error.value = response.message
     }

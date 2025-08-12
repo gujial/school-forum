@@ -18,6 +18,9 @@
                             <div id="vditor"></div>
                         </v-form>
                     </v-card-text>
+                    <v-card-text>
+                        <TagEditor v-model="tags" />
+                    </v-card-text>
                     <MediaEditor ref="mediaEditorRef" />
                     <v-card-actions>
                         <v-btn text @click="postTweet">{{ $t('post') }}</v-btn>
@@ -34,6 +37,7 @@
 <script setup>
 import MediaEditor from '~/components/MediaEditor.vue';
 import Vditor from 'vditor';
+import TagEditor from '~/components/TagEditor.vue';
 import 'vditor/dist/index.css';
 
 const user = ref(null)
@@ -41,9 +45,12 @@ const error = ref(null)
 const mediaEditorRef = ref(null);
 const localePath = useLocalePath()
 const vditor = ref(null);
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const colorMode = useColorMode();
 const attachments = ref([])
+const route = useRoute()
+const parent_id = route.query.parent_id || null;
+const tags = ref([]);
 
 const postTweet = async () => {
     if (!vditor.value || vditor.value.getValue().trim() === '') {
@@ -58,7 +65,9 @@ const postTweet = async () => {
             },
             body: JSON.stringify({
                 content: vditor.value.getValue(),
-                attachments: attachments.value
+                parent_id: parent_id,
+                attachments: attachments.value,
+                tags: tags.value
             })
         })
 
@@ -75,6 +84,7 @@ onMounted(async () => {
     vditor.value = new Vditor('vditor', {
         placeholder: t('content'),
         theme: colorMode.value === 'dark' ? 'dark' : 'classic',
+        lang: locale.value === 'en' ? 'en_US' : 'zh_CN',
         upload: {
             url: '/api/media/upload',
             method: 'POST',
@@ -127,5 +137,6 @@ onUnmounted(() => {
 <style scoped>
 .vditor--fullscreen {
     margin-top: 70px;
+    height: 92vh !important;
 }
 </style>

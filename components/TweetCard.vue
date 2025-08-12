@@ -1,18 +1,30 @@
 <!--推文卡片组件，展示用户信息、发布时间、内容及媒体（图片/视频）。-->
 <template>
-  <v-card
-    v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
-    style="display: flex; flex-direction: column;" @click="goToDetail">
-    <v-divider/>
+  <v-card v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
+    style="display: flex; flex-direction: column;" :height="props.height" :max-height="props.maxHeight"
+    @click="goToDetail">
+    <v-divider />
     <v-alert v-if="error != null" type="error">
       {{ error }}
     </v-alert>
-    <v-card-text :class="{'text-content': !hasMedia, 'content': hasMedia}" :id="`preview${tweet.tweet_id}`">
+    <v-card-text v-if="tweet.parent_tweet" class="retweet">
+      <p>{{ tweet.parent_tweet.content }}</p>
+    </v-card-text>
+    <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true  }" :id="`preview${tweet.tweet_id}`">
     </v-card-text>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
-      <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover/>
+      <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
     </v-carousel>
-    <video v-if="video != null" :src="video" height="300px" muted autoplay loop/>
+    <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
+    <v-card-text style="flex: none;" v-if="tweet.tags.length > 0">
+      <div class="tag-list-wrapper">
+        <div class="tag-list">
+          <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary" text-color="white">
+            {{ tag }}
+          </v-chip>
+        </div>
+      </div>
+    </v-card-text>
     <v-card-actions class="d-flex justify-end">
       <v-btn icon @click.stop="likeTweet">
         <v-icon v-if="isLike">
@@ -25,6 +37,10 @@
       <span class="mr-4">{{ likeCount }}</span>
       <v-icon small class="mr-1">mdi-comment-outline</v-icon>
       <span>{{ commentCount }}</span>
+      <v-btn icon @click.stop="navigateTo(localePath(`/edit?parent_id=${tweet.tweet_id}`))">
+        <v-icon>mdi-share</v-icon>
+      </v-btn>
+      <span>{{ shareCount }}</span>
     </v-card-actions>
   </v-card>
 </template>
@@ -41,6 +57,13 @@ const props = defineProps({
   tweet: {
     type: Object,
     required: true
+  },
+  height: {
+    type: String,
+    default: '500px'
+  },
+  maxHeight: {
+    type: String
   }
 });
 
@@ -54,6 +77,9 @@ const images = ref([])
 const video = ref(null)
 const likeCount = ref(0)
 const commentCount = ref(0)
+const shareCount = ref(0)
+const userTime = ref('')
+const { t } = useI18n()
 
 const goToDetail = () => {
   router.push(localePath(`/detail/${tweet.value.tweet_id}`));
@@ -64,7 +90,7 @@ const likeTweet = async () => {
     await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`)
     updateLike()
     await fetchCounts()
-  } catch(err) {
+  } catch (err) {
     if (err.statusCode == 401) {
       navigateTo(localePath('/login'))
     }
@@ -72,12 +98,12 @@ const likeTweet = async () => {
 };
 
 const updateLike = async () => {
-    try {
-      const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
-      isLike.value = data.like
-    } catch(err) {
-      console.log(err)
-    }
+  try {
+    const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
+    isLike.value = data.like
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const fetchCounts = async () => {
@@ -86,6 +112,8 @@ const fetchCounts = async () => {
     likeCount.value = likeRes.count || 0
     const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
     commentCount.value = commentRes.count || 0
+    const shareRes = await $fetch(`/api/tweets/share/count/${tweet.value.tweet_id}`)
+    shareCount.value = shareRes.count || 0
   } catch (e) {
     console.error('Error fetching counts:', e);
   }
@@ -94,8 +122,19 @@ const fetchCounts = async () => {
 onMounted(async () => {
   try {
     const user_data = await $fetch(`/api/user/${tweet.value.user_id}`)
-    user.value = user_data.user
+    if (!user_data.user) {
+      user.value = {
+        username: t('unknownUser'),
+        user_id: tweet.value.user_id
+      }
+    } else {
+      user.value = user_data.user
+    }
     const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
+    if (!avatar_data.data) {
+      avatar_url.value = '/icon.png'
+      return
+    }
     avatar_url.value = avatar_data.data
 
     const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`)
@@ -108,7 +147,19 @@ onMounted(async () => {
         }
       }
     }
-  } catch(err) {
+
+    if (tweet.value.parent_id) {
+      const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
+      if (parent_data.success) {
+        tweet.value.parent_tweet = parent_data.data
+      } else {
+        tweet.value.parent_tweet = {
+          tweet_id: tweet.value.parent_id,
+          content: t('tweetNotFound'),
+        }
+      }
+    }
+  } catch (err) {
     error.value = err
   }
   updateLike()
@@ -117,7 +168,11 @@ onMounted(async () => {
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const userTime = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
+if (tweet.value.created_at) {
+  userTime.value = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
+} else {
+  userTime.value = t('unknownTime');
+}
 
 const hasMedia = computed(() => images.value.length > 0 || video.value != null);
 </script>
@@ -133,17 +188,46 @@ const hasMedia = computed(() => images.value.length > 0 || video.value != null);
   /* 隐藏溢出内容 */
   text-overflow: ellipsis;
   /* 添加省略号 */
-  height: 50px;
 }
 
-::v-deep(.vditor-reset p){
+::v-deep(.vditor-reset p) {
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
 .text-content {
-  height: 350px;
-  /* 设置最大高度 */
-  overflow-y: auto;
+  overflow-y: hidden;
+  max-height: 80%;
+}
+
+.retweet {
+  margin: 5px;
+  height: fit-content;
+  flex: none;
+}
+
+.retweet p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+  color: #848484;
+}
+
+.tag-list-wrapper {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tag-list {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.no-interaction {
+  pointer-events: none;
+  user-select: none;
 }
 </style>

@@ -23,13 +23,15 @@
                     <hr>
                     </hr>
                     <v-card-text>
+                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content"
+                            max-height="500px" />
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
                         <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
                     </v-card-text>
-                    <v-card-text :id="`preview${tweet.tweet_id}`" style="min-height: 300px;">
+                    <v-card-text :id="`preview${tweet.tweet_id}`">
                     </v-card-text>
                     <hr>
                     </hr>
@@ -45,12 +47,24 @@
                         <span class="mr-4">{{ likeCount }}</span>
                         <v-icon small class="mr-1">mdi-comment-outline</v-icon>
                         <span>{{ commentCount }}</span>
+                        <v-btn icon @click="navigateTo(localePath(`/edit?parent_id=${tweet.tweet_id}`))">
+                            <v-icon>mdi-share</v-icon>
+                        </v-btn>
+                        <span>{{ shareCount }}</span>
                     </v-card-actions>
-                    <CommentEditor :tweet-id="$route.params.id" @comment-posted="fetchCounts" />
+                    <div class="tag-list" v-if="tweet.tags.length > 0">
+                        <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary"
+                            text-color="white" @click="navigateTo(localePath(`/tags?tags=${tag}`))">
+                            {{ tag }}
+                        </v-chip>
+                    </div>
+                    <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id"
+                        @comment-posted="fetchCounts" />
                 </v-card>
                 <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
             </v-col>
         </v-row>
+        <v-btn v-show="showScrollTop" icon="mdi-arrow-up" color="primary" class="scroll-top-btn" @click="scrollToTop" />
     </v-container>
 </template>
 
@@ -58,6 +72,7 @@
 import moment from 'moment-timezone';
 import CommentEditor from '~/components/CommentEditor.vue';
 import renderMarkdown from '~/util/renderMarkdown';
+import TweetCard from '~/components/TweetCard.vue';
 import 'vditor/dist/index.css';
 
 const route = useRoute()
@@ -70,7 +85,31 @@ const video = ref(null)
 const isLike = ref(false)
 const likeCount = ref(0)
 const commentCount = ref(0)
+const shareCount = ref(0)
 const localePath = useLocalePath();
+const { t } = useI18n()
+const parent_tweet_data = ref(null)
+
+const showScrollTop = ref(false)
+
+const handleScroll = () => {
+    showScrollTop.value = window.scrollY > 300
+}
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
 
 const likeTweet = async () => {
     try {
@@ -99,6 +138,8 @@ const fetchCounts = async () => {
         likeCount.value = likeRes.count || 0
         const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`)
         commentCount.value = commentRes.count || 0
+        const shareRes = await $fetch(`/api/tweets/share/count/${tweet.value.tweet_id}`)
+        shareCount.value = shareRes.count || 0
     } catch (e) {
         console.error('Error fetching counts:', e);
     }
@@ -122,6 +163,19 @@ try {
             }
         }
     }
+
+    if (tweet.value.parent_id) {
+        const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
+        console.log(parent_data)
+        if (parent_data.success) {
+            parent_tweet_data.value = parent_data.data
+        } else {
+            parent_tweet_data.value = {
+                tweet_id: tweet.value.parent_id,
+                content: t('tweetNotFound'),
+            }
+        }
+    }
 } catch (err) {
     error.value = err
 }
@@ -135,3 +189,11 @@ onMounted(async () => {
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const userTime = moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
 </script>
+<style scoped>
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 2000;
+}
+</style>

@@ -114,7 +114,7 @@ const deleteTweet = async (tweetId) => {
         } else {
             error.value = res.message || '删除失败'
         }
-    } catch (err) {
+    } catch (err) {推文
         error.value = err
     }
 }
@@ -185,6 +185,7 @@ const logout = async () => {
     try {
         const result = await $fetch('/api/auth/logout');
         if (result.success) {
+            await fetchAuthUser()
             navigateTo(localePath('/'))
         } else {
             error.value = result.message

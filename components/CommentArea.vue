@@ -12,11 +12,15 @@
     <v-alert v-if="error != null" type="error">
         {{ error }}
     </v-alert>
+    <v-alert v-if="authError">
+        {{ $t('pleaseLogin') }}
+    </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
-        <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc') }}</v-btn>
+        <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
+        }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
-            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'">
+            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'" :id="`comment-${comment.comment_id}`">
             <template #prepend>
                 <v-avatar size="40" @click="navigateTo(`/profile/${users[index].user_id}`)">
                     <v-img v-if="avatars[index]" :src="avatars[index]" />
@@ -25,7 +29,7 @@
             <v-card-text>
                 {{ comment.content }}
                 <v-card-actions>
-                    <v-btn @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
+                    <v-btn v-if="!authError" @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
                     <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
                         @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
@@ -56,7 +60,9 @@
                 <!-- 回复输入框 -->
                 <div v-if="replyBoxVisible === comment.comment_id" class="mt-2">
                     <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
-                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id)">{{ $t('submit') }}</v-btn>
+                    <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id, comment.user_id)">{{
+                        $t('submit')
+                    }}</v-btn>
                     <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
                 </div>
             </v-card-text>
@@ -98,9 +104,10 @@ const replyContent = ref('')
 const showDelete = ref(false)
 const commentToDelete = ref(null)
 const commentApi = ref('order_by_time')
+const authError = ref(false)
 
 const toggleApi = () => {
-    if(commentApi.value == 'order_by_time') {
+    if (commentApi.value == 'order_by_time') {
         commentApi.value = 'by_tweet'
     } else {
         commentApi.value = 'order_by_time'
@@ -129,11 +136,15 @@ const getCurrentUser = async () => {
         const { user } = await $fetch('/api/auth/user');
         currentUserId.value = user.user_id;
     } catch (err) {
-        error.value = err.message || err;
+        if (err?.status === 401 || (err?.response && err.response.status === 401)) {
+            authError.value = true
+        } else {
+            error.value = err
+        }
     }
 };
 
-const submitReply = async (parentCommentId) => {
+const submitReply = async (parentCommentId, parentUserId) => {
     if (!replyContent.value.trim()) return
     try {
         await $fetch('/api/comment/reply', {
@@ -144,6 +155,20 @@ const submitReply = async (parentCommentId) => {
                 content: replyContent.value
             }
         })
+
+        await $fetch('/api/message/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tweet_id: props.tweetId,
+                comment_id: parentCommentId,
+                receiver_id: parentUserId,
+                content: replyContent.value
+            })
+        })
+
         replyBoxVisible.value = null
         replyContent.value = ''
         updateComments()
@@ -189,6 +214,18 @@ const updateComments = async () => {
         }
 
         ready.value = true
+
+        nextTick(() => {
+            const hash = window.location.hash
+            if (hash && hash.startsWith('#comment-')) {
+                const target = document.querySelector(hash)
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    target.classList.add('highlight-comment')
+                    setTimeout(() => target.classList.remove('highlight-comment'), 2000)
+                }
+            }
+        })
     } catch (err) {
         error.value = err.message || err
     }
@@ -219,5 +256,14 @@ const showDeleteDialog = (comment) => {
 <style scoped>
 .reply-list {
     margin-top: 8px;
+}
+
+.highlight-comment {
+    animation: flash-bg 1s ease-in-out 2;
+}
+
+@keyframes flash-bg {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(255, 255, 0, 0.3); }
 }
 </style>

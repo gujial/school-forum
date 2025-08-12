@@ -7,6 +7,7 @@ const poolConfig = {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'school_forum',
+  charset: 'utf8mb4',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -19,11 +20,11 @@ const pool = mysql.createPool(poolConfig)
 export async function testConnection() {
   try {
     const connection = await pool.getConnection()
-    console.log('✅ MySQL数据库连接成功')
+    console.log('✅ 数据库连接成功')
     connection.release()
     return true
   } catch (error) {
-    console.error('❌ MySQL数据库连接失败:', error)
+    console.error('❌ 数据库连接失败:', error)
     return false
   }
 }

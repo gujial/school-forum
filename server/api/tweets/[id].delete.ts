@@ -1,6 +1,7 @@
 import { useDatabase } from '../../util/database'
 import { unlink, rm } from 'fs/promises'
 import { join } from 'path'
+import authMiddleware from '../../util/auth';
 
 const removeFile = async (mediaUrl: string): Promise<void> => {
     try {
@@ -28,6 +29,7 @@ const removeFile = async (mediaUrl: string): Promise<void> => {
 }
 
 export default defineEventHandler(async (event) => {
+    authMiddleware(event); 
     const tweetId = getRouterParam(event, 'id')
     const db = useDatabase()
 

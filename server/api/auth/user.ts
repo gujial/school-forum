@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     if (rows.length === 0) {
         return {
             success: false,
-            message: 'User not found'
+            message: '数据库中没有用户，请注册'
         };
     }
 

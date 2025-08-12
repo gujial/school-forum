@@ -8,14 +8,29 @@ export default defineEventHandler(async (event) => {
     const pageSize = Number(getQuery(event).pageSize || 9)
     const offset = (page - 1) * pageSize
     const { rows } = await db.sql`
-      SELECT * FROM Tweets WHERE user_id = ${userId}
-      ORDER BY created_at DESC
+      SELECT 
+        t.*,
+        GROUP_CONCAT(tag.name ORDER BY tag.name SEPARATOR ',') AS tags
+      FROM Tweets t
+      LEFT JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
+      LEFT JOIN TAGS tag ON tt.tag_id = tag.tag_id
+      WHERE t.user_id = ${userId}
+      GROUP BY t.tweet_id
+      ORDER BY t.created_at DESC
       LIMIT ${pageSize} OFFSET ${offset}
     `
     const { rows: countRows } = await db.sql`
       SELECT COUNT(*) AS count FROM Tweets WHERE user_id = ${userId}
     `
-    return { success: true, data: rows, total: Number(countRows[0].count) }
+
+    const tweets = Array.isArray(rows) && Array.isArray(rows[0]) ? rows[0] : rows;
+
+    const processedTweets = tweets.map(tweet => ({
+      ...tweet,
+      tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : []
+    }));
+
+    return { success: true, data: processedTweets, total: Number(countRows[0].count) }
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e)
     return { success: false, message }

@@ -18,11 +18,12 @@ export default defineEventHandler(async (event) => {
 
     const newTweet = {
         user_id: userInfo.userId,
-        content: body['content']
+        content: body['content'],
+        parent_id: body['parent_id'] || null
     }
 
     try {
-        await db.sql`INSERT INTO Tweets (user_id, content) VALUES (${newTweet.user_id}, ${newTweet.content})`;
+        await db.sql`INSERT INTO Tweets (user_id, parent_id, content) VALUES (${newTweet.user_id}, ${newTweet.parent_id}, ${newTweet.content})`;
         const { rows } = await db.sql`SELECT * FROM Tweets WHERE user_id = ${newTweet.user_id} ORDER BY created_at DESC LIMIT 1`;
         if (rows == undefined) {
             throw createError({
@@ -30,9 +31,15 @@ export default defineEventHandler(async (event) => {
                 message: 'Create tweet failed'
             })
         }
+        const tweetId = rows[0].tweet_id;
 
         for (const file of body['attachments'] || []) {
             await db.sql`UPDATE Media SET tweet_id = ${rows[0].tweet_id} WHERE tweet_id IS NULL AND media_type = ${'all'} AND media_url = ${file}`
+        }
+
+        if (body['tags'] && body['tags'].length > 0) {
+            const tagStr = Array.isArray(body['tags']) ? body['tags'].join(',') : body['tags'];
+            await db.sql`CALL add_tweet_tags(${tweetId}, ${tagStr})`;
         }
 
         return {

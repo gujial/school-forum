@@ -9,7 +9,7 @@
                 </v-avatar>
             </v-col>
             <v-col cols="6" sm="auto" class="d-flex justify-space-between">
-                <div>
+                <div style="color: white;">
                     <v-card-title style="z-index: 99; position: relative;">{{ user ? user.username : $t('guestUser')
                         }}</v-card-title>
                     <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user ? user.email :

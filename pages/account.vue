@@ -10,8 +10,8 @@
                 <br>
                 {{ $t('joinTime') + ' ' + userTime }}
                 <br>
-                <v-btn flat>{{ $t('followerCount') + ' ' + followerCount }}</v-btn>
-                <v-btn flat>{{ $t('followingCount') + ' ' + followingCount }}</v-btn>
+                <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' + followerCount }}</v-btn>
+                <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' + followingCount }}</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-btn text @click.stop="logout">{{ $t('logout') }}</v-btn>
@@ -99,7 +99,7 @@ const fetchFollower = async () => {
     if (!user.value) return
     try {
         const res = await $fetch(`/api/follow/get_follower_list`);
-        follower.value = res.total || 0
+        followerCount.value = res.total || 0
     } catch (err) {
         error.value = err
     }
@@ -109,7 +109,7 @@ const fetchFollowing = async () => {
     if (!user.value) return
     try {
         const res = await $fetch(`/api/follow/get_following_list`);
-        following.value = res.total || 0
+        followingCount.value = res.total || 0
     } catch (err) {
         error.value = err
     }

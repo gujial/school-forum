@@ -8,8 +8,9 @@
                 <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
                     <v-card-actions>
                         <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
-                        <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('follow') }}</v-btn>
-                        <v-btn @click="navigateTo(`/profile/${user.user_id}`)">{{ $t('profile') }}</v-btn>
+                        <v-btn v-if="!follow_status" @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
+                        <v-btn v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
+                        <v-btn @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{ $t('profile') }}</v-btn>
                     </v-card-actions>
                     <hr>
                     </hr>
@@ -80,7 +81,7 @@ const shareCount = ref(0)
 const localePath = useLocalePath();
 const { t } = useI18n()
 const parent_tweet_data = ref(null)
-
+const follow_status = ref(false)
 const showScrollTop = ref(false)
 
 const handleScroll = () => {
@@ -101,6 +102,33 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScroll)
 })
+
+const fetchFollowStatus = async () => {
+    try {
+        const res = await $fetch(`/api/follow/check/${user.value.user_id}`)
+        follow_status.value = res.follow
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const followUser = async (id) => {
+    try {
+        const res = await $fetch(`/api/follow/${id}`)
+        follow_status.value = res.follow
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const unfolowUser = async (id) => {
+    try {
+        const res = await $fetch(`/api/follow/${id}`, {method: 'DELETE'})
+        follow_status.value = res.follow
+    } catch (err) {
+        error.value = err
+    }
+}
 
 const likeTweet = async () => {
     try {
@@ -143,6 +171,7 @@ try {
     user.value = user_data.user
     const avatar_data = await $fetch(`/api/avatar/${tweet.value.user_id}`)
     avatar_url.value = avatar_data.data
+    fetchFollowStatus()
 
     const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`)
     if (media_data.data.length > 0) {

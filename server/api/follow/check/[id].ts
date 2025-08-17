@@ -10,17 +10,17 @@ export default defineEventHandler(async (event) => {
 
     if (userId == undefined) {
         return {
-          success: false,
-          message: 'Need ids'
+            success: false,
+            message: 'Need ids'
         }
-      }
-  
+    }
+
     try {
-        const {rows} = await db.sql`SELECT * FROM Follows WHERE follower_id = ${userInfo.userId} AND following_id = ${userId}`;
+        const { rows } = await db.sql`SELECT * FROM Follows WHERE follower_id = ${userInfo.userId} AND following_id = ${userId}`;
 
         if (rows === undefined) {
             throw new Error('Query returned undefined');
-          }
+        }
 
         if (rows.length > 0) {
             return {
@@ -40,5 +40,4 @@ export default defineEventHandler(async (event) => {
             message: 'Failed to follow'
         };
     }
-  });
-  
+});

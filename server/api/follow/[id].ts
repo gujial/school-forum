@@ -9,7 +9,12 @@ export default defineEventHandler(async (event) => {
     const followingId = getRouterParam(event, 'id');
 
     try {
-        db.sql`insert into Follows(follower_id, following_id) values (${userInfo.user_id}, ${followingId})`;
+        await db.sql`insert into Follows(follower_id, following_id) values (${userInfo.userId}, ${followingId})`;
+
+        return {
+            success: true,
+            follow: true
+        }
     } catch (error) {
         console.error('Database error:', error)
         return {

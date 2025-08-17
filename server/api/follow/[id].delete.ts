@@ -9,7 +9,12 @@ export default defineEventHandler(async (event) => {
     const followingId = getRouterParam(event, 'id');
 
     try {
-        db.sql`delete from Follows where follower_id = ${userInfo.user_id} and following_id = ${followingId}`;
+        await db.sql`delete from Follows where follower_id = ${userInfo.userId} and following_id = ${followingId}`;
+
+        return {
+            success: true,
+            follow: false
+        }
     } catch (error) {
         console.error('Database error:', error)
         return {

@@ -31,6 +31,13 @@ const currentPage = ref(1)
 const pageCount = ref(1)
 const pageSize = 9
 
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
 const fetchTweets = async () => {
   try {
     const res = await $fetch(`/api/tweets/user/${props.userId}?page=${currentPage.value}&pageSize=${pageSize}`)
@@ -43,6 +50,9 @@ const fetchTweets = async () => {
   }
 }
 
-watch(currentPage, fetchTweets)
+watch(currentPage, () => {
+  fetchTweets()
+  scrollToTop()
+})
 onMounted(fetchTweets)
 </script>

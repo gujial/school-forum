@@ -88,10 +88,21 @@ const updateBg = async () => {
   }
 }
 
-watch(currentPage, updateTweets)
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
+watch(currentPage, () => {
+  updateTweets()
+  scrollToTop()
+})
 watch(tab, () => {
   currentPage.value = 1
   updateTweets()
+  scrollToTop()
 })
 
 onMounted(async () => {

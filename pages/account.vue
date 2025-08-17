@@ -100,6 +100,13 @@ const fetchTweets = async () => {
     }
 }
 
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
 const deleteTweet = async (tweetId) => {
     try {
         const res = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' })
@@ -178,7 +185,10 @@ onMounted(async () => {
     }
 });
 
-watch(page, fetchTweets)
+watch(page, () => {
+    fetchTweets()
+    scrollToTop()
+})
 
 const logout = async () => {
     try {

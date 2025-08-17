@@ -9,6 +9,9 @@
                 {{ $t('email') + ' ' + user.email }}
                 <br>
                 {{ $t('joinTime') + ' ' + userTime }}
+                <br>
+                <v-btn flat>{{ $t('followerCount') + ' ' + followerCount }}</v-btn>
+                <v-btn flat>{{ $t('followingCount') + ' ' + followingCount }}</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-btn text @click.stop="logout">{{ $t('logout') }}</v-btn>
@@ -88,6 +91,29 @@ const deleteId = ref(null)
 const editDialog = ref(false)
 const editId = ref(null)
 const editContent = ref('')
+
+const followerCount = ref(0)
+const followingCount = ref(0)
+
+const fetchFollower = async () => {
+    if (!user.value) return
+    try {
+        const res = await $fetch(`/api/follow/get_follower_list`);
+        follower.value = res.total || 0
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const fetchFollowing = async () => {
+    if (!user.value) return
+    try {
+        const res = await $fetch(`/api/follow/get_following_list`);
+        following.value = res.total || 0
+    } catch (err) {
+        error.value = err
+    }
+}
 
 const fetchTweets = async () => {
     if (!user.value) return
@@ -176,6 +202,8 @@ onMounted(async () => {
             navigateTo(localePath('/login'))
         }
         await fetchTweets()
+        fetchFollower()
+        fetchFollowing()
     } catch (err) {
         if (err.statusCode == 401) {
             navigateTo(localePath('/login'))

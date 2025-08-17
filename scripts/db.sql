@@ -81,12 +81,34 @@ CREATE TABLE IF NOT EXISTS TweetTags (
                             FOREIGN KEY (tag_id) REFERENCES TAGS(tag_id)
 );
 
+CREATE TABLE IF NOT EXISTS Follows (
+                            follower_id BIGINT NOT NULL,
+                            following_id BIGINT NOT NULL,
+                            PRIMARY KEY (follower_id, following_id),
+                            FOREIGN KEY (follower_id) REFERENCES Users(user_id),
+                            FOREIGN KEY (following_id) REFERENCES Users(user_id)
+);
+
 drop trigger if exists before_tweet_tags_delete;
 drop trigger if exists before_tweet_delete;
 drop trigger if exists before_comment_delete;
+drop trigger if exists before_follow_insert;
 drop procedure if exists add_tweet_tags;
 drop procedure if exists get_tweets_by_tags_desc;
 drop procedure if exists get_tweets_by_tags_asc;
+
+DELIMITER $$
+
+CREATE TRIGGER before_follow_insert
+BEFORE INSERT ON Follows
+FOR EACH ROW
+BEGIN
+    IF NEW.follower_id = NEW.following_id THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '不能关注自己';
+    END IF;
+END $$
+
+DELIMITER ;
 
 DELIMITER $$
 

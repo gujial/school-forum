@@ -97,6 +97,8 @@ export default defineI18nConfig(() => ({
       help: 'Help',
       news: 'News',
       tags: 'Tags',
+      followingCount: 'Following Count',
+      followerCount: 'Follower Count',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -236,6 +238,8 @@ export default defineI18nConfig(() => ({
       help: '帮帮墙',
       news: '资讯',
       tags: '标签',
+      followingCount: '关注数',
+      followerCount: '粉丝数',
       $vuetify: {
         input: {
           prependAction: '添加图片',

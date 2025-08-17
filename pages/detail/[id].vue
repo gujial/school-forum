@@ -108,7 +108,11 @@ const fetchFollowStatus = async () => {
         const res = await $fetch(`/api/follow/check/${user.value.user_id}`)
         follow_status.value = res.follow
     } catch (err) {
-        error.value = err
+        if (err.statusCode === 401) {
+            // 在评论区组件已经提示过了这里就不提示了
+        } else {
+            error.value = err
+        }
     }
 }
 

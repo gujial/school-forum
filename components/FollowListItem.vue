@@ -83,6 +83,7 @@ onMounted(() => {
     padding: 10px;
     position: relative;
     overflow: hidden;
+    margin: 10px;
 }
 
 .bg-mask {

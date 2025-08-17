@@ -1,9 +1,7 @@
 import { defineEventHandler } from 'h3'
 import { useDatabase } from '../../../util/database'
-import authMiddleware from '../../../util/auth';
 
 export default defineEventHandler(async (event) => {
-    await authMiddleware(event)
     const db = useDatabase()
     const query = getQuery(event)
     const page = query.page ? parseInt(query.page as string) : 1

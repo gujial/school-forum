@@ -6,7 +6,7 @@
         <v-card class="d-flex align-center head-card avatar-bg-mask" color="black">
           <div class="background-container">
             <div class="background-image" :style="{ backgroundImage: `url(${bgSrc})` }"></div>
-            <div class="bg-mask"></div>
+            <div class = "bg-mask"></div>
           </div>
           <v-avatar v-if="src.length > 0" size="200">
             <v-img cover :src='src' />
@@ -17,19 +17,14 @@
           </v-container>
           <v-card-actions>
             <v-btn text :to="localePath('/edit')">{{ $t('newTweet') }}</v-btn>
-            <!-- 添加页面背景图编辑器 -->
-            <PageBackgroundEditor 
-              v-if="user" 
-              :user="user" 
-              @background-updated="updatePageBg" />
           </v-card-actions>
         </v-card>
         <v-tabs v-model="tab" background-color="primary">
           <v-tab key="all">{{ $t('all') }}</v-tab>
           <v-tab key="school">{{ $t('school') }}</v-tab>
-          <v-tab key="school">{{ $t('biaobai') }}</v-tab>
-          <v-tab key="school">{{ $t('help') }}</v-tab>
-          <v-tab key="school">{{ $t('news') }}</v-tab>
+          <v-tab key="biaobai">{{ $t('biaobai') }}</v-tab>
+          <v-tab key="help">{{ $t('help') }}</v-tab>
+          <v-tab key="news">{{ $t('news') }}</v-tab>
           <v-tab key="more" @click="() => { tab = 0; navigateTo(localePath('/tags')) }">{{ $t('more') }}</v-tab>
         </v-tabs>
         <v-row v-if="tweets != null">
@@ -53,20 +48,19 @@
 
 <script setup>
 import TweetCard from '~/components/TweetCard.vue';
-import PageBackgroundEditor from '~/components/PageBackgroundEditor.vue';
 
 const tweets = ref(null)
 const src = ref('')
 const username = ref('')
 const user_id = ref(null)
-const user = ref(null) // 添加完整用户对象
 const localePath = useLocalePath()
 const currentPage = useState('currentPage', () => 1)
 const pageCount = ref(1)
 const error = ref(null)
 const authError = ref(false)
 const bgSrc = ref('/card-image.jpg')
-const pageBgSrc = ref('/default-page-bg.jpg') // 页面背景图
+// 使用特定的固定背景图路径
+const pageBgSrc = ref('/background_image.jpg')
 const tab = ref(0)
 
 const updateTweets = async () => {
@@ -102,16 +96,6 @@ const updateBg = async () => {
   }
 }
 
-// 更新页面背景图
-const updatePageBg = async () => {
-  try {
-    const data = await $fetch('/api/page-bg/' + user_id.value);
-    pageBgSrc.value = data.data || '/default-page-bg.jpg';
-  } catch (err) {
-    pageBgSrc.value = '/default-page-bg.jpg'
-  }
-}
-
 watch(currentPage, updateTweets)
 watch(tab, () => {
   currentPage.value = 1
@@ -127,9 +111,7 @@ onMounted(async () => {
     }
     username.value = data.user.username;
     user_id.value = data.user.user_id;
-    user.value = data.user; // 保存完整用户对象
     updateBg();
-    updatePageBg(); // 加载页面背景图
   } catch (err) {
     // 检查是否为 401 未认证错误
     if (err?.status === 401 || (err?.response && err.response.status === 401)) {

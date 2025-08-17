@@ -115,7 +115,12 @@ const fetchFollowStatus = async () => {
 const followUser = async (id) => {
     try {
         const res = await $fetch(`/api/follow/${id}`)
-        follow_status.value = res.follow
+        if (res.success) {
+            follow_status.value = res.follow
+        } else {
+            error.value = res.message
+            setTimeout(() => {error.value = null}, 2000)
+        }
     } catch (err) {
         error.value = err
     }

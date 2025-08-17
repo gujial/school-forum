@@ -15,11 +15,11 @@ export default defineEventHandler(async (event) => {
             success: true,
             follow: true
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Database error:', error)
         return {
             success: false,
-            message: 'Failed to follow user'
+            message: error.toString()
         }
     }
 })

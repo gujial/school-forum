@@ -1,5 +1,5 @@
 <template>
-  <v-app :theme="theme.global.name">
+  <v-app v-if="!$colorMode.unknown" :theme="theme.global.name">
     <NavBar />
     <v-main>
       <slot />

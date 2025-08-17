@@ -49,6 +49,8 @@
 </template>
 
 <script setup>
+import { useTheme } from 'vuetify'
+
 const colorMode = useColorMode();
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath();
@@ -56,6 +58,7 @@ const navOpen = shallowRef(false);
 const src = ref('/icon.png')
 const bgSrc = ref('/card-image.jpg')
 const user = useAuthUser()
+const theme = useTheme()
 
 const updateAvatar = async () => {
     try {
@@ -92,6 +95,13 @@ watch(user, (val) => {
     bgSrc.value = '/card-image.jpg'
   }
 }, { immediate: true })
+
+watch(
+  () => colorMode.value,
+  (val) => {
+    theme.global.name.value = val === 'dark' ? 'dark' : 'light'
+  }
+)
 
 onMounted(async () => {
     fetchAuthUser();

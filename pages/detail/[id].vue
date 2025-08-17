@@ -118,7 +118,7 @@ const followUser = async (id) => {
         if (res.success) {
             follow_status.value = res.follow
         } else {
-            error.value = res.message
+            error.value = '不能关注自己'
             setTimeout(() => {error.value = null}, 2000)
         }
     } catch (err) {

@@ -98,6 +98,7 @@ export default defineI18nConfig(() => ({
       help: 'Help',
       news: 'News',
       tags: 'Tags',
+      map: 'Map',
       followingCount: 'Following Count',
       followerCount: 'Follower Count',
       $vuetify: {
@@ -240,6 +241,7 @@ export default defineI18nConfig(() => ({
       help: '帮帮墙',
       news: '资讯',
       tags: '标签',
+      map: '地图',
       followingCount: '关注数',
       followerCount: '粉丝数',
       $vuetify: {

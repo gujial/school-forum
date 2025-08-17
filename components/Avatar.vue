@@ -57,6 +57,10 @@ onMounted(() => {
   padding: 10px;
   position: relative;
   overflow: hidden;
+  min-height: 500px; /* 最小高度 */
+  background-size: cover; /* 填充背景图片 */
+  background-repeat: no-repeat; /* 不重复 */
+  background-position: center; /* 中心对齐 */
 }
 
 .bg-mask {

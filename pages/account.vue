@@ -12,6 +12,9 @@
                 {{ $t('email') + ' ' + user.email }}
                 <br>
                 {{ $t('joinTime') + ' ' + userTime }}
+                <br>
+                <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' + followerCount }}</v-btn>
+                <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' + followingCount }}</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-btn text @click.stop="logout">{{ $t('logout') }}</v-btn>
@@ -21,7 +24,8 @@
         <h2 style="margin-bottom: 20px;">{{ $t('userTweets') }}</h2>
         <v-row>
             <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
-                <v-card>
+                <v-lazy>
+                    <v-card>
                     <TweetCard :tweet="tweet" />
                     <v-card-actions>
                         <v-btn color="primary" text @click="openEditDialog(tweet)">
@@ -32,6 +36,7 @@
                         </v-btn>
                     </v-card-actions>
                 </v-card>
+                </v-lazy>
             </v-col>
             <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
         </v-row>
@@ -90,6 +95,29 @@ const editDialog = ref(false)
 const editId = ref(null)
 const editContent = ref('')
 
+const followerCount = ref(0)
+const followingCount = ref(0)
+
+const fetchFollower = async () => {
+    if (!user.value) return
+    try {
+        const res = await $fetch(`/api/follow/get_follower_list`);
+        followerCount.value = res.total || 0
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const fetchFollowing = async () => {
+    if (!user.value) return
+    try {
+        const res = await $fetch(`/api/follow/get_following_list`);
+        followingCount.value = res.total || 0
+    } catch (err) {
+        error.value = err
+    }
+}
+
 const fetchTweets = async () => {
     if (!user.value) return
     try {
@@ -99,6 +127,13 @@ const fetchTweets = async () => {
     } catch (err) {
         error.value = err
     }
+}
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
 }
 
 const deleteTweet = async (tweetId) => {
@@ -170,6 +205,8 @@ onMounted(async () => {
             navigateTo(localePath('/login'))
         }
         await fetchTweets()
+        fetchFollower()
+        fetchFollowing()
     } catch (err) {
         if (err.statusCode == 401) {
             navigateTo(localePath('/login'))
@@ -179,7 +216,10 @@ onMounted(async () => {
     }
 });
 
-watch(page, fetchTweets)
+watch(page, () => {
+    fetchTweets()
+    scrollToTop()
+})
 
 const logout = async () => {
     try {

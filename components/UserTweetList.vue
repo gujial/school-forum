@@ -12,7 +12,9 @@
     <h2 style="margin-bottom: 20px;">{{ $t('userTweets') }}</h2>
     <v-row>
       <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
-        <TweetCard :tweet="tweet" />
+        <v-lazy>
+          <TweetCard :tweet="tweet" />
+        </v-lazy>
       </v-col>
       <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
     </v-row>
@@ -38,6 +40,13 @@ const currentPage = ref(1)
 const pageCount = ref(1)
 const pageSize = 9
 
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+}
+
 const fetchTweets = async () => {
   try {
     const res = await $fetch(`/api/tweets/user/${props.userId}?page=${currentPage.value}&pageSize=${pageSize}`)
@@ -50,6 +59,9 @@ const fetchTweets = async () => {
   }
 }
 
-watch(currentPage, fetchTweets)
+watch(currentPage, () => {
+  fetchTweets()
+  scrollToTop()
+})
 onMounted(fetchTweets)
 </script>

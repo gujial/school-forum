@@ -41,6 +41,7 @@ export default defineI18nConfig(() => ({
       loginFirst: 'Login first',
       inputComments: 'Input your comment',
       follow: 'Follow',
+      unfollow: 'Unfollow',
       profile: 'Profile',
       pleaseLogin: 'Please login first to use more features',
       replyContent: 'Reply Content',
@@ -97,6 +98,9 @@ export default defineI18nConfig(() => ({
       help: 'Help',
       news: 'News',
       tags: 'Tags',
+      map: 'Map',
+      followingCount: 'Following Count',
+      followerCount: 'Follower Count',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -180,6 +184,7 @@ export default defineI18nConfig(() => ({
       loginFirst: '请先登录',
       inputComments: '输入你的点评',
       follow: '关注',
+      unfollow: '取消关注',
       profile: '个人资料',
       pleaseLogin: '请先登录以使用更多功能',
       replyContent: '回复内容',
@@ -236,6 +241,9 @@ export default defineI18nConfig(() => ({
       help: '帮帮墙',
       news: '资讯',
       tags: '标签',
+      map: '地图',
+      followingCount: '关注数',
+      followerCount: '粉丝数',
       $vuetify: {
         input: {
           prependAction: '添加图片',

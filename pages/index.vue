@@ -34,36 +34,6 @@
           </v-col>
         </v-row>
         <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
-        <v-pagination v-model="currentPage" :length="pageCount" />
-        <v-alert v-if="authError">
-          {{ $t('pleaseLogin') }}
-        </v-alert>
-        <v-alert v-if="error != null" type="error" v-show="!authError">
-          {{ error }}
-        </v-alert>
-
-        <v-card-actions>
-          <v-btn text :to="localePath('/edit')">{{ $t('newTweet') }}</v-btn>
-        </v-card-actions>
-        <v-tabs v-model="tab" background-color="primary">
-          <v-tab key="all">{{ $t('all') }}</v-tab>
-          <v-tab key="school">{{ $t('school') }}</v-tab>
-          <v-tab key="biaobai">{{ $t('biaobai') }}</v-tab>
-          <v-tab key="help">{{ $t('help') }}</v-tab>
-          <v-tab key="news">{{ $t('news') }}</v-tab>
-          <v-tab key="map">{{ $t('map') }}</v-tab>
-          <v-tab key="more" @click="() => { tab = 0; navigateTo(localePath('/tags')) }">{{ $t('more') }}</v-tab>
-        </v-tabs>
-        <v-row v-if="tweets != null">
-          <v-alert v-if="tweets.length == 0 && tab != 5" type="info" style="margin: 20px;">{{ $t('noTweets')
-            }}</v-alert>
-          <v-col v-for="tweet in tweets" v-else :key="tweet.tweet_id" cols="12" md="6" lg="4">
-            <v-lazy>
-              <TweetCard :tweet="tweet" />
-            </v-lazy>
-          </v-col>
-        </v-row>
-        <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
         <v-row v-if="tab == 5">
           <iframe width="100%" height="700"
             src="https://www.openstreetmap.org/export/embed.html?bbox=115.7815223787844%2C28.650561869520143%2C115.80765782342552%2C28.668750457195618&amp;layer=mapnik"

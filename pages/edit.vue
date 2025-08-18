@@ -42,6 +42,7 @@ const attachments = ref([])
 const route = useRoute()
 const parent_id = route.query.parent_id || null;
 const tags = ref([]);
+const theme = useTheme()
 
 const postTweet = async () => {
     if (!vditor.value || vditor.value.getValue().trim() === '') {
@@ -102,8 +103,8 @@ onMounted(async () => {
         },
         after: () => {
             vditor.value.setTheme(
-                colorMode.value === 'dark' ? 'dark' : 'classic',
-                colorMode.value === 'dark' ? 'dark' : 'light'
+                theme.global.name.value === 'dark' ? 'dark' : 'classic',
+                theme.global.name.value === 'dark' ? 'dark' : 'light'
             );
         }
     });

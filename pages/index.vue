@@ -150,7 +150,7 @@ onMounted(async () => {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  padding: 20px 0;
+  padding: 0;
 }
 
 .page-overlay {

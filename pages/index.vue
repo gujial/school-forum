@@ -25,10 +25,11 @@
           <v-tab key="biaobai">{{ $t('biaobai') }}</v-tab>
           <v-tab key="help">{{ $t('help') }}</v-tab>
           <v-tab key="news">{{ $t('news') }}</v-tab>
+          <v-tab key="map">{{ $t('map') }}</v-tab>
           <v-tab key="more" @click="() => { tab = 0; navigateTo(localePath('/tags')) }">{{ $t('more') }}</v-tab>
         </v-tabs>
         <v-row v-if="tweets != null">
-          <v-alert v-if="tweets.length == 0" type="info" style="margin: 20px;">{{ $t('noTweets') }}</v-alert>
+          <v-alert v-if="tweets.length == 0 && tab != 5" type="info" style="margin: 20px;">{{ $t('noTweets') }}</v-alert>
           <v-col v-for="tweet in tweets" v-else :key="tweet.tweet_id" cols="12" md="6" lg="4">
             <TweetCard :tweet="tweet" />
           </v-col>

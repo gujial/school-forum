@@ -65,6 +65,8 @@ const messages = ref<any[]>([])
 const loading = ref(false)
 const usernames = ref<Record<number, string>>({})
 const search = ref('')
+const currentUser = useAuthUser()
+const localePath = useLocalePath()
 
 const headers = [
     { title: t('id'), value: 'message_id', sortable: true },
@@ -156,6 +158,9 @@ watch(messages, (msgs) => {
 })
 
 onMounted(() => {
+    if (currentUser.value.user_id === -1) {
+        navigateTo(localePath('/login'))
+    }
     fetchMessages()
 })
 </script>

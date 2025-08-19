@@ -13,7 +13,7 @@
                 <v-avatar style="z-index: 99; position: relative;" size="80" class="mx-2">
                     <v-img cover :src="src" />
                 </v-avatar>
-                <v-card-title style="z-index: 99; position: relative;">{{ user.username !== 'guest' ? user.username : $t('guestUser')
+                <v-card-title style="z-index: 99; position: relative;">{{ user && user.username !== 'guest' ? user.username : $t('guestUser')
                     }}</v-card-title>
                 <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user ? user.email : $t('clickAccountToLogin') }}</v-card-subtitle>
             </v-img>

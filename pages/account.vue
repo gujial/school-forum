@@ -155,7 +155,7 @@ import Avatar from '~/components/AvatarEditor.vue';
 import moment from 'moment-timezone';
 import renderMarkdown from '~/util/renderPreviewMarkdown';
 
-const user = ref(null);
+const user = useAuthUser()
 const error = ref(null)
 const localePath = useLocalePath()
 const userTime = ref('')
@@ -335,7 +335,6 @@ const deleteTweet = async (tweetId) => {
             error.value = res.message || '删除失败'
         }
     } catch (err) {
-        推文
         error.value = err
     }
 }
@@ -381,16 +380,11 @@ const confirmEdit = async () => {
 }
 
 onMounted(async () => {
+    if (user.value.user_id === -1) {
+         navigateTo(localePath('/login'))
+    }
     try {
-        const data = await $fetch('/api/auth/user');
-        user.value = data.user;
-        if (data.success) {
-            const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            userTime.value = moment.utc(user.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss');
-        } else {
-            navigateTo(localePath('/login'))
-        }
-        await fetchTweets()
+        fetchTweets()
         fetchFollower()
         fetchFollowing()
     } catch (err) {

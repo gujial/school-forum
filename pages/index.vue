@@ -155,7 +155,7 @@ onMounted(async () => {
 }
 
 .page-overlay {
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.5);
   /* 半透明背景增强可读性 */
   min-height: 100vh;
 }

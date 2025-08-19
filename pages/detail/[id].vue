@@ -7,10 +7,15 @@
                 </v-alert>
                 <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
                     <v-card-actions>
-                        <v-btn :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
-                        <v-btn v-if="!follow_status" @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
-                        <v-btn v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
-                        <v-btn @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{ $t('profile') }}</v-btn>
+                        <v-btn flat :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
+                        <v-btn flat v-if="!follow_status" @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
+                        <v-btn flat v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
+                        <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{ $t('profile')
+                            }}</v-btn>
+                        <v-btn flat v-if="currentUser.user_id = user.user_id || currentUser.admin" color="error"
+                            @click="openDeleteDialog()">
+                            {{ $t('delete') }}
+                        </v-btn>
                     </v-card-actions>
                     <hr>
                     </hr>
@@ -58,6 +63,17 @@
         </v-row>
         <v-btn v-show="showScrollTop" icon="mdi-arrow-up" color="primary" class="scroll-top-btn" @click="scrollToTop" />
     </v-container>
+    <v-dialog v-model="deleteDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
+            <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -83,6 +99,8 @@ const { t } = useI18n()
 const parent_tweet_data = ref(null)
 const follow_status = ref(false)
 const showScrollTop = ref(false)
+const currentUser = useAuthUser()
+const deleteDialog = ref(false)
 
 const handleScroll = () => {
     showScrollTop.value = window.scrollY > 300
@@ -93,6 +111,30 @@ const scrollToTop = () => {
         top: 0,
         behavior: 'smooth'
     })
+}
+
+const openDeleteDialog = () => {
+    deleteDialog.value = true
+}
+
+const deleteTweet = async (tweetId) => {
+    try {
+        const res = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' })
+        if (res.success) {
+            navigateTo(localePath(route.query.from));
+        } else {
+            error.value = res.message || '删除失败'
+        }
+    } catch (err) {
+        error.value = err
+    }
+}
+
+const confirmDelete = async () => {
+    if (tweet.value.tweet_id) {
+        await deleteTweet(tweet.value.tweet_id)
+    }
+    deleteDialog.value = false
 }
 
 onMounted(() => {
@@ -123,7 +165,7 @@ const followUser = async (id) => {
             follow_status.value = res.follow
         } else {
             error.value = '不能关注自己'
-            setTimeout(() => {error.value = null}, 2000)
+            setTimeout(() => { error.value = null }, 2000)
         }
     } catch (err) {
         error.value = err
@@ -132,7 +174,7 @@ const followUser = async (id) => {
 
 const unfolowUser = async (id) => {
     try {
-        const res = await $fetch(`/api/follow/${id}`, {method: 'DELETE'})
+        const res = await $fetch(`/api/follow/${id}`, { method: 'DELETE' })
         follow_status.value = res.follow
     } catch (err) {
         error.value = err

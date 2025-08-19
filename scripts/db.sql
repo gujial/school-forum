@@ -94,7 +94,6 @@ CREATE TABLE IF NOT EXISTS Admins (
                             FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-drop trigger if exists before_tweet_tags_delete;
 drop trigger if exists before_tweet_delete;
 drop trigger if exists before_comment_delete;
 drop trigger if exists before_follow_insert;
@@ -113,24 +112,6 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '不能关注自己';
     END IF;
 END $$
-
-DELIMITER ;
-
-DELIMITER $$
-
-CREATE TRIGGER before_tweet_tags_delete
-AFTER DELETE ON TweetTags
-FOR EACH ROW
-BEGIN
-    DECLARE tag_count INT;
-    SELECT COUNT(*) INTO tag_count 
-    FROM TweetTags 
-    WHERE tag_id = OLD.tag_id;
-
-    IF tag_count = 0 THEN
-        DELETE FROM TAGS WHERE tag_id = OLD.tag_id;
-    END IF;
-END$$
 
 DELIMITER ;
 

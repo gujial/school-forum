@@ -2,6 +2,7 @@ import { useDatabase } from '../../util/database'
 import { unlink, rm } from 'fs/promises'
 import { join } from 'path'
 import authMiddleware from '../../util/auth';
+import adminAuthMiddleware from '../../util/adminAuth'
 
 const removeFile = async (mediaUrl: string): Promise<void> => {
     try {
@@ -32,12 +33,19 @@ export default defineEventHandler(async (event) => {
     authMiddleware(event); 
     const tweetId = getRouterParam(event, 'id')
     const db = useDatabase()
+    const userInfo = event.context.auth;
 
     if (!tweetId) {
         return { success: false, message: '推文ID不能为空' }
     }
 
     try {
+        const { rows: userRows } = await db.sql`select user_id from Tweets where tweet_id = ${tweetId}`
+
+        if (userRows[0].user_id != userInfo.userId) {
+            adminAuthMiddleware(event);
+        }
+
         const { rows: mediaRows } = await db.sql`
       SELECT media_url FROM Media WHERE tweet_id = ${tweetId}
     `

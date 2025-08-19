@@ -20,7 +20,7 @@
                 {{ comment.content }}
                 <v-card-actions>
                     <v-btn v-if="!authError" @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
-                    <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
+                    <v-btn v-if="currentUser.user_id === users[index].user_id || currentUser.admin" color="red" variant="text"
                         @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
                     </v-btn>
@@ -40,7 +40,7 @@
                         </v-card-title>
                         <v-card-text class="text-body-2">{{ reply.content }}</v-card-text>
                         <v-card-actions>
-                            <v-btn v-if="currentUserId === users[index].user_id" color="red" variant="text"
+                            <v-btn v-if="currentUser.user_id === users[index].user_id" color="red" variant="text"
                                 @click="showDeleteDialog(reply)">
                                 {{ $t('delete') }}
                             </v-btn>
@@ -88,7 +88,7 @@ const avatars = ref([])
 const ready = ref(false)
 const currentPage = ref(1)
 const pageCount = ref(1)
-const currentUserId = ref(null);
+const currentUser = useAuthUser();
 const replyBoxVisible = ref(null)
 const replyContent = ref('')
 const showDelete = ref(false)
@@ -118,19 +118,6 @@ const handleDelete = async (commentId) => {
         updateComments();
     } catch (err) {
         error.value = err.message || err;
-    }
-};
-
-const getCurrentUser = async () => {
-    try {
-        const { user } = await $fetch('/api/auth/user');
-        currentUserId.value = user.user_id;
-    } catch (err) {
-        if (err?.status === 401 || (err?.response && err.response.status === 401)) {
-            authError.value = true
-        } else {
-            error.value = err
-        }
     }
 };
 
@@ -225,7 +212,6 @@ const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 watch(currentPage, updateComments)
 onMounted(() => {
-    getCurrentUser()
     updateComments()
 })
 defineExpose({ updateComments })

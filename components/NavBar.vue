@@ -102,10 +102,6 @@ watch(
     theme.global.name.value = val === 'dark' ? 'dark' : 'light'
   }
 )
-
-onMounted(async () => {
-    fetchAuthUser();
-});
 </script>
 
 <style scoped>

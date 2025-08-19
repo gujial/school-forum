@@ -8,9 +8,10 @@
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
     <div v-else-if="ready">
         <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
-        }}</v-btn>
+            }}</v-btn>
         <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
-            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'" :id="`comment-${comment.comment_id}`">
+            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'"
+            :id="`comment-${comment.comment_id}`">
             <template #prepend>
                 <v-avatar size="40" @click="navigateTo(`/profile/${users[index].user_id}`)">
                     <v-img v-if="avatars[index]" :src="avatars[index]" />
@@ -20,8 +21,8 @@
                 {{ comment.content }}
                 <v-card-actions>
                     <v-btn v-if="!authError" @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
-                    <v-btn v-if="currentUser.user_id === users[index].user_id || currentUser.admin" color="red" variant="text"
-                        @click="showDeleteDialog(comment)">
+                    <v-btn v-if="currentUser && (currentUser.user_id === users[index].user_id || currentUser.admin)"
+                        color="red" variant="text" @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
                     </v-btn>
                 </v-card-actions>
@@ -40,8 +41,8 @@
                         </v-card-title>
                         <v-card-text class="text-body-2">{{ reply.content }}</v-card-text>
                         <v-card-actions>
-                            <v-btn v-if="currentUser.user_id === users[index].user_id" color="red" variant="text"
-                                @click="showDeleteDialog(reply)">
+                            <v-btn v-if="currentUser && (currentUser.user_id === reply.user_id)" color="red"
+                                variant="text" @click="showDeleteDialog(reply)">
                                 {{ $t('delete') }}
                             </v-btn>
                         </v-card-actions>
@@ -52,7 +53,7 @@
                     <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
                     <v-btn size="small" variant="flat" @click="submitReply(comment.comment_id, comment.user_id)">{{
                         $t('submit')
-                    }}</v-btn>
+                        }}</v-btn>
                     <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{ $t('cancel') }}</v-btn>
                 </div>
             </v-card-text>
@@ -68,8 +69,8 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" @click="handleDeleteConfirm">{{ $t('confirm') }}</v-btn>
                 <v-btn text @click="showDelete = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="red" @click="handleDeleteConfirm">{{ $t('confirm') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -239,7 +240,14 @@ const showDeleteDialog = (comment) => {
 }
 
 @keyframes flash-bg {
-    0%, 100% { background-color: transparent; }
-    50% { background-color: rgba(255, 255, 0, 0.3); }
+
+    0%,
+    100% {
+        background-color: transparent;
+    }
+
+    50% {
+        background-color: rgba(255, 255, 0, 0.3);
+    }
 }
 </style>

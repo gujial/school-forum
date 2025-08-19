@@ -10,36 +10,55 @@
                 <br>
                 {{ $t('joinTime') + ' ' + userTime }}
                 <br>
-                <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' + followerCount }}</v-btn>
-                <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' + followingCount }}</v-btn>
+                <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' + followerCount
+                }}</v-btn>
+                <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' + followingCount
+                }}</v-btn>
             </v-card-text>
-            <v-card-actions>
-                <v-btn text @click.stop="logout">{{ $t('logout') }}</v-btn>
-            </v-card-actions>
+            <v-list>
+                <v-list-item @click="openUsernameDialog">
+                    <v-list-item-title>{{ $t('modifyUsername') }}</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="openPasswordDialog">
+                    <v-list-item-title>{{ $t('modifyPassword') }}</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="openEmailDialog">
+                    <v-list-item-title>{{ $t('modifyEmail') }}</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="openDeleteAccountDialog">
+                    <v-list-item-title>{{ $t('deleteAccount') }}</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="logout">
+                    <v-list-item-title>{{ $t('logout') }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
         </v-card>
+        <v-alert v-if="error != null" type="error">
+            {{ error }}
+        </v-alert>
+        <v-alert v-if="suc != null" type="success">
+            {{ suc }}
+        </v-alert>
         <v-divider class="my-4" />
         <h2 style="margin-bottom: 20px;">{{ $t('userTweets') }}</h2>
         <v-row>
             <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
                 <v-lazy>
                     <v-card>
-                    <TweetCard :tweet="tweet" />
-                    <v-card-actions>
-                        <v-btn color="primary" text @click="openEditDialog(tweet)">
-                            {{ $t('edit') }}
-                        </v-btn>
-                        <v-btn color="error" text @click="openDeleteDialog(tweet.tweet_id)">
-                            {{ $t('delete') }}
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+                        <TweetCard :tweet="tweet" />
+                        <v-card-actions>
+                            <v-btn color="primary" text @click="openEditDialog(tweet)">
+                                {{ $t('edit') }}
+                            </v-btn>
+                            <v-btn color="error" text @click="openDeleteDialog(tweet.tweet_id)">
+                                {{ $t('delete') }}
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
                 </v-lazy>
             </v-col>
             <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
         </v-row>
-        <v-alert v-if="error != null" type="error">
-            {{ error }}
-        </v-alert>
         <!-- 删除确认对话框 -->
         <v-dialog v-model="deleteDialog" max-width="400">
             <v-card>
@@ -68,6 +87,66 @@
         </v-dialog>
         <v-pagination v-if="total > pageSize" v-model="page" :length="Math.ceil(total / pageSize)" class="my-4" />
     </v-container>
+    <!-- 修改用户名 -->
+    <v-dialog v-model="usernameDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('modifyUsername') }}</v-card-title>
+            <v-card-text>
+                <v-text-field v-model="newUsername" :label="$t('newUsername')" />
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="usernameDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="primary" text @click="confirmUsername">{{ $t('save') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <!-- 修改密码 -->
+    <v-dialog v-model="passwordDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('modifyPassword') }}</v-card-title>
+            <v-card-text>
+                <v-text-field v-model="oldPassword" :label="$t('oldPassword')" type="password" />
+                <v-text-field v-model="newPassword" :label="$t('newPassword')" type="password" />
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="passwordDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="primary" text @click="confirmPassword">{{ $t('save') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <!-- 删除账户 -->
+    <v-dialog v-model="deleteAccountDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('deleteAccount') }}</v-card-title>
+            <v-card-text>
+                {{ $t('deleteAccountMsg') || '确定要永久删除账号吗？此操作不可恢复！' }}
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="deleteAccountDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="error" text @click="confirmDeleteAccount">{{ $t('delete') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <!-- 修改邮箱 -->
+    <v-dialog v-model="emailDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('modifyEmail') }}</v-card-title>
+            <v-card-text>
+                <v-text-field v-model="newEmail" :label="$t('newEmail')" type="email" />
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="emailDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="primary" text @click="confirmEmail">{{ $t('save') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -81,6 +160,7 @@ const error = ref(null)
 const localePath = useLocalePath()
 const userTime = ref('')
 const tweets = ref([])
+const suc = ref(null)
 
 const page = ref(1)
 const pageSize = 9
@@ -94,6 +174,114 @@ const editContent = ref('')
 
 const followerCount = ref(0)
 const followingCount = ref(0)
+
+const usernameDialog = ref(false)
+const passwordDialog = ref(false)
+const deleteAccountDialog = ref(false)
+
+const newUsername = ref('')
+const oldPassword = ref('')
+const newPassword = ref('')
+
+const emailDialog = ref(false)
+const newEmail = ref('')
+
+const openEmailDialog = () => {
+    newEmail.value = user.value?.email || ''
+    emailDialog.value = true
+}
+
+const confirmEmail = async () => {
+    try {
+        const res = await $fetch('/api/user/modify_email', {
+            method: 'PUT',
+            body: { email: newEmail.value }
+        })
+        if (res.success) {
+            error.value = null
+            suc.value = '修改成功'
+            user.value.email = newEmail.value
+            emailDialog.value = false
+        } else {
+            error.value = res.message || '修改失败'
+            emailDialog.value = false
+        }
+    } catch (err) {
+        emailDialog.value = false
+        error.value = err
+    }
+}
+
+const openUsernameDialog = () => {
+    newUsername.value = user.value?.username || ''
+    usernameDialog.value = true
+}
+
+const openPasswordDialog = () => {
+    oldPassword.value = ''
+    newPassword.value = ''
+    passwordDialog.value = true
+}
+
+const openDeleteAccountDialog = () => {
+    deleteAccountDialog.value = true
+}
+
+const confirmUsername = async () => {
+    try {
+        const res = await $fetch('/api/user/modify_username', {
+            method: 'PUT',
+            body: { newUsername: newUsername.value }
+        })
+        if (res.success) {
+            error.value = null
+            suc.value = '修改成功'
+            user.value.username = newUsername.value
+            usernameDialog.value = false
+        } else {
+            error.value = res.message || '修改失败'
+            usernameDialog.value = false
+        }
+    } catch (err) {
+        usernameDialog.value = false
+        error.value = err
+    }
+}
+
+const confirmPassword = async () => {
+    try {
+        const res = await $fetch('/api/user/modify_password', {
+            method: 'PUT',
+            body: { oldPassword: oldPassword.value, newPassword: newPassword.value }
+        })
+        if (res.success) {
+            error.value = null
+            suc.value = '修改成功'
+            passwordDialog.value = false
+        } else {
+            error.value = res.message || '修改失败'
+            passwordDialog.value = false
+        }
+    } catch (err) {
+        passwordDialog.value = false
+        error.value = err
+    }
+}
+
+const confirmDeleteAccount = async () => {
+    try {
+        const res = await $fetch('/api/user/delete_account', { method: 'DELETE' })
+        if (res.success) {
+            error.value = null
+            await fetchAuthUser()
+            navigateTo(localePath('/'))
+        } else {
+            error.value = res.message || '删除失败'
+        }
+    } catch (err) {
+        error.value = err
+    }
+}
 
 const fetchFollower = async () => {
     if (!user.value) return
@@ -146,7 +334,8 @@ const deleteTweet = async (tweetId) => {
         } else {
             error.value = res.message || '删除失败'
         }
-    } catch (err) {推文
+    } catch (err) {
+        推文
         error.value = err
     }
 }
@@ -216,6 +405,12 @@ onMounted(async () => {
 watch(page, () => {
     fetchTweets()
     scrollToTop()
+})
+
+watch(suc, () => {
+    if (suc.value) {
+        setTimeout(()=>suc.value=null, 2000)
+    }
 })
 
 const logout = async () => {

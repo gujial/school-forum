@@ -116,6 +116,7 @@ watch(tab, () => {
 })
 
 onMounted(async () => {
+  updateTweets();
   try {
     const data = await $fetch('/api/auth/user');
     if (!data.user) {
@@ -133,7 +134,6 @@ onMounted(async () => {
       error.value = err
     }
   }
-  updateTweets();
 });
 </script>
 

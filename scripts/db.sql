@@ -89,10 +89,16 @@ CREATE TABLE IF NOT EXISTS Follows (
                             FOREIGN KEY (following_id) REFERENCES Users(user_id)
 );
 
+CREATE TABLE IF NOT EXISTS Admins (
+                            user_id BIGINT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 drop trigger if exists before_tweet_tags_delete;
 drop trigger if exists before_tweet_delete;
 drop trigger if exists before_comment_delete;
 drop trigger if exists before_follow_insert;
+drop trigger if exists before_user_delete;
 drop procedure if exists add_tweet_tags;
 drop procedure if exists get_tweets_by_tags_desc;
 drop procedure if exists get_tweets_by_tags_asc;
@@ -150,6 +156,23 @@ BEFORE DELETE ON Comments
 FOR EACH ROW
 BEGIN
     DELETE FROM Messages WHERE comment_id = OLD.comment_id;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER before_user_delete
+BEFORE DELETE ON Users
+FOR EACH ROW
+BEGIN
+    DELETE FROM Avatar WHERE user_id = OLD.user_id;
+    DELETE FROM Tweets WHERE user_id = OLD.user_id;
+    DELETE FROM Comments WHERE user_id = OLD.user_id;
+    DELETE FROM Likes WHERE user_id = OLD.user_id;
+    DELETE FROM Messages WHERE sender_id = OLD.user_id OR receiver_id = OLD.user_id;
+    DELETE FROM Follows WHERE follower_id = OLD.user_id OR following_id = OLD.user_id;
+    DELETE FROM Admins WHERE user_id = OLD.user_id;
 END$$
 
 DELIMITER ;

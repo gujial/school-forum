@@ -23,13 +23,16 @@ export default defineEventHandler(async (event) => {
         };
     }
 
+    const admin = await db.sql`select * from Admins where user_id = ${userInfo.userId}`;
+
     return {
       success: true,
       user: {
         user_id: rows[0].user_id,
         username: rows[0].username,
         email: rows[0].email,
-        created_at: rows[0].created_at
+        created_at: rows[0].created_at,
+        admin: admin.rows.length > 0
       }
     };
   } catch (error) {

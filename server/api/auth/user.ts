@@ -5,7 +5,7 @@ import authMiddleware from '../../util/auth';
 import { useDatabase } from '../../util/database';
 
 export default defineEventHandler(async (event) => {
-  await authMiddleware(event); // Apply authentication middleware
+  await authMiddleware(event);
 
   const userInfo = event.context.auth;
   const db = useDatabase();
@@ -15,12 +15,12 @@ export default defineEventHandler(async (event) => {
     if (rows === undefined) {
       throw new Error('Query returned undefined');
     }
-    
+
     if (rows.length === 0) {
-        return {
-            success: false,
-            message: '数据库中没有用户，请注册'
-        };
+      return {
+        success: false,
+        message: '数据库中没有用户，请注册'
+      };
     }
 
     const admin = await db.sql`select * from Admins where user_id = ${userInfo.userId}`;
@@ -36,11 +36,11 @@ export default defineEventHandler(async (event) => {
       }
     };
   } catch (error) {
-      console.error('Database error:', error);
-      return {
-          success: false,
-          message: 'Failed to fetch user'
-      };
+    console.error('Database error:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch user'
+    };
   }
 
 });

@@ -16,6 +16,10 @@ import NavBar from '~/components/NavBar.vue'
 const colorMode = useColorMode({ preference: 'system' })
 const theme = useTheme()
 
+onMounted(async () => {
+    await fetchAuthUser();
+});
+
 watch(
   () => colorMode.value,
   (val) => {

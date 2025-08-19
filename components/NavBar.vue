@@ -20,7 +20,7 @@
                 <v-avatar style="z-index: 99; position: relative;" size="80" class="mx-2">
                     <v-img cover :src="src" />
                 </v-avatar>
-                <v-card-title style="z-index: 99; position: relative;">{{ user ? user.username : $t('guestUser')
+                <v-card-title style="z-index: 99; position: relative;">{{ user && user.username !== 'guest' ? user.username : $t('guestUser')
                     }}</v-card-title>
                 <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user ? user.email : $t('clickAccountToLogin') }}</v-card-subtitle>
             </v-img>
@@ -50,6 +50,7 @@
                 <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
             </v-list-item>
         </v-list>
+        <v-btn text style="width: 100%;" v-if="user && user.admin" @click="navigateTo(localePath('/admin'))">{{ $t('adminDashboard') }}</v-btn>
         <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
         <v-btn flat icon="mdi-theme-light-dark" @click="toggleTheme()" />
     </v-navigation-drawer>
@@ -68,6 +69,7 @@ const user = useAuthUser()
 const theme = useTheme()
 
 const updateAvatar = async () => {
+    if (user.value.user_id === -1) return
     try {
         const data = await $fetch('/api/avatar/' + user.value.user_id);
         src.value = data.data;
@@ -77,6 +79,7 @@ const updateAvatar = async () => {
 }
 
 const updateBg = async () => {
+    if (user.value.user_id === -1) return
     try {
         const data = await $fetch('/api/bg/' + user.value.user_id);
         bgSrc.value = data.data || '/card-image.jpg';
@@ -109,10 +112,6 @@ watch(
     theme.global.name.value = val === 'dark' ? 'dark' : 'light'
   }
 )
-
-onMounted(async () => {
-    fetchAuthUser();
-});
 </script>
 
 <style scoped>

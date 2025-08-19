@@ -80,9 +80,10 @@ const commentCount = ref(0)
 const shareCount = ref(0)
 const userTime = ref('')
 const { t } = useI18n()
+const route = useRoute()
 
 const goToDetail = () => {
-  router.push(localePath(`/detail/${tweet.value.tweet_id}`));
+  router.push(localePath(`/detail/${tweet.value.tweet_id}?from="${route.path}"`));
 };
 
 const likeTweet = async () => {

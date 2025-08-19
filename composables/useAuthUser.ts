@@ -6,6 +6,10 @@ export const fetchAuthUser = async () => {
     const data = <any>await $fetch('/api/auth/user')
     user.value = data.user || null
   } catch {
-    user.value = null
+    user.value = {
+      user_id: -1,
+      admin: false,
+      username: 'guest'
+    }
   }
 }

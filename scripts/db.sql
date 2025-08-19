@@ -89,10 +89,15 @@ CREATE TABLE IF NOT EXISTS Follows (
                             FOREIGN KEY (following_id) REFERENCES Users(user_id)
 );
 
-drop trigger if exists before_tweet_tags_delete;
+CREATE TABLE IF NOT EXISTS Admins (
+                            user_id BIGINT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 drop trigger if exists before_tweet_delete;
 drop trigger if exists before_comment_delete;
 drop trigger if exists before_follow_insert;
+drop trigger if exists before_user_delete;
 drop procedure if exists add_tweet_tags;
 drop procedure if exists get_tweets_by_tags_desc;
 drop procedure if exists get_tweets_by_tags_asc;
@@ -107,24 +112,6 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '不能关注自己';
     END IF;
 END $$
-
-DELIMITER ;
-
-DELIMITER $$
-
-CREATE TRIGGER before_tweet_tags_delete
-AFTER DELETE ON TweetTags
-FOR EACH ROW
-BEGIN
-    DECLARE tag_count INT;
-    SELECT COUNT(*) INTO tag_count 
-    FROM TweetTags 
-    WHERE tag_id = OLD.tag_id;
-
-    IF tag_count = 0 THEN
-        DELETE FROM TAGS WHERE tag_id = OLD.tag_id;
-    END IF;
-END$$
 
 DELIMITER ;
 
@@ -150,6 +137,23 @@ BEFORE DELETE ON Comments
 FOR EACH ROW
 BEGIN
     DELETE FROM Messages WHERE comment_id = OLD.comment_id;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER before_user_delete
+BEFORE DELETE ON Users
+FOR EACH ROW
+BEGIN
+    DELETE FROM Avatar WHERE user_id = OLD.user_id;
+    DELETE FROM Tweets WHERE user_id = OLD.user_id;
+    DELETE FROM Comments WHERE user_id = OLD.user_id;
+    DELETE FROM Likes WHERE user_id = OLD.user_id;
+    DELETE FROM Messages WHERE sender_id = OLD.user_id OR receiver_id = OLD.user_id;
+    DELETE FROM Follows WHERE follower_id = OLD.user_id OR following_id = OLD.user_id;
+    DELETE FROM Admins WHERE user_id = OLD.user_id;
 END$$
 
 DELIMITER ;

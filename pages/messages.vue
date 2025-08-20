@@ -26,7 +26,7 @@
                     </template>
 
                     <template #item.tweet_id="{ item }">
-                        <v-btn v-if="item.tweet_id" :to="`/detail/${item.tweet_id}`">{{ item.tweet_id }}</v-btn>
+                        <v-btn v-if="item.tweet_id" :to="`/detail/${item.tweet_id}?from=${route.path}`">{{ item.tweet_id }}</v-btn>
                         <span v-else>-</span>
                     </template>
 
@@ -68,6 +68,7 @@ const usernames = ref<Record<number, string>>({})
 const search = ref('')
 const currentUser = useAuthUser()
 const localePath = useLocalePath()
+const route = useRoute()
 
 const headers = [
     { title: t('sender'), value: 'sender', sortable: true },

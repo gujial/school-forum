@@ -173,7 +173,11 @@ const deleteTweet = async (tweetId) => {
     try {
         const res = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' })
         if (res.success) {
-            navigateTo(localePath(route.query.from));
+            if (route.query.from && route.query.from !== '') {
+                navigateTo(localePath(route.query.from));
+            } else {
+                navigateTo(localePath('/'));
+            }
         } else {
             error.value = res.message || '删除失败'
         }

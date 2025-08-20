@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
         const { rows } = await db.sql`
             SELECT * from Reports
-            ORDER BY u.created_at DESC
+            ORDER BY created_at DESC
             LIMIT ${limit} OFFSET ${offset}
             `
 

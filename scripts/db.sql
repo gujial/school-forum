@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS Reports (
                             comment_id BIGINT,
                             user_id BIGINT,
                             content TEXT NOT NULL,
+                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                             FOREIGN KEY (tweet_id) REFERENCES Tweets(tweet_id),
                             FOREIGN KEY (comment_id) REFERENCES Comments(comment_id),
                             FOREIGN KEY (user_id) REFERENCES Users(user_id)

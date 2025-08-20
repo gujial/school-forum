@@ -11,21 +11,22 @@
                     variant="outlined" hide-details single-line></v-text-field>
             </template>
             <v-card-text>
-                <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="id" :search="search"
+                <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="message_id" :search="search"
                     class="elevation-1">
                     <template #item.created_at="{ item }">
                         {{ new Date(item.created_at).toLocaleString() }}
                     </template>
+
                     <template #item.sender="{ item }">
-                        <span>{{ usernames[item.sender_id] || 'Loading...' }}</span>
+                        <v-btn flat :to="`/profile/${item.sender_id}`">{{ usernames[item.sender_id] || 'Loading...' }}</v-btn>
                     </template>
 
                     <template #item.receiver="{ item }">
-                        <span>{{ usernames[item.receiver_id] || 'Loading...' }}</span>
+                        <v-btn flat :to="`/profile/${item.receiver_id}`">{{ usernames[item.receiver_id] || 'Loading...' }}</v-btn>
                     </template>
 
                     <template #item.tweet_id="{ item }">
-                        <v-btn v-if="item.tweet_id" :to="`/detail/${item.tweet_id}`" text>{{ item.tweet_id }}</v-btn>
+                        <v-btn v-if="item.tweet_id" :to="`/detail/${item.tweet_id}`">{{ item.tweet_id }}</v-btn>
                         <span v-else>-</span>
                     </template>
 
@@ -69,9 +70,6 @@ const currentUser = useAuthUser()
 const localePath = useLocalePath()
 
 const headers = [
-    { title: t('id'), value: 'message_id', sortable: true },
-    { title: t('senderId'), value: 'sender_id', sortable: true },
-    { title: t('receiverId'), value: 'receiver_id', sortable: true },
     { title: t('sender'), value: 'sender', sortable: true },
     { title: t('receiver'), value: 'receiver', sortable: true },
     { title: t('tweetId'), value: 'tweet_id', sortable: true },
@@ -158,7 +156,7 @@ watch(messages, (msgs) => {
 })
 
 onMounted(() => {
-    if (currentUser.value.user_id === -1) {
+    if (currentUser.value && currentUser.value.user_id === -1) {
         navigateTo(localePath('/login'))
     }
     fetchMessages()

@@ -3,7 +3,7 @@ import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth';
 
 export default defineEventHandler(async (event) => {
-    authMiddleware(event);
+    await authMiddleware(event);
     const userInfo = event.context.auth
     const db = useDatabase()
 

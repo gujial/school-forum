@@ -37,7 +37,7 @@
                 <!-- 二级评论展示 -->
                 <div v-if="comment.replies && comment.replies.length > 0" class="reply-list">
                     <v-card v-for="reply in comment.replies" :key="reply.comment_id" class="ml-6 mb-2" variant="tonal"
-                        density="compact">
+                        density="compact" :id="`comment-${reply.comment_id}`">
                         <v-card-title class="text-caption d-flex align-center">
                             <v-avatar size="24" class="mr-2">
                                 <v-img v-if="reply.avatar" :src="reply.avatar" />
@@ -138,7 +138,8 @@ const confirmReport = async () => {
         const res = await $fetch(`/api/report/comment/${reportCommentId.value}`, {
             method: 'POST',
             body: JSON.stringify({
-                content: reportContent.value
+                content: reportContent.value,
+                tweet_id: props.tweetId
             })
         })
 

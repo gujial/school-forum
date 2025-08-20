@@ -3,12 +3,12 @@ import { useDatabase } from '../../../util/database'
 import adminAuthMiddleware from '../../../util/adminAuth'
 
 export default defineEventHandler(async (event) => {
-    adminAuthMiddleware(event);
+    await adminAuthMiddleware(event);
     const db = useDatabase()
     const reportId = getRouterParam(event, 'id');
 
     try {
-        await db.sql`delete from reports where user_id = ${reportId}`
+        await db.sql`delete from reports where report_id = ${reportId}`
 
         return {
             success: true,

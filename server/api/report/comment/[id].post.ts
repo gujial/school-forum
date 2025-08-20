@@ -19,11 +19,12 @@ export default defineEventHandler(async (event) => {
     const newReport = {
         user_id: userInfo.userId,
         content: body['content'],
+        tweet_id: body['tweet_id'],
         comment_id: commentId
     }
 
     try {
-        await db.sql`INSERT INTO Reports(user_id, content, comment_id) values (${newReport.user_id}, ${newReport.content}, ${newReport.comment_id})`;
+        await db.sql`INSERT INTO Reports(user_id, content, tweet_id, comment_id) values (${newReport.user_id}, ${newReport.content}, ${newReport.tweet_id}, ${newReport.comment_id})`;
 
         return {
             success: true,

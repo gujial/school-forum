@@ -126,7 +126,12 @@ export default defineI18nConfig(() => ({
       confirmReportMsg: 'Are you sure to report this tweet/comment?',
       reportContent: 'Report Content',
       reportSuccess: 'Report Successfully',
+      reportManage: 'Report Manage',
       report: 'Report',
+      AIReports: 'AI Reported',
+      deleteAllReports: 'Delete All Reports',
+      user: 'User',
+      userId: 'User ID',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -296,6 +301,11 @@ export default defineI18nConfig(() => ({
       reportContent: '举报内容',
       reportSuccess: '成功举报',
       report: '举报',
+      reportManage: '举报管理',
+      AIReports: 'AI审核员',
+      deleteAllReports: '删除所有举报信息',
+      user: '用户',
+      userId: '用户 ID',
       $vuetify: {
         input: {
           prependAction: '添加图片',

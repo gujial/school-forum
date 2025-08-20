@@ -1,0 +1,29 @@
+[**nuxt-app**](../../../../../README.md)
+
+***
+
+[nuxt-app](../../../../../README.md) / [api/tweets/like/\[id\]](../README.md) / default
+
+# Variable: default
+
+> **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
+
+Defined in: [api/tweets/like/\[id\].ts:21](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/tweets/like/[id].ts#L21)
+
+点赞或取消点赞指定推文（幂等切换）。
+
+路由: POST /api/tweets/like/:id
+权限: 登录用户
+
+路径参数:
+- id: string 推文 ID
+
+返回:
+- { success: true, message }
+- { success: false, message }
+
+## Param
+
+H3 请求事件对象
+
+## Returns

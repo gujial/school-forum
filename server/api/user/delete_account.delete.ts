@@ -2,10 +2,6 @@ import { defineEventHandler, createError } from 'h3'
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth'
 
-interface DeleteBody {
-  password: string
-}
-
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
   const userInfo = event.context.auth

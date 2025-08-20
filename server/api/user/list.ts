@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
                 u.created_at,
             EXISTS (
                 SELECT 1 
-                FROM admins a 
+                FROM Admins a 
                 WHERE a.user_id = u.user_id
                 ) AS admin
             FROM Users u

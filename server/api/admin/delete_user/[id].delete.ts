@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id');
 
     try {
-        await db.sql`delete from users where user_id = ${userId}`
+        await db.sql`delete from Users where user_id = ${userId}`
 
         return {
             success: true,

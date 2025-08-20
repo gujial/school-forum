@@ -371,5 +371,7 @@ FLUSH PRIVILEGES;
 /**/
 
 /*添加初始用户*/
-INSERT INTO Users (username, email, password) VALUES
-('admin', 'admin', '$2b$10$Hrl6HxggObHjW2y4aeYJf.AbkqZAfoY34dGjpndRfj8QL5.FKJWhS');
+INSERT INTO Users (user_id, username, email, password) VALUES
+(1, 'admin', 'admin', '$2b$10$Hrl6HxggObHjW2y4aeYJf.AbkqZAfoY34dGjpndRfj8QL5.FKJWhS');
+
+INSERT INTO Admins (user_id) VALUES (1);

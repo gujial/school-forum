@@ -34,6 +34,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-forum_pass}
       - DB_NAME=${DB_NAME:-school_forum}
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     ports:
       - "3000:3000"
     volumes:

@@ -8,8 +8,10 @@ export default {
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
     "@nuxtjs/i18n",
-    '@sidebase/nuxt-auth'
+    '@sidebase/nuxt-auth',
+    '@scalar/nuxt'
   ],
+  
   // esline: {
   //   config: {
   //     stylke: true,
@@ -48,13 +50,15 @@ export default {
   },
 
   nitro: {
-    // 使用自定义MySQL连接池
+    experimental: {
+      openAPI: true,
+    },
   },
 
   i18n: {
     vueI18n: './i18n.config.ts', // if you are using custom path, default
     locales: ['zh', 'en'],
-    strategy: 'prefix_except_default', 
+    strategy: 'prefix_except_default',
     defaultLocale: 'zh'
   },
 

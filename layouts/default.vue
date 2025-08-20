@@ -23,7 +23,7 @@ onMounted(async () => {
 watch(
   () => colorMode.value,
   (val) => {
-    theme.global.name.value = val === 'dark' ? 'dark' : 'light'
+    theme.change(val === 'dark' ? 'dark' : 'light')
   },
   { immediate: true }
 )

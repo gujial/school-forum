@@ -110,7 +110,7 @@ watch(user, (val) => {
 watch(
   () => colorMode.value,
   (val) => {
-    theme.global.name.value = val === 'dark' ? 'dark' : 'light'
+    theme.change(val === 'dark' ? 'dark' : 'light')
   }
 )
 </script>

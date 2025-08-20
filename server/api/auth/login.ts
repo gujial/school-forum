@@ -27,6 +27,23 @@ interface UserRows {
 
 const JWT_SECRET = 'twitterClone';
 
+/**
+ * 用户登录，验证邮箱与密码，签发 JWT 并设置到 Cookie `auth_token`。
+ *
+ * 路由: POST /api/auth/login
+ * 权限: 公开
+ *
+ * 请求体:
+ * - email: string 必填
+ * - password: string 必填
+ *
+ * 返回:
+ * - { success: true, message: string, token: string }
+ * - 失败时抛出 400 错误或返回错误信息
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string, token: string}>}
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody<LoginBody>(event);
   const { email, password } = body;

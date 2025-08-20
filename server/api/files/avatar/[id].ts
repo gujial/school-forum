@@ -3,6 +3,20 @@ import { readdir } from 'fs/promises'
 import { join } from 'path'
 import { defineEventHandler, getRouterParam, createError, setHeader } from 'h3'
 
+/**
+ * 读取某用户目录下最新头像文件。
+ *
+ * 路由: GET /api/files/avatar/:id
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - id: string 用户 ID
+ *
+ * 返回: 二进制图片数据，默认 Content-Type 为 image/jpeg
+ *
+ * @param {import('h3').H3Event} event
+ * @returns {Promise<Buffer>}
+ */
 export default defineEventHandler(async (event) => {
   const userId = getRouterParam(event, 'id')
   

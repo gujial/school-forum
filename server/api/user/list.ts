@@ -1,6 +1,24 @@
 import { defineEventHandler, getQuery } from 'h3'
 import { useDatabase } from '../../util/database'
 
+/**
+ * 获取用户列表（支持分页与关键词模糊查询）。
+ *
+ * 路由: GET /api/user/list
+ * 权限: 无（公开）
+ *
+ * 查询参数:
+ * - page: number 当前页，默认 1
+ * - pageSize: number 每页数量，默认 20
+ * - keyword: string 关键词，匹配 username 或 email
+ *
+ * 返回:
+ * - { success: true, data: any[], maxPages: number }
+ * - { success: false, message: string }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data?: any[], maxPages?: number, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase()
     const query = getQuery(event)

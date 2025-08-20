@@ -1,5 +1,21 @@
 import { useDatabase } from '../../util/database'
 
+/**
+ * 获取指定用户的背景图 URL。
+ *
+ * 路由: GET /api/bg/:id
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - id: string 用户 ID
+ *
+ * 返回:
+ * - { success: true, data: string }
+ * - { success: false, data: '' }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data: string}>}
+ */
 export default defineEventHandler(async (event) => {
   const userId = getRouterParam(event, 'id')
   const db = useDatabase()

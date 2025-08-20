@@ -1,6 +1,25 @@
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth';
 
+/**
+ * 修改指定推文内容。
+ *
+ * 路由: PUT /api/tweets/:id
+ * 权限: 登录用户（必须为推文作者或管理员）
+ *
+ * 路径参数:
+ * - id: string 推文 ID
+ *
+ * 请求体:
+ * - content: string 新内容
+ *
+ * 返回:
+ * - { success: true }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     authMiddleware(event); 
     const tweetId = getRouterParam(event, 'id')

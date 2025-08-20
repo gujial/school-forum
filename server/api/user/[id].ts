@@ -1,6 +1,22 @@
 import { defineEventHandler, getRouterParam } from 'h3'
 import { useDatabase } from '../../util/database'
 
+/**
+ * 获取指定用户的公开信息与是否为管理员标记。
+ *
+ * 路由: GET /api/user/:id
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - id: string 用户 ID
+ *
+ * 返回:
+ * - { success: true, user: { user_id, username, email, created_at, admin } }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, user?: any, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
     const userId = getRouterParam(event, 'id');

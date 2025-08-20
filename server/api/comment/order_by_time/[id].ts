@@ -1,6 +1,26 @@
 import { defineEventHandler, getRouterParam, getQuery } from 'h3'
 import { useDatabase } from '../../../util/database'
 
+/**
+ * 获取某条推文下的顶级评论，按时间倒序，分页返回。
+ *
+ * 路由: GET /api/comment/order_by_time/:id
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - id: string 推文 ID
+ *
+ * 查询参数:
+ * - page: number 必填，页号
+ * - pageSize?: number 每页数量，默认 20
+ *
+ * 返回:
+ * - { success: true, data: any[], maxPages: number }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data?: any[], maxPages?: number, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase()
     const tweetId = getRouterParam(event, 'id')

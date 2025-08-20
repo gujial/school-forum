@@ -2,6 +2,21 @@ import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { defineEventHandler, getRouterParam, createError } from 'h3'
 
+/**
+ * 读取某条推文目录下的媒体文件。
+ *
+ * 路由: GET /api/files/media/:tweetId/:filename
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - tweetId: string 推文 ID
+ * - filename: string 文件名（需 URL 编码安全）
+ *
+ * 返回: 二进制文件流，按扩展名设置 Content-Type
+ *
+ * @param {import('h3').H3Event} event
+ * @returns {Promise<Buffer>}
+ */
 export default defineEventHandler(async (event) => {
   const tweetId = getRouterParam(event, 'tweetId')
   const filename = getRouterParam(event, 'filename')

@@ -1,6 +1,25 @@
 import { defineEventHandler, readBody, getQuery } from 'h3'
 import { useDatabase } from '../../util/database';
 
+/**
+ * 按标签过滤推文（需同时包含全部指定标签），按时间倒序分页。
+ *
+ * 路由: GET/POST /api/tweets/by_tags_desc
+ * 权限: 公开
+ *
+ * 参数来源:
+ * - GET 查询参数: tags, page?, pageSize?
+ * - POST JSON 体: tags, page?, pageSize?
+ *
+ * tags 支持逗号分隔字符串或数组，去重后按全部包含匹配。
+ *
+ * 返回:
+ * - { success: true, data: any[], maxPages }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event
+ * @returns {Promise<{success: boolean, data?: any[], maxPages?: number, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
     let tags, page, pageSize;

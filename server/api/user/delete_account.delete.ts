@@ -2,6 +2,19 @@ import { defineEventHandler, createError } from 'h3'
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth'
 
+/**
+ * 删除当前登录账户。
+ *
+ * 路由: DELETE /api/user/delete_account
+ * 权限: 登录用户
+ *
+ * 返回:
+ * - { success: true, message }
+ * - 失败时抛出 404 或其他错误
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
   const userInfo = event.context.auth

@@ -23,6 +23,23 @@ interface UserRows {
   rows: User[]
 }
 
+/**
+ * 用户注册，创建用户记录并初始化头像。
+ *
+ * 路由: POST /api/auth/register
+ * 权限: 公开
+ *
+ * 请求体:
+ * - username: string 必填
+ * - email: string 必填
+ * - password: string 必填
+ *
+ * 返回:
+ * - { success: true, message: string }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
   const body = await readBody<RegisterBody>(event)
   const { username, email, password } = body

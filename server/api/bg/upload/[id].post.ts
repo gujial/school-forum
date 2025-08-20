@@ -3,6 +3,23 @@ import { mkdirSync, copyFileSync, unlinkSync, existsSync } from 'fs'
 import { join } from 'path'
 import { useDatabase } from '../../../util/database'
 
+/**
+ * 上传并替换指定用户的背景图，删除旧背景文件并更新 `Users.bg_url`。
+ *
+ * 路由: POST /api/bg/upload/:id
+ * 权限: 登录用户（通常应与自身 ID 匹配，具体由业务层校验）
+ *
+ * 路径参数:
+ * - id: string 用户 ID
+ *
+ * 请求: multipart/form-data，字段名 `file`
+ *
+ * 返回:
+ * - { success: true, data: string } 背景图 URL
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data: string}>}
+ */
 export default defineEventHandler(async (event) => {
   const userId = getRouterParam(event, 'id')
   const form = new IncomingForm({ multiples: false })

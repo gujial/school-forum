@@ -8,6 +8,23 @@ interface PasswordBody {
   newPassword: string
 }
 
+/**
+ * 修改当前用户的密码。
+ *
+ * 路由: PUT /api/user/modify_password
+ * 权限: 登录用户
+ *
+ * 请求体:
+ * - oldPassword: string 必填，旧密码
+ * - newPassword: string 必填，新密码
+ *
+ * 返回:
+ * - { success: true, message }
+ * - 失败时抛出 400/401/404 等错误
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
   await authMiddleware(event) // 获取当前用户信息
   const body = await readBody<PasswordBody>(event)

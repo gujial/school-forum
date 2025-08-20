@@ -3,6 +3,25 @@ import authMiddleware from '../../util/auth';
 import { useDatabase } from '../../util/database';
 import { auditAndReport } from "../../util/contentModeration";
 
+/**
+ * 创建推文（可附带标签与媒体）。
+ *
+ * 路由: POST /api/tweets/new
+ * 权限: 登录用户
+ *
+ * 请求体:
+ * - content: string 必填，推文内容
+ * - parent_id?: number 可选，引用的父推文 ID（转发/评论）
+ * - attachments?: string[] 可选，已上传媒体的 URL 列表
+ * - tags?: string[] | string 可选，标签集合
+ *
+ * 返回:
+ * - { success: true, tweet_id: number, message: string }
+ * - { success: false, message: string }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, tweet_id?: number, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase()
     const body = await readBody(event)

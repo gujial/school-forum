@@ -6,6 +6,22 @@ interface UsernameBody {
   newUsername: string
 }
 
+/**
+ * 修改当前用户的用户名。
+ *
+ * 路由: PUT /api/user/modify_username
+ * 权限: 登录用户
+ *
+ * 请求体:
+ * - newUsername: string 必填，新的用户名
+ *
+ * 返回:
+ * - { success: true, message, newUsername }
+ * - 失败时抛出 400 等错误
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string, newUsername?: string}>}
+ */
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
   const body = await readBody<UsernameBody>(event)

@@ -1,6 +1,22 @@
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth'
 
+/**
+ * 修改当前用户的邮箱。
+ *
+ * 路由: PUT /api/user/modify_email
+ * 权限: 登录用户
+ *
+ * 请求体:
+ * - newEmail: string 必填，新邮箱
+ *
+ * 返回:
+ * - { success: true, message, newEmail }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string, newEmail?: string}>}
+ */
 export default defineEventHandler(async (event) => {
   await authMiddleware(event)
 

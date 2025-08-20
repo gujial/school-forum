@@ -2,6 +2,24 @@ import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth';
 import { auditAndReport } from "../../util/contentModeration";
 
+/**
+ * 回复评论（子评论）。
+ *
+ * 路由: POST /api/comment/reply
+ * 权限: 登录用户
+ *
+ * 请求体:
+ * - tweet_id: number 所属推文 ID
+ * - parent_id: number 父评论 ID
+ * - content: string 回复内容
+ *
+ * 返回:
+ * - { success: true }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     await authMiddleware(event);
     const body = await readBody(event)

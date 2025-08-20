@@ -1,6 +1,25 @@
 import { defineEventHandler, getQuery } from 'h3'
 import { useDatabase } from '../../util/database'
 
+/**
+ * 搜索推文，支持关键词与时间排序，带分页。
+ *
+ * 路由: GET /api/tweets/search
+ * 权限: 公开
+ *
+ * 查询参数:
+ * - keyword?: string 关键词，默认空
+ * - page?: number 页号，默认 1
+ * - pageSize?: number 每页数量，默认 20
+ * - order?: 'asc' | 'desc' 时间顺序，默认 desc
+ *
+ * 返回:
+ * - { success: true, data: any[], maxPages: number }
+ * - { success: false, message: string }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data?: any[], maxPages?: number, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase()
     const query = getQuery(event)

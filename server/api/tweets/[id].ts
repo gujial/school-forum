@@ -1,6 +1,22 @@
 import { defineEventHandler, getRouterParam } from 'h3'
 import { useDatabase } from '../../util/database'
 
+/**
+ * 获取单条推文详情，包含标签集合。
+ *
+ * 路由: GET /api/tweets/:id
+ * 权限: 公开
+ *
+ * 路径参数:
+ * - id: string 推文 ID
+ *
+ * 返回:
+ * - { success: true, data: { ...tweet, tags: string[] } }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, data?: any, message?: string}>}
+ */
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
     const tweetId = getRouterParam(event, 'id');

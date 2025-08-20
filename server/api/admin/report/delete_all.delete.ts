@@ -2,6 +2,19 @@ import { defineEventHandler, getRouterParam, createError } from 'h3'
 import { useDatabase } from '../../../util/database'
 import adminAuthMiddleware from '../../../util/adminAuth'
 
+/**
+ * 管理端清空全部举报记录。
+ *
+ * 路由: DELETE /api/admin/report/delete_all
+ * 权限: 管理员
+ *
+ * 返回:
+ * - { success: true, message }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
     await adminAuthMiddleware(event);
     const userInfo = event.context.auth

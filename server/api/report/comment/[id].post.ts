@@ -2,6 +2,26 @@ import { defineEventHandler, readBody, createError } from 'h3'
 import authMiddleware from '../../../util/auth';
 import { useDatabase } from '../../../util/database';
 
+/**
+ * 举报评论。
+ *
+ * 路由: POST /api/report/comment/:id
+ * 权限: 登录用户
+ *
+ * 路径参数:
+ * - id: string 评论 ID
+ *
+ * 请求体:
+ * - content: string 举报理由
+ * - tweet_id: number 所属推文 ID
+ *
+ * 返回:
+ * - { success: true, message }
+ * - { success: false, message }
+ *
+ * @param {import('h3').H3Event} event H3 请求事件对象
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export default defineEventHandler(async (event) => {
     await authMiddleware(event);
     const db = useDatabase()

@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     const reportId = getRouterParam(event, 'id');
 
     try {
-        await db.sql`delete from reports where report_id = ${reportId}`;
+        await db.sql`delete from Reports where report_id = ${reportId}`;
 
         return {
             success: true,

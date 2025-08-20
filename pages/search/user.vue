@@ -5,7 +5,7 @@
             @keyup.enter="fetchUsers" />
 
         <!-- 用户表格 -->
-        <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" :page.sync="page" :loading="loading"
+        <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" v-model:page="page" :loading="loading"
             :server-items-length="totalUsers" class="elevation-1">
 
             <template #item.created_at="{ item }">

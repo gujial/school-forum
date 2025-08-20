@@ -12,9 +12,10 @@
     <div v-else-if="ready">
         <v-btn variant="flat" @click="toggleApi">{{ commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
             }}</v-btn>
-        <v-card v-for="(comment, index) in comments" :key="comment.comment_id" :title="users[index].username"
-            :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')" :variant="'flat'"
-            :id="`comment-${comment.comment_id}`">
+        <v-card
+v-for="(comment, index) in comments" :id="`comment-${comment.comment_id}`" :key="comment.comment_id"
+            :title="users[index].username" :subtitle="moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')"
+            :variant="'flat'">
             <template #prepend>
                 <v-avatar size="40" @click="navigateTo(`/profile/${users[index].user_id}`)">
                     <v-img v-if="avatars[index]" :src="avatars[index]" />
@@ -26,18 +27,21 @@
                     <v-btn v-if="currentUser && currentUser.user_id !== -1" @click="showReplyBox(comment.comment_id)">{{
                         $t('reply')
                         }}</v-btn>
-                    <v-btn v-if="currentUser && currentUser.user_id !== -1"
+                    <v-btn
+v-if="currentUser && currentUser.user_id !== -1"
                         @click="openCommentReportDialog(comment.comment_id)">{{
                         $t('report') }}</v-btn>
-                    <v-btn v-if="currentUser && (currentUser.user_id === users[index].user_id || currentUser.admin)"
+                    <v-btn
+v-if="currentUser && (currentUser.user_id === users[index].user_id || currentUser.admin)"
                         color="red" variant="text" @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
                     </v-btn>
                 </v-card-actions>
                 <!-- 二级评论展示 -->
                 <div v-if="comment.replies && comment.replies.length > 0" class="reply-list">
-                    <v-card v-for="reply in comment.replies" :key="reply.comment_id" class="ml-6 mb-2" variant="tonal"
-                        density="compact" :id="`comment-${reply.comment_id}`">
+                    <v-card
+v-for="reply in comment.replies" :id="`comment-${reply.comment_id}`" :key="reply.comment_id" class="ml-6 mb-2"
+                        variant="tonal" density="compact">
                         <v-card-title class="text-caption d-flex align-center">
                             <v-avatar size="24" class="mr-2">
                                 <v-img v-if="reply.avatar" :src="reply.avatar" />
@@ -49,9 +53,11 @@
                         </v-card-title>
                         <v-card-text class="text-body-2">{{ reply.content }}</v-card-text>
                         <v-card-actions>
-                            <v-btn v-if="currentUser && currentUser.user_id !== -1"
+                            <v-btn
+v-if="currentUser && currentUser.user_id !== -1"
                                 @click="openCommentReportDialog(reply.comment_id)">{{ $t('report') }}</v-btn>
-                            <v-btn v-if="currentUser && (currentUser.user_id === reply.user_id)" color="red"
+                            <v-btn
+v-if="currentUser && (currentUser.user_id === reply.user_id)" color="red"
                                 variant="text" @click="showDeleteDialog(reply)">
                                 {{ $t('delete') }}
                             </v-btn>
@@ -76,9 +82,9 @@
             <v-card-title>{{ $t('deleteComment') }}</v-card-title>
             <v-card-text>{{ commentToDelete.content }} ({{
                 moment.utc(commentToDelete.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss') }})</v-card-text>
-            <v-divider></v-divider>
+            <v-divider/>
             <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer/>
                 <v-btn text @click="showDelete = false">{{ $t('cancel') }}</v-btn>
                 <v-btn color="red" @click="handleDeleteConfirm">{{ $t('confirm') }}</v-btn>
             </v-card-actions>
@@ -131,7 +137,7 @@ const openCommentReportDialog = (commentId) => {
 
 const confirmReport = async () => {
     try {
-        if (!reportContent || reportContent === '') {
+        if (!reportContent.value || reportContent.value === '') {
             throw t('contentRequired')
         }
 
@@ -290,7 +296,7 @@ const showDeleteDialog = (comment) => {
 }
 
 watch(suc, () => {
-    if (suc) {
+    if (suc.value) {
         setTimeout(() => {
             suc.value = null
         }, 2000)
@@ -298,7 +304,7 @@ watch(suc, () => {
 })
 
 watch(error, () => {
-    if (error) {
+    if (error.value) {
         setTimeout(() => {
             error.value = null
         }, 2000)

@@ -5,7 +5,7 @@
       @keyup.enter="fetchUsers" />
 
     <!-- 用户表格 -->
-    <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" :page.sync="page" :loading="loading"
+    <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" v-model:page="page" :loading="loading"
       :server-items-length="totalUsers" class="elevation-1">
 
       <template #item.created_at="{ item }">
@@ -76,11 +76,11 @@ const loading = ref(false)
 
 const deleteDialog = ref(false)
 const userToDelete = ref<any>(null)
-const error = ref<any>(null)
+const error = ref<string | null>(null)
 const currentUser = useAuthUser()
 
 async function addAdmin(user_id: number) {
-  if (currentUser.value.user_id === user_id) {
+  if (currentUser.value && currentUser.value.user_id === user_id) {
     error.value = '不能修改自己'
     return
   }
@@ -96,7 +96,7 @@ async function addAdmin(user_id: number) {
 }
 
 async function deleteAdmin(user_id: number) {
-  if (currentUser.value.user_id === user_id) {
+  if (currentUser.value && currentUser.value.user_id === user_id) {
     error.value = '不能修改自己'
     return
   }
@@ -135,7 +135,7 @@ async function fetchUsers() {
 }
 
 function confirmDelete(user: any) {
-  if (currentUser.value.user_id === user.user_id) {
+  if (currentUser.value && currentUser.value.user_id === user.user_id) {
     error.value = '不能删除自己'
     return
   }

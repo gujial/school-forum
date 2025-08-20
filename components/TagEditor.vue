@@ -1,15 +1,17 @@
 <template>
     <div class="tag-editor">
-        <v-text-field v-model="inputTag" :label="$t('tags')" @keydown.enter.prevent="addTag" @blur="addTag"
-            placeholder="请输入标签，按回车或逗号添加" clearable />
+        <v-text-field
+v-model="inputTag" :label="$t('tags')" placeholder="请输入标签，按回车或逗号添加" clearable
+            @keydown.enter.prevent="addTag" @blur="addTag" />
         <span>{{ $t('presetTags') }}: </span>
         <v-btn flat @click="addTagFromPreset(['school'])">{{ $t('school') }}</v-btn>
         <v-btn flat @click="addTagFromPreset(['school', 'biaobai'])">{{ $t('biaobai') }}</v-btn>
         <v-btn flat @click="addTagFromPreset(['school', 'help'])">{{ $t('help') }}</v-btn>
         <v-btn flat @click="addTagFromPreset(['school', 'news'])">{{ $t('news') }}</v-btn>
-        <div class="tag-list" v-if="tags.length > 0">
-            <v-chip v-for="(tag, index) in tags" :key="tag" closable @click:close="removeTag(index)" class="ma-1"
-                color="primary" text-color="white">
+        <div v-if="tags.length > 0" class="tag-list">
+            <v-chip
+v-for="(tag, index) in tags" :key="tag" closable class="ma-1" color="primary"
+                text-color="white" @click:close="removeTag(index)">
                 {{ tag }}
             </v-chip>
         </div>

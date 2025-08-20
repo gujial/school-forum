@@ -1,6 +1,6 @@
 <template>
   <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
-    <div class="bg-mask"></div>
+    <div class="bg-mask"/>
     <v-row class="align-center" no-gutters>
       <v-col cols="12" sm="auto" class="d-flex">
         <v-avatar size="120" class="mx-2">
@@ -11,17 +11,16 @@
   </v-card>
 </template>
 
-<script setup>
-const props = defineProps({
-  user: String()
-});
+<script setup lang="ts">
+defineOptions({ name: 'AppAvatar' })
+const props = defineProps<{ user: { user_id: number } }>()
 const src = ref('/icon.png')
 const bgSrc = ref('/card-image.jpg')
 
 const updateAvatar = async () => {
   try {
-    const data = await $fetch('/api/avatar/' + props.user.user_id);
-    src.value = data.data;
+    const data = await $fetch<{ success: boolean; data: string }>('/api/avatar/' + props.user.user_id)
+    src.value = data.data
   } catch (err) {
     console.log(err)
   }
@@ -29,8 +28,8 @@ const updateAvatar = async () => {
 
 const updateBg = async () => {
   try {
-    const data = await $fetch('/api/bg/' + props.user.user_id);
-    bgSrc.value = data.data || '/card-image.jpg';
+    const data = await $fetch<{ success: boolean; data: string }>('/api/bg/' + props.user.user_id)
+    bgSrc.value = data.data || '/card-image.jpg'
   } catch (err) {
     bgSrc.value = '/card-image.jpg'
   }

@@ -5,39 +5,41 @@
                 {{ $t('reportManage') }}
             </v-card-title>
             <v-card-text>
-                <v-data-table :headers="headers" :items="reports" :loading="loading" item-value="report_id"
+                <v-data-table
+:headers="headers" :items="reports" :loading="loading" item-value="report_id"
                     class="elevation-1">
                     <template #item.created_at="{ item }">
                         {{ new Date(item.created_at).toLocaleString() }}
                     </template>
 
                     <template #item.user="{ item }">
-                        <v-btn flat v-if="item.user_id" :to="`/profile/${item.user_id}`">{{ usernames[item.user_id] || 'Loading...' }}</v-btn>
+                        <v-btn v-if="item.user_id" flat :to="`/profile/${item.user_id}`">{{ usernames[item.user_id] || 'Loading...' }}</v-btn>
                         <span v-else>{{ usernames[item.user_id] || 'Loading...' }}</span>
                     </template>
 
                     <template #item.tweet_id="{ item }">
-                        <v-btn flat v-if="item.tweet_id" :to="`/detail/${item.tweet_id}?from=${route.path}`">{{ item.tweet_id }}</v-btn>
+                        <v-btn v-if="item.tweet_id" flat :to="`/detail/${item.tweet_id}?from=${route.path}`">{{ item.tweet_id }}</v-btn>
                         <span v-else>-</span>
                     </template>
 
                     <template #item.comment_id="{ item }">
-                        <v-btn flat v-if="item.comment_id" :to="`/detail/${item.tweet_id}#comment-${item.comment_id}`">{{ item.comment_id }}</v-btn>
+                        <v-btn v-if="item.comment_id" flat :to="`/detail/${item.tweet_id}#comment-${item.comment_id}`">{{ item.comment_id }}</v-btn>
                         <span v-else>-</span>
                     </template>
 
-                    <template v-slot:item.actions="{ item }">
+                    <template #item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
-                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteReport(item.report_id)"></v-icon>
+                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteReport(item.report_id)"/>
                         </div>
                     </template>
                 </v-data-table>
-                <v-btn class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
-                    :text="$t('deleteAllReports')" @click="deleteAllReports"></v-btn>
+                <v-btn
+class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
+                    :text="$t('deleteAllReports')" @click="deleteAllReports"/>
             </v-card-text>
 
             <v-card-actions class="justify-center">
-                <v-pagination v-model="page" :length="maxPages" total-visible="7"></v-pagination>
+                <v-pagination v-model="page" :length="maxPages" total-visible="7"/>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -71,7 +73,7 @@ async function fetchReports() {
     loading.value = true
 
     try {
-        const data = <any>await $fetch(`/api/admin/report/list`, {
+        const data = await $fetch<any>(`/api/admin/report/list`, {
             params: {
                 page: page.value,
                 pageSize
@@ -103,7 +105,7 @@ async function loadUsername(id: number) {
     }
     if (usernames.value[id]) return
     try {
-        const { user } = <any>await $fetch(`/api/user/${id}`)
+        const { user } = await $fetch<any>(`/api/user/${id}`)
         usernames.value[id] = user.username || 'Unknown User'
     } catch {
         usernames.value[id] = 'Unknown User'

@@ -23,17 +23,17 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 const localePath = useLocalePath()
 
 const email = ref('')
 const password = ref('')
-const error = ref(null)
-const router = useRouter()
+const error = ref<string | null>(null)
+// const router = useRouter()
 const { t } = useI18n()
 
-const required = value => !!value || t('fieldIsRequired')
+const required = (value: string) => !!value || t('fieldIsRequired')
 
 const login = async () => {
   if (email.value == '' || password.value == '') {

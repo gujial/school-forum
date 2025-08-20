@@ -1,8 +1,9 @@
 <template>
     <v-container>
         <v-row class="my-4" justify="space-between">
-            <v-text-field v-model="tagInput" label="输入标签 (逗号分隔)" placeholder="例如: tech,ai,news" clearable
-                @keyup.enter="applyFilter" class="mr-4" />
+            <v-text-field
+v-model="tagInput" label="输入标签 (逗号分隔)" placeholder="例如: tech,ai,news" clearable
+                class="mr-4" @keyup.enter="applyFilter" />
             <v-btn-toggle v-model="order" mandatory>
                 <v-btn value="asc" flat :title="$t('ascending')">
                     <v-icon>mdi-arrow-up</v-icon>
@@ -19,7 +20,7 @@
                 <TweetCard :tweet="tweet" />
             </v-col>
         </v-row>
-        <v-alert v-else-if="!loading&&!error" type="info" v-if="loaded">{{ $t('noTweets') }}</v-alert>
+        <v-alert v-else-if="loaded && !loading && !error" type="info">{{ $t('noTweets') }}</v-alert>
         <v-alert v-else-if="!error" type="info">{{ $t('loading') }}</v-alert>
         <v-alert v-if="error != null" type="error">
             {{ error }}
@@ -29,17 +30,17 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import TweetCard from '~/components/TweetCard.vue'
 
 const tagInput = ref('')
 const order = ref('desc')
-const tweets = ref([])
+const tweets = ref<any[]>([])
 const currentPage = ref(1)
 const maxPages = ref(1)
 const loading = ref(false)
 const loaded = ref(false)
-const error = ref(null)
+const error = ref<string | null>(null)
 
 async function fetchTweets() {
     if (!tagInput.value.trim()) {
@@ -57,10 +58,10 @@ async function fetchTweets() {
                 ? `/api/tweets/by_tags_asc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
                 : `/api/tweets/by_tags_desc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
 
-        const res = await $fetch(url)
+        const res = await $fetch<{ success: boolean; data?: any[]; maxPages?: number; message?: string }>(url)
         if (res.success) {
-            tweets.value = res.data
-            maxPages.value = res.maxPages
+            tweets.value = res.data || []
+            maxPages.value = res.maxPages || 1
             loaded.value = true
         } else {
             error.value = res.message || 'Failed to fetch tweets'

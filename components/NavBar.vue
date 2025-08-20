@@ -1,6 +1,6 @@
 <template>
     <v-app-bar app>
-        <v-btn icon="mdi-menu" @click="() => { if (navOpen) { navOpen = false } else { navOpen = true } }"></v-btn>
+        <v-btn icon="mdi-menu" @click="() => { if (navOpen) { navOpen = false } else { navOpen = true } }"/>
         <v-avatar size="40" class="mx-2" @click="navigateTo(localePath('/'))">
           <v-img cover src="/icon.png" />
         </v-avatar>
@@ -9,41 +9,41 @@
     <v-navigation-drawer v-model="navOpen" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>
         <v-card>
             <v-img class="text-white avatar-bg-mask" height="150px" :src="bgSrc" cover>
-                <div class="bg-mask"></div>
+                <div class="bg-mask"/>
                 <v-avatar style="z-index: 99; position: relative;" size="80" class="mx-2">
                     <v-img cover :src="src" />
                 </v-avatar>
                 <v-card-title style="z-index: 99; position: relative;">{{ user && user.username !== 'guest' ? user.username : $t('guestUser')
                     }}</v-card-title>
-                <v-card-subtitle style="z-index: 99; position: relative;" v-if="user">{{ user ? user.email : $t('clickAccountToLogin') }}</v-card-subtitle>
+                <v-card-subtitle v-if="user" style="z-index: 99; position: relative;">{{ user ? user.email : $t('clickAccountToLogin') }}</v-card-subtitle>
             </v-img>
         </v-card>
 
-        <v-divider></v-divider>
+        <v-divider/>
 
         <v-list :lines="false" density="compact" nav>
             <v-list-item :to="localePath('/')" @click="navOpen = false">
-                <template v-slot:prepend>
+                <template #prepend>
                     <v-icon>mdi-home</v-icon>
                 </template>
                 <v-list-item-title>{{ $t('home') }}</v-list-item-title>
             </v-list-item>
 
             <v-list-item :to="localePath('/account')" @click="navOpen = false">
-                <template v-slot:prepend>
+                <template #prepend>
                     <v-icon>mdi-account</v-icon>
                 </template>
                 <v-list-item-title>{{ $t('account') }}</v-list-item-title>
             </v-list-item>
 
             <v-list-item :to="localePath('/messages')" @click="navOpen = false">
-                <template v-slot:prepend>
+                <template #prepend>
                     <v-icon>mdi-message-text</v-icon>
                 </template>
                 <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
             </v-list-item>
         </v-list>
-        <v-btn flat style="width: 100%;" v-if="user && user.admin" @click="navigateTo(localePath('/admin'))">{{ $t('adminDashboard') }}</v-btn>
+        <v-btn v-if="user && user.admin" flat style="width: 100%;" @click="navigateTo(localePath('/admin'))">{{ $t('adminDashboard') }}</v-btn>
         <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
         <v-btn flat icon="mdi-theme-light-dark" @click="toggleTheme()" />
     </v-navigation-drawer>
@@ -77,7 +77,7 @@ const updateAvatar = async () => {
 
 const updateBg = async () => {
     if (user.value.user_id === -1) {
-        bgSrc = '/card-image.jpg'
+        bgSrc.value = '/card-image.jpg'
         return
     }
     

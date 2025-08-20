@@ -6,7 +6,7 @@
                     <v-card-title>{{ $t('newTweetEdit') }}</v-card-title>
                     <v-card-text>
                         <v-form>
-                            <div id="vditor"></div>
+                            <div id="vditor"/>
                         </v-form>
                     </v-card-text>
                     <v-card-text>

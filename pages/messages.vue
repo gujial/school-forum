@@ -6,7 +6,7 @@
                 <v-tab :value="'sent'">{{ $t('sent') }}</v-tab>
             </v-tabs>
 
-            <template v-slot:text>
+            <template #text>
                 <v-text-field v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify"
                     variant="outlined" hide-details single-line></v-text-field>
             </template>
@@ -35,7 +35,7 @@
                         <span v-else>-</span>
                     </template>
 
-                    <template v-slot:item.actions="{ item }">
+                    <template #item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
                             <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteMessage(item.message_id)"></v-icon>
                         </div>

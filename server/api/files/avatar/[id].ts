@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from 'fs'
 import { readdir } from 'fs/promises'
 import { join } from 'path'
-import { defineEventHandler, getRouterParam, createError, setHeader } from 'h3'
+import { defineEventHandler, getRouterParam, createError } from 'h3'
 
 /**
  * 读取某用户目录下最新头像文件。

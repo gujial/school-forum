@@ -6,8 +6,8 @@
         v-model="keyword"
         :label="$t('enterKeyword')"
         clearable
-        @keyup.enter="applyFilter"
         class="mr-4"
+        @keyup.enter="applyFilter"
       />
 
       <!-- 排序按钮 -->

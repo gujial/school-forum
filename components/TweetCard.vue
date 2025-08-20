@@ -1,5 +1,6 @@
 <template>
-  <v-card v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
+  <v-card
+v-if="user != null" class="mb-3" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime"
     style="display: flex; flex-direction: column;" :height="props.height" :max-height="props.maxHeight"
     @click="goToDetail">
     <v-divider />
@@ -9,13 +10,12 @@
     <v-card-text v-if="tweet.parent_tweet" class="retweet">
       <p>{{ tweet.parent_tweet.content }}</p>
     </v-card-text>
-    <v-card-text :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true  }" :id="`preview${tweet.tweet_id}`">
-    </v-card-text>
+    <v-card-text :id="`preview${tweet.tweet_id}`" :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true  }"/>
     <v-carousel v-if="images.length > 0" height="300px" cycle :show-arrows="false" hide-delimiters>
       <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" cover />
     </v-carousel>
     <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
-    <v-card-text style="flex: none;" v-if="tweet.tags.length > 0">
+    <v-card-text v-if="tweet.tags.length > 0" style="flex: none;">
       <div class="tag-list-wrapper">
         <div class="tag-list">
           <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary" text-color="white">

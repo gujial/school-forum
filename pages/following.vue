@@ -19,8 +19,9 @@
       </v-alert>
 
       <v-list v-else lines="two" class="rounded-lg elevation-1">
-        <FollowListItem v-for="f in followings" :key="f.following_id" :user-id="f.following_id"
-          @unfollow="fetchFollowings()" unfollowable/>
+        <FollowListItem
+v-for="f in followings" :key="f.following_id" :user-id="f.following_id"
+          unfollowable @unfollow="fetchFollowings()"/>
       </v-list>
 
       <!-- 分页 -->

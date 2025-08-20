@@ -11,31 +11,31 @@
                 <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
                     <v-card-actions>
                         <v-btn flat :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
-                        <v-btn flat v-if="!follow_status" @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
-                        <v-btn flat v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
+                        <v-btn v-if="!follow_status" flat @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
+                        <v-btn v-else flat @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
                         <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{
                             $t('profile') }}</v-btn>
-                        <v-btn flat v-if="currentUser && currentUser.user_id !== -1" @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
-                        <v-btn flat v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)"
+                        <v-btn v-if="currentUser && currentUser.user_id !== -1" flat @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
+                        <v-btn
+v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)" flat
                             color="error" @click="openDeleteDialog()">
                             {{ $t('delete') }}
                         </v-btn>
                     </v-card-actions>
-                    <hr>
-                    </hr>
+                    <hr >
                     <v-card-text>
-                        <TweetCard v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content"
+                        <TweetCard
+v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content"
                             max-height="500px" />
                         <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
                             <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
                         </v-carousel>
-                        <video v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
+                        <video
+v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
                             @click.stop />
                     </v-card-text>
-                    <v-card-text :id="`preview${tweet.tweet_id}`">
-                    </v-card-text>
-                    <hr>
-                    </hr>
+                    <v-card-text :id="`preview${tweet.tweet_id}`"/>
+                    <hr >
                     <v-card-actions class="d-flex justify-end">
                         <v-btn icon @click.stop="likeTweet">
                             <v-icon v-if="isLike">
@@ -53,13 +53,15 @@
                         </v-btn>
                         <span>{{ shareCount }}</span>
                     </v-card-actions>
-                    <div class="tag-list" v-if="tweet.tags.length > 0">
-                        <v-chip v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary"
+                    <div v-if="tweet.tags.length > 0" class="tag-list">
+                        <v-chip
+v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary"
                             text-color="white" @click="navigateTo(localePath(`/tags?tags=${tag}`))">
                             {{ tag }}
                         </v-chip>
                     </div>
-                    <CommentEditor :tweet-id="$route.params.id" :receiver-id="tweet.user_id"
+                    <CommentEditor
+:tweet-id="$route.params.id" :receiver-id="tweet.user_id"
                         @comment-posted="fetchCounts" />
                 </v-card>
                 <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
@@ -129,7 +131,7 @@ const openTweetReportDialog = (tweetId) => {
 
 const confirmReport = async () => {
     try {
-        if (!reportContent || reportContent === '') {
+        if (!reportContent.value || reportContent.value === '') {
             throw t('contentRequired')
         }
 
@@ -313,7 +315,7 @@ onMounted(async () => {
 })
 
 watch(suc, () => {
-    if (suc) {
+    if (suc.value) {
         setTimeout(() => {
             suc.value = null
         }, 2000)
@@ -321,7 +323,7 @@ watch(suc, () => {
 })
 
 watch(error, () => {
-    if (error) {
+    if (error.value) {
         setTimeout(() => {
             error.value = null
         }, 2000)

@@ -8,10 +8,9 @@ const renderMarkdown = (md, id) => {
     theme: {
       current: colorMode.value === 'dark' ? 'dark' : 'classic',
     },
-    transform: (element) => {
-      const imgRegex = /<img[^>]*>/g;
-      element = element.replace(imgRegex, (match) => `[图片]`);
-      return element;
+    transform: (html) => {
+      const imgRegex = /<img[^>]*>/g
+      return html.replace(imgRegex, () => `[图片]`)
     }
   });
 }

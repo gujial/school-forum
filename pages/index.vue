@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card :image="bgSrc" class="d-flex align-center head-card avatar-bg-mask" color="black">
-      <div class="bg-mask"></div>
+      <div class="bg-mask"/>
       <v-avatar v-if="src.length > 0" size="200">
         <v-img cover :src='src' />
       </v-avatar>
@@ -34,16 +34,17 @@
     </v-row>
     <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
     <v-row v-if="tab == 5">
-      <iframe width="100%" height="700"
+      <iframe
+width="100%" height="700"
       src="https://www.openstreetmap.org/export/embed.html?bbox=115.7815223787844%2C28.650561869520143%2C115.80765782342552%2C28.668750457195618&amp;layer=mapnik"
-      style="border: 1px solid black; margin: 20px;"></iframe><br /><small><a
+      style="border: 1px solid black; margin: 20px;"/><br ><small><a
         href="https://www.openstreetmap.org/?#map=16/28.65966/115.79459">查看更大的地图</a></small>
     </v-row>
     <v-pagination v-if="tab != 5" v-model="currentPage" :length="pageCount" />
     <v-alert v-if="authError">
       {{ $t('pleaseLogin') }}
     </v-alert>
-    <v-alert v-if="error != null" type="error" v-show="!authError">
+    <v-alert v-if="error != null" v-show="!authError" type="error">
       {{ error }}
     </v-alert>
   </v-container>
@@ -87,7 +88,7 @@ const updateTweets = async () => {
     pageCount.value = data.maxPages
   } else if (tab.value === 5) {
     tweets.value = []
-    pageCount = 1
+    pageCount.value = 1
   }
 }
 

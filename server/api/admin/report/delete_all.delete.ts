@@ -1,4 +1,4 @@
-import { defineEventHandler, getRouterParam, createError } from 'h3'
+import { defineEventHandler } from 'h3'
 import { useDatabase } from '../../../util/database'
 import adminAuthMiddleware from '../../../util/adminAuth'
 
@@ -17,7 +17,7 @@ import adminAuthMiddleware from '../../../util/adminAuth'
  */
 export default defineEventHandler(async (event) => {
     await adminAuthMiddleware(event);
-    const userInfo = event.context.auth
+    const _userInfo = event.context.auth
     const db = useDatabase()
 
     try {

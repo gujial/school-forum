@@ -8,18 +8,8 @@ export default {
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
     "@nuxtjs/i18n",
-    '@sidebase/nuxt-auth',
-    '@scalar/nuxt'
+    '@sidebase/nuxt-auth'
   ],
-  
-  // esline: {
-  //   config: {
-  //     stylke: true,
-  //   }
-  // },
-  // serverMiddleware: [
-  //   { path: '/api', handler: '~/api/tweets.ts' }
-  // ],
 
   runtimeConfig: {
     // 文件服务现在由Node.js服务器直接提供
@@ -47,12 +37,6 @@ export default {
       home: '/',
     },
     globalAppMiddleware: false,
-  },
-
-  nitro: {
-    experimental: {
-      openAPI: true,
-    },
   },
 
   i18n: {

@@ -2,7 +2,10 @@
     <v-alert v-if="error != null" type="error">
         {{ error }}
     </v-alert>
-    <v-alert v-if="authError">
+    <v-alert v-if="suc != null" type="success">
+        {{ suc }}
+    </v-alert>
+    <v-alert v-if="currentUser && currentUser.user_id === -1">
         {{ $t('pleaseLogin') }}
     </v-alert>
     <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
@@ -20,7 +23,12 @@
             <v-card-text>
                 {{ comment.content }}
                 <v-card-actions>
-                    <v-btn v-if="!authError" @click="showReplyBox(comment.comment_id)">{{ $t('reply') }}</v-btn>
+                    <v-btn v-if="currentUser && currentUser.user_id !== -1" @click="showReplyBox(comment.comment_id)">{{
+                        $t('reply')
+                        }}</v-btn>
+                    <v-btn v-if="currentUser && currentUser.user_id !== -1"
+                        @click="openCommentReportDialog(comment.comment_id)">{{
+                        $t('report') }}</v-btn>
                     <v-btn v-if="currentUser && (currentUser.user_id === users[index].user_id || currentUser.admin)"
                         color="red" variant="text" @click="showDeleteDialog(comment)">
                         {{ $t('delete') }}
@@ -41,6 +49,8 @@
                         </v-card-title>
                         <v-card-text class="text-body-2">{{ reply.content }}</v-card-text>
                         <v-card-actions>
+                            <v-btn v-if="currentUser && currentUser.user_id !== -1"
+                                @click="openCommentReportDialog(reply.comment_id)">{{ $t('report') }}</v-btn>
                             <v-btn v-if="currentUser && (currentUser.user_id === reply.user_id)" color="red"
                                 variant="text" @click="showDeleteDialog(reply)">
                                 {{ $t('delete') }}
@@ -74,6 +84,19 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog v-model="reportDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
+            <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条评论吗？' }}</v-card-text>
+            <v-text-field v-model="reportContent" :label="$t('reportContent')" :rules="[required]" />
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -95,7 +118,43 @@ const replyContent = ref('')
 const showDelete = ref(false)
 const commentToDelete = ref(null)
 const commentApi = ref('order_by_time')
-const authError = ref(false)
+const reportDialog = ref(false)
+const reportCommentId = ref(null)
+const reportContent = ref('')
+const suc = ref(null)
+const { t } = useI18n()
+
+const openCommentReportDialog = (commentId) => {
+    reportDialog.value = true
+    reportCommentId.value = commentId
+}
+
+const confirmReport = async () => {
+    try {
+        if (!reportContent || reportContent === '') {
+            throw t('contentRequired')
+        }
+
+        const res = await $fetch(`/api/report/comment/${reportCommentId.value}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                content: reportContent.value
+            })
+        })
+
+        if (!res.success) {
+            throw res.message
+        } else {
+            suc.value = t('reportSuccess')
+        }
+    } catch (err) {
+        error.value = err
+    } finally {
+        reportDialog.value = false
+        reportContent.value = ''
+        reportCommentId.value = null
+    }
+}
 
 const toggleApi = () => {
     if (commentApi.value == 'order_by_time') {
@@ -228,6 +287,22 @@ const showDeleteDialog = (comment) => {
     commentToDelete.value = comment;
     showDelete.value = true;
 }
+
+watch(suc, () => {
+    if (suc) {
+        setTimeout(() => {
+            suc.value = null
+        }, 2000)
+    }
+})
+
+watch(error, () => {
+    if (error) {
+        setTimeout(() => {
+            error.value = null
+        }, 2000)
+    }
+})
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@
                         <v-btn flat v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
                         <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{
                             $t('profile') }}</v-btn>
-                        <v-btn flat @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
+                        <v-btn flat v-if="currentUser && currentUser.user_id !== -1" @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
                         <v-btn flat v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)"
                             color="error" @click="openDeleteDialog()">
                             {{ $t('delete') }}

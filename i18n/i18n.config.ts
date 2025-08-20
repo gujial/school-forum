@@ -121,6 +121,12 @@ export default defineI18nConfig(() => ({
       enterKeyword: 'Enter Keyword',
       searchTweet: 'Search Tweet',
       search: 'Search',
+      cannotFollowYourself: 'Can not follow yourself.',
+      confirmReport: 'Confirm Report',
+      confirmReportMsg: 'Are you sure to report this tweet?',
+      reportContent: 'Report Content',
+      reportSuccess: 'Report Successfully',
+      report: 'Report',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -284,6 +290,12 @@ export default defineI18nConfig(() => ({
       enterKeyword: '输入关键词',
       searchTweet: '搜索帖子',
       search: '搜索',
+      cannotFollowYourself: '不能关注自己',
+      confirmReport: '确认举报',
+      confirmReportMsg: '确认举报这个帖子吗？',
+      reportContent: '举报内容',
+      reportSuccess: '成功举报',
+      report: '举报',
       $vuetify: {
         input: {
           prependAction: '添加图片',

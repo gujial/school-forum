@@ -94,6 +94,17 @@ CREATE TABLE IF NOT EXISTS Admins (
                             FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+CREATE TABLE IF NOT EXISTS Reports (
+                            report_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                            tweet_id BIGINT,
+                            comment_id BIGINT,
+                            user_id BIGINT,
+                            content TEXT NOT NULL,
+                            FOREIGN KEY (tweet_id) REFERENCES Tweets(tweet_id),
+                            FOREIGN KEY (comment_id) REFERENCES Comments(comment_id),
+                            FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 drop trigger if exists before_tweet_delete;
 drop trigger if exists before_comment_delete;
 drop trigger if exists before_follow_insert;
@@ -126,6 +137,7 @@ BEGIN
     DELETE FROM Likes WHERE tweet_id = OLD.tweet_id;
     DELETE FROM Messages WHERE tweet_id = OLD.tweet_id;
     DELETE FROM TweetTags WHERE tweet_id = OLD.tweet_id;
+    DELETE FROM Reports WHERE tweet_id = OLD.tweet_id;
 END$$
 
 DELIMITER ;
@@ -137,6 +149,7 @@ BEFORE DELETE ON Comments
 FOR EACH ROW
 BEGIN
     DELETE FROM Messages WHERE comment_id = OLD.comment_id;
+    DELETE FROM Reports WHERE comment_id = OLD.comment_id;
 END$$
 
 DELIMITER ;
@@ -154,6 +167,7 @@ BEGIN
     DELETE FROM Messages WHERE sender_id = OLD.user_id OR receiver_id = OLD.user_id;
     DELETE FROM Follows WHERE follower_id = OLD.user_id OR following_id = OLD.user_id;
     DELETE FROM Admins WHERE user_id = OLD.user_id;
+    DELETE FROM Reports WHERE user_id = OLD.user_id;
 END$$
 
 DELIMITER ;

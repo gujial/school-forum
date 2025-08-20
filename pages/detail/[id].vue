@@ -5,15 +5,19 @@
                 <v-alert v-if="error != null" type="error">
                     {{ error }}
                 </v-alert>
+                <v-alert v-if="suc != null" type="success">
+                    {{ suc }}
+                </v-alert>
                 <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
                     <v-card-actions>
                         <v-btn flat :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
                         <v-btn flat v-if="!follow_status" @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
                         <v-btn flat v-else @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
-                        <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{ $t('profile')
-                            }}</v-btn>
-                        <v-btn flat v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)" color="error"
-                            @click="openDeleteDialog()">
+                        <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{
+                            $t('profile') }}</v-btn>
+                        <v-btn flat @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
+                        <v-btn flat v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)"
+                            color="error" @click="openDeleteDialog()">
                             {{ $t('delete') }}
                         </v-btn>
                     </v-card-actions>
@@ -74,6 +78,18 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog v-model="reportDialog" max-width="400">
+        <v-card>
+            <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
+            <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条推文吗？' }}</v-card-text>
+            <v-text-field v-model="reportContent" :label="$t('reportContent')" :rules="[required]" />
+            <v-card-actions>
+                <v-spacer />
+                <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
+                <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -101,6 +117,42 @@ const follow_status = ref(false)
 const showScrollTop = ref(false)
 const currentUser = useAuthUser()
 const deleteDialog = ref(false)
+const reportDialog = ref(false)
+const reportTweetId = ref(null)
+const reportContent = ref('')
+const suc = ref(null)
+
+const openTweetReportDialog = (tweetId) => {
+    reportDialog.value = true
+    reportTweetId.value = tweetId
+}
+
+const confirmReport = async () => {
+    try {
+        if (!reportContent || reportContent === '') {
+            throw t('contentRequired')
+        }
+
+        const res = await $fetch(`/api/report/tweet/${reportTweetId.value}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                content: reportContent.value
+            })
+        })
+
+        if (!res.success) {
+            throw res.message
+        } else {
+            suc.value = t('reportSuccess')
+        }
+    } catch (err) {
+        error.value = err
+    } finally {
+        reportDialog.value = false
+        reportContent.value = ''
+        reportTweetId.value = null
+    }
+}
 
 const handleScroll = () => {
     showScrollTop.value = window.scrollY > 300
@@ -164,7 +216,7 @@ const followUser = async (id) => {
         if (res.success) {
             follow_status.value = res.follow
         } else {
-            error.value = '不能关注自己'
+            error.value = t('cannotFollowYourself')
             setTimeout(() => { error.value = null }, 2000)
         }
     } catch (err) {
@@ -255,6 +307,22 @@ onMounted(async () => {
     updateLike()
     await fetchCounts()
     renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
+})
+
+watch(suc, () => {
+    if (suc) {
+        setTimeout(() => {
+            suc.value = null
+        }, 2000)
+    }
+})
+
+watch(error, () => {
+    if (error) {
+        setTimeout(() => {
+            error.value = null
+        }, 2000)
+    }
 })
 
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

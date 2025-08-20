@@ -289,7 +289,6 @@ try {
 
     if (tweet.value.parent_id) {
         const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`)
-        console.log(parent_data)
         if (parent_data.success) {
             parent_tweet_data.value = parent_data.data
         } else {

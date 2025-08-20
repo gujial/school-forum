@@ -1,6 +1,9 @@
 <template>
     <v-container>
         <v-card>
+            <v-card-title>
+                {{ $t('reportManage') }}
+            </v-card-title>
             <v-card-text>
                 <v-data-table :headers="headers" :items="reports" :loading="loading" item-value="report_id"
                     class="elevation-1">

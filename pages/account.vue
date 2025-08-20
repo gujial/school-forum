@@ -13,10 +13,10 @@
                     <br>
                     <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' +
                         followerCount
-                        }}</v-btn>
+                    }}</v-btn>
                     <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' +
                         followingCount
-                        }}</v-btn>
+                    }}</v-btn>
                 </v-card-text>
                 <v-list>
                     <v-list-item @click="openUsernameDialog">
@@ -206,10 +206,10 @@ const openEmailDialog = () => {
 
 const confirmEmail = async () => {
     try {
-        const res = await $fetch('/api/user/modify_email', {
+        const res = await $fetch<{ success: boolean; message?: string }>('/api/user/modify_email', {
             method: 'PUT',
             body: { email: newEmail.value }
-        }) as { success: boolean; message?: string }
+        })
         if (res.success) {
             error.value = null
             suc.value = '修改成功'

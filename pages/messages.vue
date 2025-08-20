@@ -56,24 +56,53 @@ class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+interface Message {
+  message_id: number
+  sender_id: number
+  receiver_id: number
+  tweet_id?: number
+  comment_id?: number
+  content: string
+  created_at: string | number
+}
+
+interface User {
+  user_id: number
+  username: string
+}
+
+interface FetchMessagesResponse {
+  success: boolean
+  data: Message[]
+  maxPages: number
+  message?: string
+}
 
 const { t } = useI18n()
 
-const activeTab = ref<'received' | 'sent'>('received')
-const page = ref(1)
-const pageSize = 20
-const maxPages = ref(1)
-const messages = ref<any[]>([])
-const loading = ref(false)
-const usernames = ref<Record<number, string>>({})
-const search = ref('')
+const activeTab: Ref<'received' | 'sent'> = ref('received')
+const page: Ref<number> = ref(1)
+const pageSize: number = 20
+const maxPages: Ref<number> = ref(1)
+const messages: Ref<Message[]> = ref([])
+const loading: Ref<boolean> = ref(false)
+const usernames: Ref<Record<number, string>> = ref({})
+const search: Ref<string> = ref('')
+
 const currentUser = useAuthUser()
-const localePath = useLocalePath()
+const localePath: (_path: string) => string = useLocalePath()
 const route = useRoute()
 
-const headers = [
+interface TableHeader {
+  title: string
+  value: string
+  sortable?: boolean
+}
+
+const headers: TableHeader[] = [
     { title: t('sender'), value: 'sender', sortable: true },
     { title: t('receiver'), value: 'receiver', sortable: true },
     { title: t('tweetId'), value: 'tweet_id', sortable: true },
@@ -83,7 +112,7 @@ const headers = [
     { title: t('actions'), value: 'actions', sortable: false }
 ]
 
-async function fetchMessages() {
+async function fetchMessages(): Promise<void> {
     loading.value = true
     const endpoint =
         activeTab.value === 'received'
@@ -91,12 +120,12 @@ async function fetchMessages() {
             : `/api/message/getSent`
 
     try {
-        const data = await $fetch(endpoint, {
+        const data = await $fetch<FetchMessagesResponse>(endpoint, {
             params: {
                 page: page.value,
                 pageSize
             }
-        }) as any
+        })
 
         if (data.success) {
             messages.value = data.data
@@ -105,60 +134,62 @@ async function fetchMessages() {
             messages.value = []
             maxPages.value = 1
         }
-
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching messages:', error)
         messages.value = []
         maxPages.value = 1
+    } finally {
         loading.value = false
-        return
     }
-    loading.value = false
 }
 
-async function loadUsername(id: number) {
+async function loadUsername(id: number): Promise<void> {
     if (usernames.value[id]) return
     try {
-        const { user } = await $fetch(`/api/user/${id}`) as any
+        const { user } = await $fetch<{ user: User }>(`/api/user/${id}`)
         usernames.value[id] = user.username || 'Unknown User'
     } catch {
         usernames.value[id] = 'Unknown User'
     }
 }
 
-const deleteAllMessages = async () => {
+const deleteAllMessages = async (): Promise<void> => {
     try {
-        const ep = activeTab.value === 'received'
-            ? '/api/message/deleteAllReceive'
-            : '/api/message/deleteAllSend'
+        const ep =
+            activeTab.value === 'received'
+                ? '/api/message/deleteAllReceive'
+                : '/api/message/deleteAllSend'
         await $fetch(ep, { method: 'DELETE' })
         messages.value = []
         maxPages.value = 1
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting messages:', error)
     }
 }
 
-const deleteMessage = async (messageId: number) => {
+const deleteMessage = async (messageId: number): Promise<void> => {
     try {
         await $fetch(`/api/message/${messageId}`, { method: 'DELETE' })
         fetchMessages()
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error deleting message:', error)
     }
 }
 
+// 监听 tab 和分页变化
 watch([activeTab, page], () => {
     fetchMessages()
 })
 
-watch(messages, (msgs) => {
+// 监听 messages 加载用户名
+watch(messages, (msgs: Message[]) => {
     msgs.forEach(msg => {
         loadUsername(msg.sender_id)
         loadUsername(msg.receiver_id)
     })
 })
 
+// 生命周期
 onMounted(() => {
     if (currentUser.value && currentUser.value.user_id === -1) {
         navigateTo(localePath('/login'))

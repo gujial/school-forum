@@ -28,65 +28,100 @@ v-model:page="page" :headers="headers" :items="users" :items-per-page="pageSize"
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n()
-const localePath = useLocalePath()
-const headers = [
-    { title: t('id'), key: 'user_id' },
-    { title: t('username'), key: 'username' },
-    { title: t('email'), key: 'email' },
-    { title: t('createdAt'), key: 'created_at' },
-    { title: t('actions'), key: 'actions' }
-]
+import type { Ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const users = ref<any[]>([])
-const totalUsers = ref(0)
-const page = ref(1)
-const pageSize = 20
-const search = ref('')
-const loading = ref(false)
-
-const error = ref<any>(null)
-
-async function fetchUsers() {
-    loading.value = true
-    try {
-        const res = await $fetch('/api/user/list', {
-            method: 'GET',
-            query: {
-                page: page.value,
-                pageSize,
-                keyword: search.value
-            }
-        }) as any
-
-        if (res.success) {
-            users.value = res.data
-            totalUsers.value = res.maxPages * pageSize
-        }
-    } catch (err) {
-        console.error(err)
-    } finally {
-        loading.value = false
-    }
+interface User {
+  user_id: number
+  username: string
+  email?: string
+  created_at: string | number
 }
 
+interface FetchUsersResponse {
+  success: boolean
+  data: User[]
+  maxPages: number
+  message?: string
+}
+
+const { t } = useI18n()
+const localePath: (_path: string) => string = useLocalePath()
+
+interface TableHeader {
+  title: string
+  key: string
+  sortable?: boolean
+}
+
+const headers: TableHeader[] = [
+  { title: t('id'), key: 'user_id' },
+  { title: t('username'), key: 'username' },
+  { title: t('email'), key: 'email' },
+  { title: t('createdAt'), key: 'created_at' },
+  { title: t('actions'), key: 'actions' }
+]
+
+// 用户数据
+const users: Ref<User[]> = ref([])
+const totalUsers: Ref<number> = ref(0)
+const page: Ref<number> = ref(1)
+const pageSize: number = 20
+const search: Ref<string> = ref('')
+const loading: Ref<boolean> = ref(false)
+
+// 错误信息
+const error: Ref<string | null> = ref(null)
+
+// 获取用户列表
+async function fetchUsers(): Promise<void> {
+  loading.value = true
+  try {
+    const res = await $fetch<FetchUsersResponse>('/api/user/list', {
+      method: 'GET',
+      query: {
+        page: page.value,
+        pageSize,
+        keyword: search.value
+      }
+    })
+
+    if (res.success) {
+      users.value = res.data
+      totalUsers.value = res.maxPages * pageSize
+    } else {
+      users.value = []
+      totalUsers.value = 0
+      error.value = res.message || 'Failed to fetch users'
+    }
+  } catch (err: any) {
+    console.error(err)
+    error.value = err?.message || 'Error fetching users'
+  } finally {
+    loading.value = false
+  }
+}
+
+// 生命周期
 onMounted(fetchUsers)
 
-// 监听搜索输入，用户停顿后自动搜索
-let searchTimeout: NodeJS.Timeout
+// 搜索防抖
+let searchTimeout: ReturnType<typeof setTimeout>
 watch(search, () => {
-    clearTimeout(searchTimeout)
-    searchTimeout = setTimeout(() => {
-        page.value = 1
-        fetchUsers()
-    }, 500)
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    page.value = 1
+    fetchUsers()
+  }, 500)
 })
 
+// 自动清理错误信息
 watch(error, () => {
-    if (error.value) {
-        setTimeout(() => {
-            error.value = null
-        }, 2000)
-    }
+  if (error.value) {
+    setTimeout(() => {
+      error.value = null
+    }, 2000)
+  }
 })
 </script>

@@ -11,7 +11,7 @@ v-model:page="page" :headers="headers" :items="users" :items-per-page="pageSize"
       :server-items-length="totalUsers" class="elevation-1">
 
       <template #item.created_at="{ item }">
-        {{ new Date(item.created_at).toLocaleString() }}
+        {{ item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A' }}
       </template>
 
       <template #item.admin="{ item }">
@@ -58,9 +58,29 @@ v-model:page="page" :headers="headers" :items="users" :items-per-page="pageSize"
 </template>
 
 <script setup lang="ts">
+import type { Ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
-const localePath = useLocalePath()
-const headers = [
+const localePath: (_path: string) => string = useLocalePath()
+
+// 表格列类型
+interface TableHeader {
+  title: string
+  key: string
+  sortable?: boolean
+}
+
+interface User {
+  user_id: number
+  username: string
+  email?: string
+  admin?: boolean
+  created_at?: string
+}
+
+const headers: TableHeader[] = [
   { title: t('id'), key: 'user_id' },
   { title: t('username'), key: 'username' },
   { title: t('email'), key: 'email' },
@@ -69,26 +89,30 @@ const headers = [
   { title: t('actions'), key: 'actions', sortable: false }
 ]
 
-const users = ref<any[]>([])
-const totalUsers = ref(0)
-const page = ref(1)
-const pageSize = 20
-const search = ref('')
-const loading = ref(false)
+// 用户数据
+const users: Ref<User[]> = ref([])
+const totalUsers: Ref<number> = ref(0)
+const page: Ref<number> = ref(1)
+const pageSize: number = 20
+const search: Ref<string> = ref('')
+const loading: Ref<boolean> = ref(false)
 
-const deleteDialog = ref(false)
-const userToDelete = ref<any>(null)
-const error = ref<string | null>(null)
-const currentUser = useAuthUser()
+// 删除用户对话框状态
+const deleteDialog: Ref<boolean> = ref(false)
+const userToDelete: Ref<User | null> = ref(null)
+const error: Ref<string | null> = ref(null)
 
-async function addAdmin(user_id: number) {
-  if (currentUser.value && currentUser.value.user_id === user_id) {
+const currentUser = useAuthUser() // 假设类型已经在 useAuthUser 中定义
+
+// 添加管理员
+async function addAdmin(user_id: number): Promise<void> {
+  if (currentUser.value?.user_id === user_id) {
     error.value = '不能修改自己'
     return
   }
   loading.value = true
   try {
-    await $fetch('/api/admin/add/' + user_id)
+    await $fetch<any>(`/api/admin/add/${user_id}`)
     fetchUsers()
   } catch (err) {
     console.error(err)
@@ -97,14 +121,15 @@ async function addAdmin(user_id: number) {
   }
 }
 
-async function deleteAdmin(user_id: number) {
-  if (currentUser.value && currentUser.value.user_id === user_id) {
+// 删除管理员
+async function deleteAdmin(user_id: number): Promise<void> {
+  if (currentUser.value?.user_id === user_id) {
     error.value = '不能修改自己'
     return
   }
   loading.value = true
   try {
-    await $fetch('/api/admin/delete/' + user_id, { method: 'DELETE' })
+    await $fetch<any>(`/api/admin/delete/${user_id}`, { method: 'DELETE' })
     fetchUsers()
   } catch (err) {
     console.error(err)
@@ -113,17 +138,25 @@ async function deleteAdmin(user_id: number) {
   }
 }
 
-async function fetchUsers() {
+// 获取用户列表
+interface FetchUsersResponse {
+  success: boolean
+  data: User[]
+  maxPages: number
+  message?: string
+}
+
+async function fetchUsers(): Promise<void> {
   loading.value = true
   try {
-    const res = await $fetch('/api/user/list', {
+    const res = await $fetch<FetchUsersResponse>('/api/user/list', {
       method: 'GET',
       query: {
         page: page.value,
         pageSize,
         keyword: search.value
       }
-    }) as any
+    })
 
     if (res.success) {
       users.value = res.data
@@ -136,8 +169,9 @@ async function fetchUsers() {
   }
 }
 
-function confirmDelete(user: any) {
-  if (currentUser.value && currentUser.value.user_id === user.user_id) {
+// 删除用户操作
+function confirmDelete(user: User): void {
+  if (currentUser.value?.user_id === user.user_id) {
     error.value = '不能删除自己'
     return
   }
@@ -145,15 +179,17 @@ function confirmDelete(user: any) {
   deleteDialog.value = true
 }
 
-async function deleteUser() {
+async function deleteUser(): Promise<void> {
   if (!userToDelete.value) return
+
   try {
-    const res = await $fetch(`/api/admin/delete_user/${userToDelete.value.user_id}`, {
-      method: 'DELETE'
-    }) as any
+    const res = await $fetch<{ success: boolean; message?: string }>(
+      `/api/admin/delete_user/${userToDelete.value.user_id}`,
+      { method: 'DELETE' }
+    )
 
     if (res.success) {
-      users.value = users.value.filter(u => u.user_id !== userToDelete.value.user_id)
+      users.value = users.value.filter(u => u.user_id !== userToDelete.value!.user_id)
     } else {
       console.error(res.message)
     }
@@ -164,10 +200,11 @@ async function deleteUser() {
   }
 }
 
+// 生命周期
 onMounted(fetchUsers)
 
-// 监听搜索输入，用户停顿后自动搜索
-let searchTimeout: NodeJS.Timeout
+// 搜索防抖
+let searchTimeout: ReturnType<typeof setTimeout>
 watch(search, () => {
   clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
@@ -176,6 +213,7 @@ watch(search, () => {
   }, 500)
 })
 
+// 自动清理 error
 watch(error, () => {
   if (error.value) {
     setTimeout(() => {

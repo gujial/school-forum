@@ -48,7 +48,9 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits<{ (e: 'unfollow'): void }>()
+const emit = defineEmits<{
+  (_e: 'unfollow'): void
+}>()
 
 const src = ref<string>('/icon.png')
 const bgSrc = ref<string>('/card-image.jpg')
@@ -59,8 +61,8 @@ const localePath = useLocalePath()
 // 获取用户信息
 const updateUser = async () => {
   try {
-    const { user: data } = await $fetch(`/api/user/${props.userId}`) as { user: User }
-    user.value = data
+    const data: { user: User } = await $fetch<{ user: User }>(`/api/user/${props.userId}`)
+    user.value = data.user
   } catch (err) {
     console.error(err)
   }

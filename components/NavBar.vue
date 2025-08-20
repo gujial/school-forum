@@ -71,7 +71,7 @@ const updateAvatar = async () => {
         const data = await $fetch('/api/avatar/' + user.value.user_id);
         src.value = data.data;
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -84,7 +84,7 @@ const updateBg = async () => {
     try {
         const data = await $fetch('/api/bg/' + user.value.user_id);
         bgSrc.value = data.data || '/card-image.jpg';
-    } catch (err) {
+    } catch {
         bgSrc.value = '/card-image.jpg'
     }
 }

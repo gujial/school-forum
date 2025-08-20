@@ -1,97 +1,109 @@
 <template>
-    <v-container>
-        <v-row class="d-flex justify-center">
-            <v-col>
-                <v-alert v-if="error != null" type="error">
-                    {{ error }}
-                </v-alert>
-                <v-alert v-if="suc != null" type="success">
-                    {{ suc }}
-                </v-alert>
-                <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="userTime">
-                    <v-card-actions>
-                        <v-btn flat :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email') }}</v-btn>
-                        <v-btn v-if="!follow_status" flat @click="followUser(user.user_id)">{{ $t('follow') }}</v-btn>
-                        <v-btn v-else flat @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
-                        <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{
-                            $t('profile') }}</v-btn>
-                        <v-btn v-if="currentUser && currentUser.user_id !== -1" flat @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
-                        <v-btn
+    <div>
+        <v-container>
+            <v-row class="d-flex justify-center">
+                <v-col>
+                    <v-alert v-if="error != null" type="error">
+                        {{ error }}
+                    </v-alert>
+                    <v-alert v-if="suc != null" type="success">
+                        {{ suc }}
+                    </v-alert>
+                    <v-card
+v-if="user != null" :prepend-avatar="avatar_url" :title="user.username"
+                        :subtitle="userTime">
+                        <v-card-actions>
+                            <v-btn flat :href="`mailto:${user.email}?subject=Re:${tweet.content}`">{{ $t('email')
+                                }}</v-btn>
+                            <v-btn v-if="!follow_status" flat @click="followUser(user.user_id)">{{ $t('follow')
+                                }}</v-btn>
+                            <v-btn v-else flat @click="unfolowUser(user.user_id)">{{ $t('unfollow') }}</v-btn>
+                            <v-btn flat @click="navigateTo(localePath(`/profile/${user.user_id}`))">{{
+                                $t('profile') }}</v-btn>
+                            <v-btn
+v-if="currentUser && currentUser.user_id !== -1" flat
+                                @click="openTweetReportDialog(tweet.tweet_id)">{{ $t('report') }}</v-btn>
+                            <v-btn
 v-if="currentUser && (currentUser.user_id == user.user_id || currentUser.admin)" flat
-                            color="error" @click="openDeleteDialog()">
-                            {{ $t('delete') }}
-                        </v-btn>
-                    </v-card-actions>
-                    <hr >
-                    <v-card-text>
-                        <TweetCard
+                                color="error" @click="openDeleteDialog()">
+                                {{ $t('delete') }}
+                            </v-btn>
+                        </v-card-actions>
+                        <hr>
+                        <v-card-text>
+                            <TweetCard
 v-if="parent_tweet_data" :tweet="parent_tweet_data" height="fit-content"
-                            max-height="500px" />
-                        <v-carousel v-if="images.length > 0" show-arrows="hover" progress hide-delimiters @click.stop>
-                            <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
-                        </v-carousel>
-                        <video
+                                max-height="500px" />
+                            <v-carousel
+v-if="images.length > 0" show-arrows="hover" progress hide-delimiters
+                                @click.stop>
+                                <v-carousel-item v-for="image in images" :key="image.media_id" :src="image.media_url" />
+                            </v-carousel>
+                            <video
 v-if="video != null" controls :src="video" width="100%" style="max-height: 70vh;"
-                            @click.stop />
-                    </v-card-text>
-                    <v-card-text :id="`preview${tweet.tweet_id}`"/>
-                    <hr >
-                    <v-card-actions class="d-flex justify-end">
-                        <v-btn icon @click.stop="likeTweet">
-                            <v-icon v-if="isLike">
-                                mdi-thumb-up
-                            </v-icon>
-                            <v-icon v-else>
-                                mdi-thumb-up-outline
-                            </v-icon>
-                        </v-btn>
-                        <span class="mr-4">{{ likeCount }}</span>
-                        <v-icon small class="mr-1">mdi-comment-outline</v-icon>
-                        <span>{{ commentCount }}</span>
-                        <v-btn icon @click="navigateTo(localePath(`/edit?parent_id=${tweet.tweet_id}`))">
-                            <v-icon>mdi-share</v-icon>
-                        </v-btn>
-                        <span>{{ shareCount }}</span>
-                    </v-card-actions>
-                    <div v-if="tweet.tags.length > 0" class="tag-list">
-                        <v-chip
+                                @click.stop />
+                        </v-card-text>
+                        <v-card-text :id="`preview${tweet.tweet_id}`" />
+                        <hr>
+                        <v-card-actions class="d-flex justify-end">
+                            <v-btn icon @click.stop="likeTweet">
+                                <v-icon v-if="isLike">
+                                    mdi-thumb-up
+                                </v-icon>
+                                <v-icon v-else>
+                                    mdi-thumb-up-outline
+                                </v-icon>
+                            </v-btn>
+                            <span class="mr-4">{{ likeCount }}</span>
+                            <v-icon small class="mr-1">mdi-comment-outline</v-icon>
+                            <span>{{ commentCount }}</span>
+                            <v-btn icon @click="navigateTo(localePath(`/edit?parent_id=${tweet.tweet_id}`))">
+                                <v-icon>mdi-share</v-icon>
+                            </v-btn>
+                            <span>{{ shareCount }}</span>
+                        </v-card-actions>
+                        <div v-if="tweet.tags.length > 0" class="tag-list">
+                            <v-chip
 v-for="(tag, index) in tweet.tags" :key="index" class="ma-1" color="primary"
-                            text-color="white" @click="navigateTo(localePath(`/tags?tags=${tag}`))">
-                            {{ tag }}
-                        </v-chip>
-                    </div>
-                    <CommentEditor
+                                text-color="white" @click="navigateTo(localePath(`/tags?tags=${tag}`))">
+                                {{ tag }}
+                            </v-chip>
+                        </div>
+                        <CommentEditor
 :tweet-id="$route.params.id" :receiver-id="tweet.user_id"
-                        @comment-posted="fetchCounts" />
-                </v-card>
-                <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
-            </v-col>
-        </v-row>
-        <v-btn v-show="showScrollTop" icon="mdi-arrow-up" color="primary" class="scroll-top-btn" @click="scrollToTop" />
-    </v-container>
-    <v-dialog v-model="deleteDialog" max-width="400">
-        <v-card>
-            <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
-            <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
-            <v-card-actions>
-                <v-spacer />
-                <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
-                <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-    <v-dialog v-model="reportDialog" max-width="400">
-        <v-card>
-            <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
-            <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条推文吗？' }}</v-card-text>
-            <v-text-field v-model="reportContent" :label="$t('reportContent')" :rules="[required]" />
-            <v-card-actions>
-                <v-spacer />
-                <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
-                <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+                            @comment-posted="fetchCounts" />
+                    </v-card>
+                    <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
+                </v-col>
+            </v-row>
+            <v-btn
+v-show="showScrollTop" icon="mdi-arrow-up" color="primary" class="scroll-top-btn"
+                @click="scrollToTop" />
+        </v-container>
+        <v-dialog v-model="deleteDialog" max-width="400">
+            <v-card>
+                <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
+                <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
+                    <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="reportDialog" max-width="400">
+            <v-card>
+                <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
+                <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条推文吗？' }}</v-card-text>
+                <v-text-field v-model="reportContent" :label="$t('reportContent')" :rules="[required]" />
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
+                    <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
 </template>
 
 <script setup>
@@ -256,7 +268,7 @@ const updateLike = async () => {
         const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
         isLike.value = data.like
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 

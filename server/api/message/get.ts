@@ -1,4 +1,4 @@
-import { defineEventHandler, getRouterParam, getQuery } from 'h3'
+import { defineEventHandler, getQuery } from 'h3'
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth';
 

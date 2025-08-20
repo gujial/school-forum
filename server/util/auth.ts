@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Invalid token',
+      statusMessage: String(error),
     });
   }
 });

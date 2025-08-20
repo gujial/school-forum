@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
       return { success: false, data: '' }
     }
     return { success: true, data: rows[0].bg_url }
-  } catch (e) {
+  } catch {
     return { success: false, data: '' }
   }
 })

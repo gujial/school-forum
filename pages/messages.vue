@@ -7,11 +7,13 @@
             </v-tabs>
 
             <template #text>
-                <v-text-field v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify"
-                    variant="outlined" hide-details single-line></v-text-field>
+                <v-text-field
+v-model="search" :label="$t('searchIdContentTime')" prepend-inner-icon="mdi-magnify"
+                    variant="outlined" hide-details single-line/>
             </template>
             <v-card-text>
-                <v-data-table :headers="headers" :items="messages" :loading="loading" item-value="message_id" :search="search"
+                <v-data-table
+:headers="headers" :items="messages" :loading="loading" item-value="message_id" :search="search"
                     class="elevation-1">
                     <template #item.created_at="{ item }">
                         {{ new Date(item.created_at).toLocaleString() }}
@@ -37,16 +39,17 @@
 
                     <template #item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
-                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteMessage(item.message_id)"></v-icon>
+                            <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="deleteMessage(item.message_id)"/>
                         </div>
                     </template>
                 </v-data-table>
-                <v-btn class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
-                    :text="$t('deleteAllMessages')" @click="deleteAllMessages"></v-btn>
+                <v-btn
+class="me-2" prepend-icon="mdi-delete" rounded="lg" color="red"
+                    :text="$t('deleteAllMessages')" @click="deleteAllMessages"/>
             </v-card-text>
 
             <v-card-actions class="justify-center">
-                <v-pagination v-model="page" :length="maxPages" total-visible="7"></v-pagination>
+                <v-pagination v-model="page" :length="maxPages" total-visible="7"/>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -88,12 +91,12 @@ async function fetchMessages() {
             : `/api/message/getSent`
 
     try {
-        const data = <any>await $fetch(endpoint, {
+        const data = await $fetch(endpoint, {
             params: {
                 page: page.value,
                 pageSize
             }
-        })
+        }) as any
 
         if (data.success) {
             messages.value = data.data
@@ -116,7 +119,7 @@ async function fetchMessages() {
 async function loadUsername(id: number) {
     if (usernames.value[id]) return
     try {
-        const { user } = <any>await $fetch(`/api/user/${id}`)
+        const { user } = await $fetch(`/api/user/${id}`) as any
         usernames.value[id] = user.username || 'Unknown User'
     } catch {
         usernames.value[id] = 'Unknown User'

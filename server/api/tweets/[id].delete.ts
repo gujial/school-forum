@@ -20,7 +20,7 @@ const removeFile = async (mediaUrl: string): Promise<void> => {
             await unlink(filePath)
         }
     } catch (e) {
-        // 文件不存在等错误可忽略
+        console.error(e)
     }
     return
 }

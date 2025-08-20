@@ -1,11 +1,13 @@
 <template>
     <v-container>
         <!-- 搜索框 -->
-        <v-text-field v-model="search" :label="$t('searchUser')" prepend-inner-icon="mdi-magnify" clearable class="mb-4"
+        <v-text-field
+v-model="search" :label="$t('searchUser')" prepend-inner-icon="mdi-magnify" clearable class="mb-4"
             @keyup.enter="fetchUsers" />
 
         <!-- 用户表格 -->
-        <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" v-model:page="page" :loading="loading"
+        <v-data-table
+v-model:page="page" :headers="headers" :items="users" :items-per-page="pageSize" :loading="loading"
             :server-items-length="totalUsers" class="elevation-1">
 
             <template #item.created_at="{ item }">
@@ -48,14 +50,14 @@ const error = ref<any>(null)
 async function fetchUsers() {
     loading.value = true
     try {
-        const res = <any>await $fetch('/api/user/list', {
+        const res = await $fetch('/api/user/list', {
             method: 'GET',
             query: {
                 page: page.value,
                 pageSize,
                 keyword: search.value
             }
-        })
+        }) as any
 
         if (res.success) {
             users.value = res.data

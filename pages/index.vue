@@ -96,7 +96,7 @@ const updateBg = async () => {
   try {
     const data = await $fetch('/api/bg/' + user_id.value);
     bgSrc.value = data.data || '/card-image.jpg';
-  } catch (err) {
+  } catch {
     bgSrc.value = '/card-image.jpg'
   }
 }

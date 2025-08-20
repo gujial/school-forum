@@ -62,7 +62,8 @@ const props = defineProps({
     default: '500px'
   },
   maxHeight: {
-    type: String
+    type: String,
+    default: 'fit-content'
   }
 });
 
@@ -102,7 +103,7 @@ const updateLike = async () => {
     const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`)
     isLike.value = data.like
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 

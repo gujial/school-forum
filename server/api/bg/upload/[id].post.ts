@@ -53,7 +53,9 @@ export default defineEventHandler(async (event) => {
         const oldFilename = parts[parts.length - 1]
         const oldFilePath = join(uploadDir, oldFilename)
         if (existsSync(oldFilePath)) {
-          try { unlinkSync(oldFilePath) } catch (e) {}
+          try { unlinkSync(oldFilePath) } catch (e) {
+            console.error(e)
+          }
         }
       }
 

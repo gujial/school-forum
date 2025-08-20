@@ -39,7 +39,7 @@ async function getTableRowCount(tableName) {
       return result.rows[0].count;
     }
     return 0;
-  } catch (error) {
+  } catch {
     return 'N/A';
   }
 }

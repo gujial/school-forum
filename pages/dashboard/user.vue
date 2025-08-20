@@ -1,11 +1,13 @@
 <template>
   <v-container>
     <!-- 搜索框 -->
-    <v-text-field v-model="search" :label="$t('searchUser')" prepend-inner-icon="mdi-magnify" clearable class="mb-4"
+    <v-text-field
+v-model="search" :label="$t('searchUser')" prepend-inner-icon="mdi-magnify" clearable class="mb-4"
       @keyup.enter="fetchUsers" />
 
     <!-- 用户表格 -->
-    <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" v-model:page="page" :loading="loading"
+    <v-data-table
+v-model:page="page" :headers="headers" :items="users" :items-per-page="pageSize" :loading="loading"
       :server-items-length="totalUsers" class="elevation-1">
 
       <template #item.created_at="{ item }">
@@ -114,14 +116,14 @@ async function deleteAdmin(user_id: number) {
 async function fetchUsers() {
   loading.value = true
   try {
-    const res = <any>await $fetch('/api/user/list', {
+    const res = await $fetch('/api/user/list', {
       method: 'GET',
       query: {
         page: page.value,
         pageSize,
         keyword: search.value
       }
-    })
+    }) as any
 
     if (res.success) {
       users.value = res.data
@@ -146,9 +148,9 @@ function confirmDelete(user: any) {
 async function deleteUser() {
   if (!userToDelete.value) return
   try {
-    const res = <any>await $fetch(`/api/admin/delete_user/${userToDelete.value.user_id}`, {
+    const res = await $fetch(`/api/admin/delete_user/${userToDelete.value.user_id}`, {
       method: 'DELETE'
-    })
+    }) as any
 
     if (res.success) {
       users.value = users.value.filter(u => u.user_id !== userToDelete.value.user_id)

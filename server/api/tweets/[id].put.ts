@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
             return { success: false, message: '内容不能为空' }
         }
         try {
-            const result = await db.sql`
+           await db.sql`
         UPDATE Tweets SET content = ${body.content} WHERE tweet_id = ${tweetId}
       `
             return { success: true }

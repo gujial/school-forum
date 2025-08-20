@@ -17,7 +17,7 @@
 
                 <v-file-input
                     v-if="selectedMedia == 1" v-model="imageFiles" :label="$t('uploadImages')" accept="image/*"
-                    multiple @change="handleFileChange"/>
+                    multiple/>
                 <v-file-input
                     v-if="selectedMedia == 2" v-model="videoFile" :label="$t('uploadvideo')"
                     accept="video/*"/>
@@ -29,9 +29,6 @@
 
 <script setup>
 const imageFiles = ref([])
-const handleFileChange = () => {
-    console.log(imageFiles)
-};
 
 const videoFile = ref(null)
 
@@ -79,7 +76,7 @@ const upload = async (tweet_id) => {
             const result = await response.json();
             successMessage.value = 'Upload successful!';
             errorMessage.value = '';
-            console.log('Upload successful:', result);
+            console.error('Upload successful:', result);
         } catch (error) {
             errorMessage.value = 'Error uploading files!';
             successMessage.value = '';

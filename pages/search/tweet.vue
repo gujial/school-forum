@@ -93,7 +93,7 @@ async function fetchTweets() {
       tweets.value = []
       maxPages.value = 1
     }
-  } catch (e) {
+  } catch {
     error.value = 'Request failed'
     tweets.value = []
     maxPages.value = 1

@@ -1,4 +1,4 @@
-import { defineEventHandler, getRouterParam, createError } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
 import { useDatabase } from '../../util/database'
 import authMiddleware from '../../util/auth';
 import adminAuthMiddleware from '../../util/adminAuth'

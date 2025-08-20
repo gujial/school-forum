@@ -22,6 +22,7 @@
       <v-tab key="map">{{ $t('map') }}</v-tab>
       <v-tab key="more" @click="() => { tab = 0; navigateTo(localePath('/tags')) }">{{ $t('more') }}</v-tab>
       <v-tab key="searchUser" @click="() => { tab = 0; navigateTo(localePath('/search/user')) }">{{ $t('searchUser') }}</v-tab>
+      <v-tab key="searchTweet" @click="() => { tab = 0; navigateTo(localePath('/search/tweet')) }">{{ $t('searchTweet') }}</v-tab>
     </v-tabs>
     <v-row v-if="tweets != null">
       <v-alert v-if="tweets.length == 0 && tab != 5" type="info" style="margin: 20px;">{{ $t('noTweets') }}</v-alert>

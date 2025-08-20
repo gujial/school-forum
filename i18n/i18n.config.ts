@@ -118,6 +118,9 @@ export default defineI18nConfig(() => ({
       searchUser: 'Search User',
       addAdmin: 'Add Admin',
       deleteAdmin: 'Delete Admin',
+      enterKeyword: 'Enter Keyword',
+      searchTweet: 'Search Tweet',
+      search: 'Search',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -278,6 +281,9 @@ export default defineI18nConfig(() => ({
       searchUser: '搜索用户',
       addAdmin: '添加管理员',
       deleteAdmin: '移除管理员',
+      enterKeyword: '输入关键词',
+      searchTweet: '搜索帖子',
+      search: '搜索',
       $vuetify: {
         input: {
           prependAction: '添加图片',

@@ -114,6 +114,8 @@ export default defineI18nConfig(() => ({
       oldPassword: 'Old Password',
       deleteAccountMsg: 'Are you sure? All tweets, comments etc will be deleted!',
       adminDashboard: 'Administrator Dashboard',
+      userManage: 'User Manage',
+      searchUser: 'Search User',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -270,6 +272,8 @@ export default defineI18nConfig(() => ({
       oldPassword: '旧密码',
       deleteAccountMsg: '确定删除账号吗？所有的帖子、评论等都会被删除！',
       adminDashboard: '管理员面板',
+      userManage: '用户管理',
+      searchUser: '搜索用户',
       $vuetify: {
         input: {
           prependAction: '添加图片',

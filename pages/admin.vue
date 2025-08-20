@@ -1,8 +1,20 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center">
-    <h1 class="text-6xl font-bold text-red-600">200</h1>
-    <p class="text-xl mt-4">允许访问</p>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>{{ $t('adminDashboard') }}</v-card-title>
+          <v-list>
+            <v-list-item :to="localePath('/dashboard/user')">
+              <v-list-item-title>
+                {{ $t('userManage') }}
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>

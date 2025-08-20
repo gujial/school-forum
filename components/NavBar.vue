@@ -43,7 +43,7 @@
                 <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
             </v-list-item>
         </v-list>
-        <v-btn text style="width: 100%;" v-if="user && user.admin" @click="navigateTo(localePath('/admin'))">{{ $t('adminDashboard') }}</v-btn>
+        <v-btn flat style="width: 100%;" v-if="user && user.admin" @click="navigateTo(localePath('/admin'))">{{ $t('adminDashboard') }}</v-btn>
         <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
         <v-btn flat icon="mdi-theme-light-dark" @click="toggleTheme()" />
     </v-navigation-drawer>

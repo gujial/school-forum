@@ -68,7 +68,7 @@
     // 获取头像
     const updateAvatar = async () => {
         try {
-            const data: { data: string } = await $fetch(`/api/avatar/${props.userId}`);
+            const data: { data: string } = await $fetch<{ data: string }>(`/api/avatar/${props.userId}`);
             src.value = data.data || '/icon.png';
         } catch (err) {
             console.error(err);
@@ -78,7 +78,7 @@
     // 获取背景
     const updateBg = async () => {
         try {
-            const data: { data?: string } = await $fetch(`/api/bg/${props.userId}`);
+            const data: { data?: string } = await $fetch<{ data: string }>(`/api/bg/${props.userId}`);
             bgSrc.value = data.data || '/card-image.jpg';
         } catch (err) {
             bgSrc.value = '/card-image.jpg';

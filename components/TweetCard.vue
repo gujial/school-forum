@@ -86,7 +86,7 @@
         },
         maxHeight: {
             type: String,
-            default: 'fit-content',
+            default: '500px',
         },
     });
 

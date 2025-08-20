@@ -1,6 +1,6 @@
 // server/api/auth/logout.ts
 
-import { defineEventHandler, setCookie } from 'h3'
+import { defineEventHandler, setCookie } from 'h3';
 
 /**
  * 用户退出登录，清除 Cookie `auth_token`。
@@ -15,14 +15,14 @@ import { defineEventHandler, setCookie } from 'h3'
  * @returns {Promise<{success: boolean, message: string}>}
  */
 export default defineEventHandler(async (event) => {
-  setCookie(event, 'auth_token', '', {
-    httpOnly: true,
-    secure: false,
-    maxAge: -1
-  })
+    setCookie(event, 'auth_token', '', {
+        httpOnly: true,
+        secure: false,
+        maxAge: -1,
+    });
 
-  return {
-    success: true,
-    message: 'Logout successful'
-  }
-})
+    return {
+        success: true,
+        message: 'Logout successful',
+    };
+});

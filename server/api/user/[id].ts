@@ -1,5 +1,5 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../util/database';
 
 /**
  * 获取指定用户的公开信息与是否为管理员标记。
@@ -23,35 +23,35 @@ export default defineEventHandler(async (event) => {
 
     try {
         const { rows } = await db.sql`SELECT * FROM Users WHERE user_id = ${userId}`;
-  
+
         if (rows === undefined) {
-          throw new Error('Query returned undefined');
+            throw new Error('Query returned undefined');
         }
-        
+
         if (rows.length === 0) {
             return {
                 success: false,
-                message: 'User not found'
+                message: 'User not found',
             };
         }
 
-        const admin = await db.sql`select * from Admins where user_id = ${userId}`
-  
+        const admin = await db.sql`select * from Admins where user_id = ${userId}`;
+
         return {
             success: true,
             user: {
-              user_id: rows[0].user_id,
-              username: rows[0].username,
-              email: rows[0].email,
-              created_at: rows[0].created_at,
-              admin: admin.rows.length > 0
-            }
-          };;
+                user_id: rows[0].user_id,
+                username: rows[0].username,
+                email: rows[0].email,
+                created_at: rows[0].created_at,
+                admin: admin.rows.length > 0,
+            },
+        };
     } catch (error) {
         console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch user'
+            message: 'Failed to fetch user',
         };
     }
-})
+});

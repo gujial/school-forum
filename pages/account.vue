@@ -8,14 +8,14 @@
                 </v-card-title>
                 <v-card-text>
                     {{ $t('email') + ' ' + user.email }}
-                    <br>
+                    <br />
                     {{ $t('joinTime') + ' ' + userTime }}
-                    <br>
-                    <v-btn flat @click="navigateTo(localePath('/follower'))">{{ $t('followerCount') + ' ' +
-                        followerCount
+                    <br />
+                    <v-btn flat @click="navigateTo(localePath('/follower'))">{{
+                        $t('followerCount') + ' ' + followerCount
                     }}</v-btn>
-                    <v-btn flat @click="navigateTo(localePath('/following'))">{{ $t('followingCount') + ' ' +
-                        followingCount
+                    <v-btn flat @click="navigateTo(localePath('/following'))">{{
+                        $t('followingCount') + ' ' + followingCount
                     }}</v-btn>
                 </v-card-text>
                 <v-list>
@@ -43,7 +43,7 @@
                 {{ suc }}
             </v-alert>
             <v-divider class="my-4" />
-            <h2 style="margin-bottom: 20px;">{{ $t('userTweets') }}</h2>
+            <h2 style="margin-bottom: 20px">{{ $t('userTweets') }}</h2>
             <v-row>
                 <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
                     <v-lazy>
@@ -66,7 +66,9 @@
             <v-dialog v-model="deleteDialog" max-width="400">
                 <v-card>
                     <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
-                    <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
+                    <v-card-text>{{
+                        $t('confirmDeleteMsg') || '确定要删除这条推文吗？'
+                    }}</v-card-text>
                     <v-card-actions>
                         <v-spacer />
                         <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
@@ -88,7 +90,12 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-pagination v-if="total > pageSize" v-model="page" :length="Math.ceil(total / pageSize)" class="my-4" />
+            <v-pagination
+                v-if="total > pageSize"
+                v-model="page"
+                :length="Math.ceil(total / pageSize)"
+                class="my-4"
+            />
         </v-container>
         <!-- 修改用户名 -->
         <v-dialog v-model="usernameDialog" max-width="400">
@@ -110,8 +117,16 @@
             <v-card>
                 <v-card-title class="headline">{{ $t('modifyPassword') }}</v-card-title>
                 <v-card-text>
-                    <v-text-field v-model="oldPassword" :label="$t('oldPassword')" type="password" />
-                    <v-text-field v-model="newPassword" :label="$t('newPassword')" type="password" />
+                    <v-text-field
+                        v-model="oldPassword"
+                        :label="$t('oldPassword')"
+                        type="password"
+                    />
+                    <v-text-field
+                        v-model="newPassword"
+                        :label="$t('newPassword')"
+                        type="password"
+                    />
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -131,7 +146,9 @@
                 <v-card-actions>
                     <v-spacer />
                     <v-btn text @click="deleteAccountDialog = false">{{ $t('cancel') }}</v-btn>
-                    <v-btn color="error" text @click="confirmDeleteAccount">{{ $t('delete') }}</v-btn>
+                    <v-btn color="error" text @click="confirmDeleteAccount">{{
+                        $t('delete')
+                    }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -154,293 +171,310 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import Avatar from '~/components/AvatarEditor.vue'
-import renderMarkdown from '~/util/renderPreviewMarkdown'
+    import { ref, onMounted, watch } from 'vue';
+    import Avatar from '~/components/AvatarEditor.vue';
+    import renderMarkdown from '~/util/renderPreviewMarkdown';
 
-// ==== 类型定义 ====
-interface Tweet {
-    tweet_id: number
-    content: string
-    created_at?: string
-}
-
-// ==== 状态 ====
-const user = useAuthUser()
-const error = ref<string | null>(null)
-const suc = ref<string | null>(null)
-
-const localePath = useLocalePath()
-const userTime = ref<string>('')
-
-const tweets = ref<Tweet[]>([])
-const page = ref<number>(1)
-const pageSize = 9
-const total = ref<number>(0)
-
-const deleteDialog = ref<boolean>(false)
-const deleteId = ref<number | null>(null)
-
-const editDialog = ref<boolean>(false)
-const editId = ref<number | null>(null)
-const editContent = ref<string>('')
-
-const followerCount = ref<number>(0)
-const followingCount = ref<number>(0)
-
-const usernameDialog = ref<boolean>(false)
-const passwordDialog = ref<boolean>(false)
-const deleteAccountDialog = ref<boolean>(false)
-const emailDialog = ref<boolean>(false)
-
-const newUsername = ref<string>('')
-const oldPassword = ref<string>('')
-const newPassword = ref<string>('')
-const newEmail = ref<string>('')
-
-// ==== 方法 ====
-const openEmailDialog = () => {
-    newEmail.value = user.value?.email || ''
-    emailDialog.value = true
-}
-
-const confirmEmail = async () => {
-    try {
-        const res = await $fetch<{ success: boolean; message?: string }>('/api/user/modify_email', {
-            method: 'PUT',
-            body: { email: newEmail.value }
-        })
-        if (res.success) {
-            error.value = null
-            suc.value = '修改成功'
-            if (user.value) user.value.email = newEmail.value
-            emailDialog.value = false
-        } else {
-            error.value = res.message || '修改失败'
-            emailDialog.value = false
-        }
-    } catch (err: any) {
-        emailDialog.value = false
-        error.value = String(err)
+    // ==== 类型定义 ====
+    interface Tweet {
+        tweet_id: number;
+        content: string;
+        created_at?: string;
     }
-}
 
-const openUsernameDialog = () => {
-    newUsername.value = user.value?.username || ''
-    usernameDialog.value = true
-}
+    // ==== 状态 ====
+    const user = useAuthUser();
+    const error = ref<string | null>(null);
+    const suc = ref<string | null>(null);
 
-const openPasswordDialog = () => {
-    oldPassword.value = ''
-    newPassword.value = ''
-    passwordDialog.value = true
-}
+    const localePath = useLocalePath();
+    const userTime = ref<string>('');
 
-const openDeleteAccountDialog = () => {
-    deleteAccountDialog.value = true
-}
+    const tweets = ref<Tweet[]>([]);
+    const page = ref<number>(1);
+    const pageSize = 9;
+    const total = ref<number>(0);
 
-const confirmUsername = async () => {
-    try {
-        const res: { success: boolean; message?: string } = await $fetch('/api/user/modify_username', {
-            method: 'PUT',
-            body: { newUsername: newUsername.value }
-        })
-        if (res.success) {
-            error.value = null
-            suc.value = '修改成功'
-            if (user.value) user.value.username = newUsername.value
-            usernameDialog.value = false
-        } else {
-            error.value = res.message || '修改失败'
-            usernameDialog.value = false
-        }
-    } catch (err: any) {
-        usernameDialog.value = false
-        error.value = String(err)
-    }
-}
+    const deleteDialog = ref<boolean>(false);
+    const deleteId = ref<number | null>(null);
 
-const confirmPassword = async () => {
-    try {
-        const res: { success: boolean; message?: string } = await $fetch('/api/user/modify_password', {
-            method: 'PUT',
-            body: { oldPassword: oldPassword.value, newPassword: newPassword.value }
-        })
-        if (res.success) {
-            error.value = null
-            suc.value = '修改成功'
-            passwordDialog.value = false
-        } else {
-            error.value = res.message || '修改失败'
-            passwordDialog.value = false
-        }
-    } catch (err: any) {
-        passwordDialog.value = false
-        error.value = String(err)
-    }
-}
+    const editDialog = ref<boolean>(false);
+    const editId = ref<number | null>(null);
+    const editContent = ref<string>('');
 
-const confirmDeleteAccount = async () => {
-    try {
-        const res: { success: boolean; message?: string } = await $fetch('/api/user/delete_account', { method: 'DELETE' })
-        if (res.success) {
-            error.value = null
-            await fetchAuthUser()
-            navigateTo(localePath('/'))
-        } else {
-            error.value = res.message || '删除失败'
-        }
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    const followerCount = ref<number>(0);
+    const followingCount = ref<number>(0);
 
-const fetchFollower = async () => {
-    if (!user.value) return
-    try {
-        const res: { total: number } = await $fetch(`/api/follow/get_follower_list`)
-        followerCount.value = res.total || 0
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    const usernameDialog = ref<boolean>(false);
+    const passwordDialog = ref<boolean>(false);
+    const deleteAccountDialog = ref<boolean>(false);
+    const emailDialog = ref<boolean>(false);
 
-const fetchFollowing = async () => {
-    if (!user.value) return
-    try {
-        const res: { total: number } = await $fetch(`/api/follow/get_following_list`)
-        followingCount.value = res.total || 0
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    const newUsername = ref<string>('');
+    const oldPassword = ref<string>('');
+    const newPassword = ref<string>('');
+    const newEmail = ref<string>('');
 
-const fetchTweets = async () => {
-    if (!user.value) return
-    try {
-        const tweetRes: { data: Tweet[]; total: number } = await $fetch(
-            `/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`
-        )
-        tweets.value = tweetRes.data || []
-        total.value = tweetRes.total || 0
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    // ==== 方法 ====
+    const openEmailDialog = () => {
+        newEmail.value = user.value?.email || '';
+        emailDialog.value = true;
+    };
 
-const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-const deleteTweet = async (tweetId: number) => {
-    try {
-        const res: { success: boolean; message?: string } = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' })
-        if (res.success) {
-            await fetchTweets()
-            if (tweets.value.length === 0 && page.value > 1) {
-                page.value--
-                await fetchTweets()
+    const confirmEmail = async () => {
+        try {
+            const res = await $fetch<{ success: boolean; message?: string }>(
+                '/api/user/modify_email',
+                {
+                    method: 'PUT',
+                    body: { email: newEmail.value },
+                },
+            );
+            if (res.success) {
+                error.value = null;
+                suc.value = '修改成功';
+                if (user.value) user.value.email = newEmail.value;
+                emailDialog.value = false;
+            } else {
+                error.value = res.message || '修改失败';
+                emailDialog.value = false;
             }
-        } else {
-            error.value = res.message || '删除失败'
+        } catch (err: any) {
+            emailDialog.value = false;
+            error.value = String(err);
         }
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    };
 
-const openDeleteDialog = (tweetId: number) => {
-    deleteId.value = tweetId
-    deleteDialog.value = true
-}
+    const openUsernameDialog = () => {
+        newUsername.value = user.value?.username || '';
+        usernameDialog.value = true;
+    };
 
-const confirmDelete = async () => {
-    if (deleteId.value) {
-        await deleteTweet(deleteId.value)
-    }
-    deleteDialog.value = false
-    deleteId.value = null
-}
+    const openPasswordDialog = () => {
+        oldPassword.value = '';
+        newPassword.value = '';
+        passwordDialog.value = true;
+    };
 
-const openEditDialog = (tweet: Tweet) => {
-    editId.value = tweet.tweet_id
-    editContent.value = tweet.content
-    editDialog.value = true
-}
+    const openDeleteAccountDialog = () => {
+        deleteAccountDialog.value = true;
+    };
 
-const confirmEdit = async () => {
-    if (!editId.value) return
-    try {
-        const res: { success: boolean; message?: string } = await $fetch(`/api/tweets/${editId.value}`, {
-            method: 'PUT',
-            body: { content: editContent.value }
-        })
-        if (res.success) {
-            await fetchTweets()
-            renderMarkdown(editContent.value, `preview${editId.value}`)
-            editDialog.value = false
-            editId.value = null
-            editContent.value = ''
-        } else {
-            error.value = res.message || '修改失败'
+    const confirmUsername = async () => {
+        try {
+            const res: { success: boolean; message?: string } = await $fetch(
+                '/api/user/modify_username',
+                {
+                    method: 'PUT',
+                    body: { newUsername: newUsername.value },
+                },
+            );
+            if (res.success) {
+                error.value = null;
+                suc.value = '修改成功';
+                if (user.value) user.value.username = newUsername.value;
+                usernameDialog.value = false;
+            } else {
+                error.value = res.message || '修改失败';
+                usernameDialog.value = false;
+            }
+        } catch (err: any) {
+            usernameDialog.value = false;
+            error.value = String(err);
         }
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    };
 
-onMounted(async () => {
-    if (user.value && user.value.user_id === -1) {
-        navigateTo(localePath('/login'))
-    }
-    try {
-        await fetchTweets()
-        await fetchFollower()
-        await fetchFollowing()
-    } catch (err: any) {
-        if (err?.statusCode === 401) {
-            navigateTo(localePath('/login'))
-        } else {
-            error.value = String(err)
+    const confirmPassword = async () => {
+        try {
+            const res: { success: boolean; message?: string } = await $fetch(
+                '/api/user/modify_password',
+                {
+                    method: 'PUT',
+                    body: { oldPassword: oldPassword.value, newPassword: newPassword.value },
+                },
+            );
+            if (res.success) {
+                error.value = null;
+                suc.value = '修改成功';
+                passwordDialog.value = false;
+            } else {
+                error.value = res.message || '修改失败';
+                passwordDialog.value = false;
+            }
+        } catch (err: any) {
+            passwordDialog.value = false;
+            error.value = String(err);
         }
-    }
-})
+    };
 
-watch(page, () => {
-    fetchTweets()
-    scrollToTop()
-})
-
-watch(suc, () => {
-    if (suc.value) {
-        setTimeout(() => (suc.value = null), 2000)
-    }
-})
-
-const logout = async () => {
-    try {
-        const result: { success: boolean; message?: string } = await $fetch('/api/auth/logout')
-        if (result.success) {
-            await fetchAuthUser()
-            navigateTo(localePath('/'))
-        } else {
-            error.value = result.message || '登出失败'
+    const confirmDeleteAccount = async () => {
+        try {
+            const res: { success: boolean; message?: string } = await $fetch(
+                '/api/user/delete_account',
+                { method: 'DELETE' },
+            );
+            if (res.success) {
+                error.value = null;
+                await fetchAuthUser();
+                navigateTo(localePath('/'));
+            } else {
+                error.value = res.message || '删除失败';
+            }
+        } catch (err: any) {
+            error.value = String(err);
         }
-    } catch (err: any) {
-        error.value = String(err)
-    }
-}
+    };
+
+    const fetchFollower = async () => {
+        if (!user.value) return;
+        try {
+            const res: { total: number } = await $fetch(`/api/follow/get_follower_list`);
+            followerCount.value = res.total || 0;
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
+
+    const fetchFollowing = async () => {
+        if (!user.value) return;
+        try {
+            const res: { total: number } = await $fetch(`/api/follow/get_following_list`);
+            followingCount.value = res.total || 0;
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
+
+    const fetchTweets = async () => {
+        if (!user.value) return;
+        try {
+            const tweetRes: { data: Tweet[]; total: number } = await $fetch(
+                `/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`,
+            );
+            tweets.value = tweetRes.data || [];
+            total.value = tweetRes.total || 0;
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const deleteTweet = async (tweetId: number) => {
+        try {
+            const res: { success: boolean; message?: string } = await $fetch(
+                `/api/tweets/${tweetId}`,
+                { method: 'DELETE' },
+            );
+            if (res.success) {
+                await fetchTweets();
+                if (tweets.value.length === 0 && page.value > 1) {
+                    page.value--;
+                    await fetchTweets();
+                }
+            } else {
+                error.value = res.message || '删除失败';
+            }
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
+
+    const openDeleteDialog = (tweetId: number) => {
+        deleteId.value = tweetId;
+        deleteDialog.value = true;
+    };
+
+    const confirmDelete = async () => {
+        if (deleteId.value) {
+            await deleteTweet(deleteId.value);
+        }
+        deleteDialog.value = false;
+        deleteId.value = null;
+    };
+
+    const openEditDialog = (tweet: Tweet) => {
+        editId.value = tweet.tweet_id;
+        editContent.value = tweet.content;
+        editDialog.value = true;
+    };
+
+    const confirmEdit = async () => {
+        if (!editId.value) return;
+        try {
+            const res: { success: boolean; message?: string } = await $fetch(
+                `/api/tweets/${editId.value}`,
+                {
+                    method: 'PUT',
+                    body: { content: editContent.value },
+                },
+            );
+            if (res.success) {
+                await fetchTweets();
+                renderMarkdown(editContent.value, `preview${editId.value}`);
+                editDialog.value = false;
+                editId.value = null;
+                editContent.value = '';
+            } else {
+                error.value = res.message || '修改失败';
+            }
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
+
+    onMounted(async () => {
+        if (user.value && user.value.user_id === -1) {
+            navigateTo(localePath('/login'));
+        }
+        try {
+            await fetchTweets();
+            await fetchFollower();
+            await fetchFollowing();
+        } catch (err: any) {
+            if (err?.statusCode === 401) {
+                navigateTo(localePath('/login'));
+            } else {
+                error.value = String(err);
+            }
+        }
+    });
+
+    watch(page, () => {
+        fetchTweets();
+        scrollToTop();
+    });
+
+    watch(suc, () => {
+        if (suc.value) {
+            setTimeout(() => (suc.value = null), 2000);
+        }
+    });
+
+    const logout = async () => {
+        try {
+            const result: { success: boolean; message?: string } = await $fetch('/api/auth/logout');
+            if (result.success) {
+                await fetchAuthUser();
+                navigateTo(localePath('/'));
+            } else {
+                error.value = result.message || '登出失败';
+            }
+        } catch (err: any) {
+            error.value = String(err);
+        }
+    };
 </script>
 
-
 <style scoped>
-h1 {
-    font-size: 2em;
-    margin-bottom: 0.5em;
-}
+    h1 {
+        font-size: 2em;
+        margin-bottom: 0.5em;
+    }
 
-p {
-    margin: 0.5em 0;
-}
+    p {
+        margin: 0.5em 0;
+    }
 </style>

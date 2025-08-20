@@ -1,26 +1,26 @@
 // server/api/auth/register.ts
 
-import { defineEventHandler, readBody, createError } from 'h3'
-import bcrypt from 'bcryptjs'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, readBody, createError } from 'h3';
+import bcrypt from 'bcryptjs';
+import { useDatabase } from '../../util/database';
 
 interface RegisterBody {
-  username: string
-  email: string
-  password: string
+    username: string;
+    email: string;
+    password: string;
 }
 
 interface User {
-  user_id: number
-  username: string
-  email: string
-  password: string
-  created_at: string
+    user_id: number;
+    username: string;
+    email: string;
+    password: string;
+    created_at: string;
 }
 
 interface UserRows {
-  user_id: any
-  rows: User[]
+    user_id: any;
+    rows: User[];
 }
 
 /**
@@ -41,37 +41,37 @@ interface UserRows {
  * @returns {Promise<{success: boolean, message: string}>}
  */
 export default defineEventHandler(async (event) => {
-  const body = await readBody<RegisterBody>(event)
-  const { username, email, password } = body
+    const body = await readBody<RegisterBody>(event);
+    const { username, email, password } = body;
 
-  if (!username || !email || !password) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'All fields are required'
-    })
-  }
+    if (!username || !email || !password) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'All fields are required',
+        });
+    }
 
-  const db = useDatabase()
+    const db = useDatabase();
 
-  const existingUser =
-    await db.sql<UserRows>`SELECT * FROM Users WHERE email = ${email} OR username = ${username}`
+    const existingUser =
+        await db.sql<UserRows>`SELECT * FROM Users WHERE email = ${email} OR username = ${username}`;
 
-  if (existingUser.rows.length !== 0) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Username or email already exists'
-    })
-  }
+    if (existingUser.rows.length !== 0) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Username or email already exists',
+        });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 10)
-  await db.sql`INSERT INTO Users (username, email, password) VALUES (${username}, ${email}, ${hashedPassword})`
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db.sql`INSERT INTO Users (username, email, password) VALUES (${username}, ${email}, ${hashedPassword})`;
 
-  const lastUser =
-    await db.sql<UserRows>`SELECT * FROM Users WHERE email = ${email} OR username = ${username}`
-  await db.sql`INSERT INTO Avatar (avatar_url, user_id) VALUES (${'/icon.png'}, ${lastUser.rows[0].user_id})`
+    const lastUser =
+        await db.sql<UserRows>`SELECT * FROM Users WHERE email = ${email} OR username = ${username}`;
+    await db.sql`INSERT INTO Avatar (avatar_url, user_id) VALUES (${'/icon.png'}, ${lastUser.rows[0].user_id})`;
 
-  return {
-    success: true,
-    message: 'User registered successfully'
-  }
-})
+    return {
+        success: true,
+        message: 'User registered successfully',
+    };
+});

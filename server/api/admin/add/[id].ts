@@ -1,6 +1,6 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../../util/database'
-import adminAuthMiddleware from '../../../util/adminAuth'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../../util/database';
+import adminAuthMiddleware from '../../../util/adminAuth';
 
 /**
  * 添加管理员权限给指定用户。
@@ -20,21 +20,21 @@ import adminAuthMiddleware from '../../../util/adminAuth'
  */
 export default defineEventHandler(async (event) => {
     adminAuthMiddleware(event);
-    const db = useDatabase()
+    const db = useDatabase();
     const userId = getRouterParam(event, 'id');
 
     try {
-        await db.sql`insert into Admins(user_id) values (${userId})`
+        await db.sql`insert into Admins(user_id) values (${userId})`;
 
         return {
             success: true,
-            message: '管理员已添加'
-        }
+            message: '管理员已添加',
+        };
     } catch (error) {
-        console.error('Database error:', error)
+        console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to add admin'
-        }
+            message: 'Failed to add admin',
+        };
     }
-})
+});

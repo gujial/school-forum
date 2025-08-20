@@ -1,4 +1,4 @@
-import { useDatabase } from '../../../../util/database'
+import { useDatabase } from '../../../../util/database';
 
 /**
  * 获取某条推文被转发/分享的数量（统计 parent_id 指向该推文的条数）。
@@ -17,15 +17,16 @@ import { useDatabase } from '../../../../util/database'
  * @returns {Promise<{success: boolean, count?: number, message?: string}>}
  */
 export default defineEventHandler(async (event) => {
-  const tweet_id = getRouterParam(event, 'id')
-  const db = useDatabase()
-  try {
-    const { rows } = await db.sql`SELECT COUNT(*) AS count FROM Tweets WHERE parent_id = ${tweet_id}`
-    return { success: true, count: Number(rows[0].count) }
-  } catch (e) {
-    return { 
-      success: false, 
-      message: e instanceof Error ? e.message : String(e) 
+    const tweet_id = getRouterParam(event, 'id');
+    const db = useDatabase();
+    try {
+        const { rows } =
+            await db.sql`SELECT COUNT(*) AS count FROM Tweets WHERE parent_id = ${tweet_id}`;
+        return { success: true, count: Number(rows[0].count) };
+    } catch (e) {
+        return {
+            success: false,
+            message: e instanceof Error ? e.message : String(e),
+        };
     }
-  }
-})
+});

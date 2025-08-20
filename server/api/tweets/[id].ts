@@ -1,5 +1,5 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../util/database';
 
 /**
  * 获取单条推文详情，包含标签集合。
@@ -22,7 +22,8 @@ export default defineEventHandler(async (event) => {
     const tweetId = getRouterParam(event, 'id');
 
     try {
-        const { rows } = await db.sql`SELECT t.*, GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
+        const { rows } =
+            await db.sql`SELECT t.*, GROUP_CONCAT(tag_all.name ORDER BY tag_all.name SEPARATOR ',') AS tags
        FROM Tweets t LEFT JOIN TweetTags tt ON t.tweet_id = tt.tweet_id
        LEFT JOIN TAGS tag_all ON tt.tag_id = tag_all.tag_id WHERE t.tweet_id = ${tweetId} GROUP BY t.tweet_id`;
 
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
         if (rows.length === 0) {
             return {
                 success: false,
-                message: 'Tweet not found'
+                message: 'Tweet not found',
             };
         }
 
@@ -41,18 +42,18 @@ export default defineEventHandler(async (event) => {
 
         const processedTweet = {
             ...tweet,
-            tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : []
+            tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : [],
         };
 
         return {
             success: true,
-            data: processedTweet
+            data: processedTweet,
         };
     } catch (error) {
         console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch tweet'
+            message: 'Failed to fetch tweet',
         };
     }
 });

@@ -1,5 +1,5 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../util/database';
 import authMiddleware from '../../util/auth';
 
 /**
@@ -20,7 +20,7 @@ import authMiddleware from '../../util/auth';
  */
 export default defineEventHandler(async (event) => {
     await authMiddleware(event);
-    const db = useDatabase()
+    const db = useDatabase();
     const messageId = getRouterParam(event, 'id');
 
     try {
@@ -28,13 +28,13 @@ export default defineEventHandler(async (event) => {
 
         return {
             success: true,
-            message: '消息已删除'
-        }
+            message: '消息已删除',
+        };
     } catch (error) {
-        console.error('Database error:', error)
+        console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch messae'
-        }
+            message: 'Failed to fetch messae',
+        };
     }
-})
+});

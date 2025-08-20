@@ -1,7 +1,7 @@
-import { IncomingForm } from 'formidable'
-import { mkdirSync, copyFileSync, unlinkSync } from 'fs'
-import { join } from 'path'
-import { useDatabase } from '../../../../util/database'
+import { IncomingForm } from 'formidable';
+import { mkdirSync, copyFileSync, unlinkSync } from 'fs';
+import { join } from 'path';
+import { useDatabase } from '../../../../util/database';
 
 /**
  * 上传单个视频到指定推文目录，并记录到 `Media` 表。
@@ -21,59 +21,59 @@ import { useDatabase } from '../../../../util/database'
  * @returns {Promise<{statusCode: number, body: string}>}
  */
 export default defineEventHandler(async (event) => {
-  const tweetId = getRouterParam(event, 'id')
-  const form = new IncomingForm({ multiples: false })
+    const tweetId = getRouterParam(event, 'id');
+    const form = new IncomingForm({ multiples: false });
 
-  if (tweetId == undefined) {
-    throw createError({
-      statusCode: 401,
-      message: 'Need tweet id'
-    })
-  }
-
-  const uploadDir = join(process.cwd(), 'dynamic', 'media', tweetId)
-  mkdirSync(uploadDir, { recursive: true })
-
-  return new Promise((resolve, reject) => {
-    form.parse(event.node.req, async (err, fields, files) => {
-      if (err) {
-        return reject(err)
-      }
-
-      if (files.file == undefined) {
+    if (tweetId == undefined) {
         throw createError({
-          statusCode: 401,
-          statusMessage: 'Invalid file'
-        })
-      }
+            statusCode: 401,
+            message: 'Need tweet id',
+        });
+    }
 
-      const db = useDatabase()
-      const file = files.file[0]
+    const uploadDir = join(process.cwd(), 'dynamic', 'media', tweetId);
+    mkdirSync(uploadDir, { recursive: true });
 
-      if (file.originalFilename == null) {
-        throw createError({
-          statusCode: 401,
-          statusMessage: 'Invalid filename'
-        })
-      }
+    return new Promise((resolve, reject) => {
+        form.parse(event.node.req, async (err, fields, files) => {
+            if (err) {
+                return reject(err);
+            }
 
-      const filePath = join(uploadDir, file.originalFilename)
-      try {
-        copyFileSync(file.filepath, filePath)
-        unlinkSync(file.filepath) // Delete the temporary file after copying
-      } catch (copyError) {
-        return reject(copyError)
-      }
+            if (files.file == undefined) {
+                throw createError({
+                    statusCode: 401,
+                    statusMessage: 'Invalid file',
+                });
+            }
 
-      await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`/api/files/media/${tweetId}/${file.originalFilename}`}, ${'video'})`
+            const db = useDatabase();
+            const file = files.file[0];
 
-      resolve({
-        statusCode: 200,
-        body: JSON.stringify({
-          tweetId,
-          filePath: `/api/files/media/${tweetId}/${file.originalFilename}`
-        })
-      })
-    })
-  })
-})
+            if (file.originalFilename == null) {
+                throw createError({
+                    statusCode: 401,
+                    statusMessage: 'Invalid filename',
+                });
+            }
+
+            const filePath = join(uploadDir, file.originalFilename);
+            try {
+                copyFileSync(file.filepath, filePath);
+                unlinkSync(file.filepath); // Delete the temporary file after copying
+            } catch (copyError) {
+                return reject(copyError);
+            }
+
+            await db.sql`INSERT INTO Media (tweet_id, media_url, media_type) VALUES (${tweetId}, ${`/api/files/media/${tweetId}/${file.originalFilename}`}, ${'video'})`;
+
+            resolve({
+                statusCode: 200,
+                body: JSON.stringify({
+                    tweetId,
+                    filePath: `/api/files/media/${tweetId}/${file.originalFilename}`,
+                }),
+            });
+        });
+    });
+});

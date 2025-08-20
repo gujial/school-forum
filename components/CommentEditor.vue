@@ -1,5 +1,10 @@
 <template>
-    <v-card v-if="user != null" :prepend-avatar="avatar_url" :title="user.username" :subtitle="user.email">
+    <v-card
+        v-if="user != null"
+        :prepend-avatar="avatar_url"
+        :title="user.username"
+        :subtitle="user.email"
+    >
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>
@@ -28,70 +33,70 @@
 </template>
 
 <script setup>
-import CommentArea from '~/components/CommentArea.vue';
-import { ref, onMounted } from 'vue';
+    import CommentArea from '~/components/CommentArea.vue';
+    import { ref, onMounted } from 'vue';
 
-const user = ref(null)
-const avatar_url = ref('/icon.png')
-const error = ref(null)
-const comment = ref('')
-const dialog = ref(false)
-const props = defineProps({
-    tweetId: Number(),
-    receiverId: Number()
-});
-const areaRef = ref(null)
+    const user = ref(null);
+    const avatar_url = ref('/icon.png');
+    const error = ref(null);
+    const comment = ref('');
+    const dialog = ref(false);
+    const props = defineProps({
+        tweetId: Number(),
+        receiverId: Number(),
+    });
+    const areaRef = ref(null);
 
-const emit = defineEmits(['comment-posted'])
+    const emit = defineEmits(['comment-posted']);
 
-onMounted(async () => {
-    try {
-        const data = await $fetch('/api/auth/user');
-        user.value = data.user;
-        const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`)
-        avatar_url.value = avatar_data.data
-    } catch (err) {
-        error.value = err
-    }
-});
-
-const postComment = async () => {
-    if (comment.value.trim() === '') {
-        dialog.value = true;
-        return;
-    }
-
-    try {
-        await $fetch('/api/comment/new', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tweet_id: props['tweetId'],
-                content: comment.value
-            })
-        })
-
-        await $fetch('/api/message/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tweet_id: props['tweetId'],
-                receiver_id: props['receiverId'],
-                content: comment.value
-            })
-        })
-
-        comment.value = ''
-        if (areaRef.value != null) {
-            areaRef.value.updateComments()
-            emit('comment-posted')
+    onMounted(async () => {
+        try {
+            const data = await $fetch('/api/auth/user');
+            user.value = data.user;
+            const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`);
+            avatar_url.value = avatar_data.data;
+        } catch (err) {
+            error.value = err;
         }
-    } catch (err) {
-        error.value = err
-    }
-}
+    });
+
+    const postComment = async () => {
+        if (comment.value.trim() === '') {
+            dialog.value = true;
+            return;
+        }
+
+        try {
+            await $fetch('/api/comment/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tweet_id: props['tweetId'],
+                    content: comment.value,
+                }),
+            });
+
+            await $fetch('/api/message/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tweet_id: props['tweetId'],
+                    receiver_id: props['receiverId'],
+                    content: comment.value,
+                }),
+            });
+
+            comment.value = '';
+            if (areaRef.value != null) {
+                areaRef.value.updateComments();
+                emit('comment-posted');
+            }
+        } catch (err) {
+            error.value = err;
+        }
+    };
 </script>

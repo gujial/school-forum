@@ -1,5 +1,5 @@
-import { defineEventHandler, getRouterParam, getQuery } from 'h3'
-import { useDatabase } from '../../../util/database'
+import { defineEventHandler, getRouterParam, getQuery } from 'h3';
+import { useDatabase } from '../../../util/database';
 
 /**
  * 获取某条推文下的顶级评论（不包含子评论），按时间正序，分页返回。
@@ -21,54 +21,54 @@ import { useDatabase } from '../../../util/database'
  * @returns {Promise<{success: boolean, data?: any[], maxPages?: number, message?: string}>}
  */
 export default defineEventHandler(async (event) => {
-    const db = useDatabase()
-    const tweetId = getRouterParam(event, 'id')
-    const query = getQuery(event)
-  
+    const db = useDatabase();
+    const tweetId = getRouterParam(event, 'id');
+    const query = getQuery(event);
+
     if (tweetId == undefined || query == undefined) {
-      return {
-        success: false,
-        message: 'Need page number and id'
-      }
+        return {
+            success: false,
+            message: 'Need page number and id',
+        };
     }
-  
-    const page = query.page as number
-  
+
+    const page = query.page as number;
+
     if (page < 0) {
-      return {
-        success: false,
-        message: 'Wrong page number'
-      }
+        return {
+            success: false,
+            message: 'Wrong page number',
+        };
     }
-    const limit = 20
-    const offset = (page - 1) * limit
-  
+    const limit = 20;
+    const offset = (page - 1) * limit;
+
     try {
-      const result = await db.sql`SELECT COUNT(*) AS total FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL`
-      if (result.rows === undefined) {
-        throw new Error('Failed to retrieve tweet count')
-      }
-      const total = result.rows[0].total as number
-      const maxPages = Math.ceil(total / limit);
-  
-      const { rows } =
-        await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL ORDER BY created_at LIMIT ${limit} OFFSET ${offset}`
-  
-      if (rows === undefined) {
-        throw new Error('Query returned undefined')
-      }
-  
-      return {
-        success: true,
-        data: rows,
-        maxPages: maxPages
-      }
+        const result =
+            await db.sql`SELECT COUNT(*) AS total FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL`;
+        if (result.rows === undefined) {
+            throw new Error('Failed to retrieve tweet count');
+        }
+        const total = result.rows[0].total as number;
+        const maxPages = Math.ceil(total / limit);
+
+        const { rows } =
+            await db.sql`SELECT * FROM Comments WHERE tweet_id = ${tweetId} AND parent_id is NULL ORDER BY created_at LIMIT ${limit} OFFSET ${offset}`;
+
+        if (rows === undefined) {
+            throw new Error('Query returned undefined');
+        }
+
+        return {
+            success: true,
+            data: rows,
+            maxPages: maxPages,
+        };
     } catch (error) {
-      console.error('Database error:', error)
-      return {
-        success: false,
-        message: 'Failed to fetch Comments'
-      }
+        console.error('Database error:', error);
+        return {
+            success: false,
+            message: 'Failed to fetch Comments',
+        };
     }
-  })
-  
+});

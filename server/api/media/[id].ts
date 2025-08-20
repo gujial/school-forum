@@ -1,5 +1,5 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../util/database';
 
 /**
  * 获取某条推文下的媒体列表（不包含 `media_type = all` 的通用项）。
@@ -22,21 +22,22 @@ export default defineEventHandler(async (event) => {
     const tweetId = getRouterParam(event, 'id');
 
     try {
-        const { rows } = await db.sql`SELECT * FROM Media WHERE tweet_id = ${tweetId} AND media_type != ${'all'}`;
+        const { rows } =
+            await db.sql`SELECT * FROM Media WHERE tweet_id = ${tweetId} AND media_type != ${'all'}`;
 
         if (rows === undefined) {
             throw new Error('Query returned undefined');
-          }
+        }
 
         return {
             success: true,
-            data: rows
+            data: rows,
         };
     } catch (error) {
         console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch media data'
+            message: 'Failed to fetch media data',
         };
     }
 });

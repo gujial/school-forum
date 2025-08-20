@@ -2,8 +2,13 @@
     <v-container>
         <v-row class="my-4" justify="space-between">
             <v-text-field
-v-model="tagInput" label="输入标签 (逗号分隔)" placeholder="例如: tech,ai,news" clearable
-                class="mr-4" @keyup.enter="applyFilter" />
+                v-model="tagInput"
+                label="输入标签 (逗号分隔)"
+                placeholder="例如: tech,ai,news"
+                clearable
+                class="mr-4"
+                @keyup.enter="applyFilter"
+            />
             <v-btn-toggle v-model="order" mandatory>
                 <v-btn value="asc" flat :title="$t('ascending')">
                     <v-icon>mdi-arrow-up</v-icon>
@@ -31,73 +36,78 @@ v-model="tagInput" label="输入标签 (逗号分隔)" placeholder="例如: tech
 </template>
 
 <script setup lang="ts">
-import TweetCard from '~/components/TweetCard.vue'
+    import TweetCard from '~/components/TweetCard.vue';
 
-const tagInput = ref('')
-const order = ref('desc')
-const tweets = ref<any[]>([])
-const currentPage = ref(1)
-const maxPages = ref(1)
-const loading = ref(false)
-const loaded = ref(false)
-const error = ref<string | null>(null)
+    const tagInput = ref('');
+    const order = ref('desc');
+    const tweets = ref<any[]>([]);
+    const currentPage = ref(1);
+    const maxPages = ref(1);
+    const loading = ref(false);
+    const loaded = ref(false);
+    const error = ref<string | null>(null);
 
-async function fetchTweets() {
-    if (!tagInput.value.trim()) {
-        tweets.value = []
-        maxPages.value = 1
-        return
-    }
-    loading.value = true
-    try {
-        const tagStr = tagInput.value.trim()
-        const sort = order.value
-
-        const url =
-            sort === 'asc'
-                ? `/api/tweets/by_tags_asc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
-                : `/api/tweets/by_tags_desc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
-
-        const res = await $fetch<{ success: boolean; data?: any[]; maxPages?: number; message?: string }>(url)
-        if (res.success) {
-            tweets.value = res.data || []
-            maxPages.value = res.maxPages || 1
-            loaded.value = true
-        } else {
-            error.value = res.message || 'Failed to fetch tweets'
-            tweets.value = []
-            maxPages.value = 1
+    async function fetchTweets() {
+        if (!tagInput.value.trim()) {
+            tweets.value = [];
+            maxPages.value = 1;
+            return;
         }
-    } catch (e) {
-        tweets.value = []
-        maxPages.value = 1
-        console.error(e)
-    } finally {
-        loading.value = false
+        loading.value = true;
+        try {
+            const tagStr = tagInput.value.trim();
+            const sort = order.value;
+
+            const url =
+                sort === 'asc'
+                    ? `/api/tweets/by_tags_asc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`
+                    : `/api/tweets/by_tags_desc?tags=${encodeURIComponent(tagStr)}&page=${currentPage.value}&pageSize=20`;
+
+            const res = await $fetch<{
+                success: boolean;
+                data?: any[];
+                maxPages?: number;
+                message?: string;
+            }>(url);
+            if (res.success) {
+                tweets.value = res.data || [];
+                maxPages.value = res.maxPages || 1;
+                loaded.value = true;
+            } else {
+                error.value = res.message || 'Failed to fetch tweets';
+                tweets.value = [];
+                maxPages.value = 1;
+            }
+        } catch (e) {
+            tweets.value = [];
+            maxPages.value = 1;
+            console.error(e);
+        } finally {
+            loading.value = false;
+        }
     }
-}
 
-function applyFilter() {
-    if (tagInput.value.trim()) {
-        error.value = null
-        currentPage.value = 1
-        loaded.value = true
-        fetchTweets()
-    } else {
-        error.value = '请输入标签'
+    function applyFilter() {
+        if (tagInput.value.trim()) {
+            error.value = null;
+            currentPage.value = 1;
+            loaded.value = true;
+            fetchTweets();
+        } else {
+            error.value = '请输入标签';
+        }
     }
-}
 
-watch(currentPage, fetchTweets)
-watch(order, fetchTweets)
+    watch(currentPage, fetchTweets);
+    watch(order, fetchTweets);
 
-const route = useRoute()
+    const route = useRoute();
 
-onMounted(() => {
-  const queryTags = route.query.tags
-  if (queryTags && typeof queryTags === 'string' && queryTags.trim()) {
-    tagInput.value = queryTags
-    applyFilter()
-  }
-})
+    onMounted(() => {
+        const queryTags = route.query.tags;
+        if (queryTags && typeof queryTags === 'string' && queryTags.trim()) {
+            tagInput.value = queryTags;
+            applyFilter();
+        }
+    });
 </script>

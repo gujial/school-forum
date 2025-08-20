@@ -1,6 +1,6 @@
-import { defineEventHandler } from 'h3'
-import { useDatabase } from '../../../util/database'
-import adminAuthMiddleware from '../../../util/adminAuth'
+import { defineEventHandler } from 'h3';
+import { useDatabase } from '../../../util/database';
+import adminAuthMiddleware from '../../../util/adminAuth';
 
 /**
  * 管理端清空全部举报记录。
@@ -17,21 +17,21 @@ import adminAuthMiddleware from '../../../util/adminAuth'
  */
 export default defineEventHandler(async (event) => {
     await adminAuthMiddleware(event);
-    const _userInfo = event.context.auth
-    const db = useDatabase()
+    const _userInfo = event.context.auth;
+    const db = useDatabase();
 
     try {
         await db.sql`DELETE FROM Reports`;
 
         return {
             success: true,
-            message: '举报已全部删除'
-        }
+            message: '举报已全部删除',
+        };
     } catch (error) {
-        console.error('Database error:', error)
+        console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch report'
-        }
+            message: 'Failed to fetch report',
+        };
     }
-})
+});

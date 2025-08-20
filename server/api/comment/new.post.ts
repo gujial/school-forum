@@ -1,7 +1,7 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody } from 'h3';
 import authMiddleware from '../../util/auth';
 import { useDatabase } from '../../util/database';
-import { auditAndReport } from "../../util/contentModeration";
+import { auditAndReport } from '../../util/contentModeration';
 
 /**
  * 新增评论（针对推文）。
@@ -21,41 +21,41 @@ import { auditAndReport } from "../../util/contentModeration";
  * @returns {Promise<{success: boolean, message: string}>}
  */
 export default defineEventHandler(async (event) => {
-    await authMiddleware(event)
-    const userInfo = event.context.auth
-    const db = useDatabase()
-    const body = await readBody(event)
+    await authMiddleware(event);
+    const userInfo = event.context.auth;
+    const db = useDatabase();
+    const body = await readBody(event);
 
     if (!body['tweet_id'] || !body['content']) {
         return {
             success: false,
-            message: 'Invalid input parameters'
-        }
+            message: 'Invalid input parameters',
+        };
     }
 
     try {
-        await db.sql`INSERT INTO Comments (tweet_id, user_id, content) VALUES (${body['tweet_id']}, ${userInfo.userId}, ${body['content']})`
+        await db.sql`INSERT INTO Comments (tweet_id, user_id, content) VALUES (${body['tweet_id']}, ${userInfo.userId}, ${body['content']})`;
         const { rows } = await db.sql`SELECT LAST_INSERT_ID() as comment_id`;
         if (rows == undefined) {
             throw createError({
                 statusCode: 401,
-                message: 'Create comment failed'
-            })
+                message: 'Create comment failed',
+            });
         }
 
-        const commentId = rows[0].comment_id
+        const commentId = rows[0].comment_id;
 
-        auditAndReport(body['content'], body['tweet_id'], commentId)
+        auditAndReport(body['content'], body['tweet_id'], commentId);
 
         return {
             success: true,
-            message: 'Comment created successfully'
-        }
+            message: 'Comment created successfully',
+        };
     } catch (error) {
-        console.error('Database error:', error)
+        console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to create Comment'
-        }
+            message: 'Failed to create Comment',
+        };
     }
-})
+});

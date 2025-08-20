@@ -6,7 +6,7 @@
                     <v-card-title>{{ $t('newTweetEdit') }}</v-card-title>
                     <v-card-text>
                         <v-form>
-                            <div id="vditor"/>
+                            <div id="vditor" />
                         </v-form>
                     </v-card-text>
                     <v-card-text>
@@ -26,109 +26,109 @@
 </template>
 
 <script setup>
-import MediaEditor from '~/components/MediaEditor.vue';
-import Vditor from 'vditor';
-import TagEditor from '~/components/TagEditor.vue';
-import 'vditor/dist/index.css';
+    import MediaEditor from '~/components/MediaEditor.vue';
+    import Vditor from 'vditor';
+    import TagEditor from '~/components/TagEditor.vue';
+    import 'vditor/dist/index.css';
 
-const user = ref(null)
-const error = ref(null)
-const mediaEditorRef = ref(null);
-const localePath = useLocalePath()
-const vditor = ref(null);
-const { t, locale } = useI18n()
-const colorMode = useColorMode();
-const attachments = ref([])
-const route = useRoute()
-const parent_id = route.query.parent_id || null;
-const tags = ref([]);
-const theme = useTheme()
+    const user = ref(null);
+    const error = ref(null);
+    const mediaEditorRef = ref(null);
+    const localePath = useLocalePath();
+    const vditor = ref(null);
+    const { t, locale } = useI18n();
+    const colorMode = useColorMode();
+    const attachments = ref([]);
+    const route = useRoute();
+    const parent_id = route.query.parent_id || null;
+    const tags = ref([]);
+    const theme = useTheme();
 
-const postTweet = async () => {
-    if (!vditor.value || vditor.value.getValue().trim() === '') {
-        error.value = t('contentRequired');
-        return;
-    }
-    try {
-        const data = await $fetch('/api/tweets/new', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                content: vditor.value.getValue(),
-                parent_id: parent_id,
-                attachments: attachments.value,
-                tags: tags.value
-            })
-        })
-
-        if (mediaEditorRef.value != null) {
-            mediaEditorRef.value.upload(data.tweet_id)
+    const postTweet = async () => {
+        if (!vditor.value || vditor.value.getValue().trim() === '') {
+            error.value = t('contentRequired');
+            return;
         }
-    } catch (err) {
-        error.value = err
-    }
-    navigateTo(localePath('/'))
-}
+        try {
+            const data = await $fetch('/api/tweets/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: vditor.value.getValue(),
+                    parent_id: parent_id,
+                    attachments: attachments.value,
+                    tags: tags.value,
+                }),
+            });
 
-onMounted(async () => {
-    vditor.value = new Vditor('vditor', {
-        placeholder: t('content'),
-        theme: colorMode.value === 'dark' ? 'dark' : 'classic',
-        lang: locale.value === 'en' ? 'en_US' : 'zh_CN',
-        upload: {
-            url: '/api/media/upload',
-            method: 'POST',
-            accept: 'image/*',
-            token: useCookie('token').value,
-            async handler(files) {
-                let res;
-                for (const file of files) {
-                    const name = file.name;
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    res = await $fetch('/api/media/upload', {
-                        method: 'POST',
-                        body: formData,
-                    });
-                    vditor.value.insertValue(`![${name}](${res.filePath})`);
-                    attachments.value.push(res.filePath);
-                }
-                if (res.filePath) {
-                    return '上传成功';
-                }
-                return '上传失败';
+            if (mediaEditorRef.value != null) {
+                mediaEditorRef.value.upload(data.tweet_id);
+            }
+        } catch (err) {
+            error.value = err;
+        }
+        navigateTo(localePath('/'));
+    };
+
+    onMounted(async () => {
+        vditor.value = new Vditor('vditor', {
+            placeholder: t('content'),
+            theme: colorMode.value === 'dark' ? 'dark' : 'classic',
+            lang: locale.value === 'en' ? 'en_US' : 'zh_CN',
+            upload: {
+                url: '/api/media/upload',
+                method: 'POST',
+                accept: 'image/*',
+                token: useCookie('token').value,
+                async handler(files) {
+                    let res;
+                    for (const file of files) {
+                        const name = file.name;
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        res = await $fetch('/api/media/upload', {
+                            method: 'POST',
+                            body: formData,
+                        });
+                        vditor.value.insertValue(`![${name}](${res.filePath})`);
+                        attachments.value.push(res.filePath);
+                    }
+                    if (res.filePath) {
+                        return '上传成功';
+                    }
+                    return '上传失败';
+                },
             },
-        },
-        after: () => {
-            vditor.value.setTheme(
-                theme.global.name.value === 'dark' ? 'dark' : 'classic',
-                theme.global.name.value === 'dark' ? 'dark' : 'light'
-            );
+            after: () => {
+                vditor.value.setTheme(
+                    theme.global.name.value === 'dark' ? 'dark' : 'classic',
+                    theme.global.name.value === 'dark' ? 'dark' : 'light',
+                );
+            },
+        });
+        try {
+            const data = await $fetch('/api/auth/user');
+            user.value = data.user;
+        } catch (err) {
+            if (err.statusCode == 401) {
+                navigateTo(localePath('/login'));
+            } else {
+                error.value = err;
+            }
         }
     });
-    try {
-        const data = await $fetch('/api/auth/user');
-        user.value = data.user;
-    } catch (err) {
-        if (err.statusCode == 401) {
-            navigateTo(localePath('/login'))
-        } else {
-            error.value = err
-        }
-    }
-});
 
-onUnmounted(() => {
-    if (vditor.value) {
-        vditor.value.destroy();
-    }
-});
+    onUnmounted(() => {
+        if (vditor.value) {
+            vditor.value.destroy();
+        }
+    });
 </script>
 <style scoped>
-.vditor--fullscreen {
-    margin-top: 70px;
-    height: 92vh !important;
-}
+    .vditor--fullscreen {
+        margin-top: 70px;
+        height: 92vh !important;
+    }
 </style>

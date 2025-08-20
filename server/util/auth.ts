@@ -16,25 +16,25 @@ const JWT_SECRET = 'twitterClone';
  * @throws {import('h3').H3Error} 未登录或 Token 无效时抛出 401
  */
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'auth_token');
+    const token = getCookie(event, 'auth_token');
 
-  if (!token) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Not authenticated',
-    });
-  }
+    if (!token) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Not authenticated',
+        });
+    }
 
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number, username: string };
-    event.context.auth = {
-      userId: decoded.userId,
-      username: decoded.username,
-    };
-  } catch (error) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: String(error),
-    });
-  }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: number; username: string };
+        event.context.auth = {
+            userId: decoded.userId,
+            username: decoded.username,
+        };
+    } catch (error) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: String(error),
+        });
+    }
 });

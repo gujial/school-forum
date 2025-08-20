@@ -1,6 +1,6 @@
-import { sendStream } from 'h3'
-import { join } from 'path'
-import { existsSync, createReadStream } from 'fs'
+import { sendStream } from 'h3';
+import { join } from 'path';
+import { existsSync, createReadStream } from 'fs';
 
 /**
  * 读取某用户目录下的指定背景图文件。
@@ -18,14 +18,14 @@ import { existsSync, createReadStream } from 'fs'
  * @returns {Promise<any>} sendStream 响应
  */
 export default defineEventHandler(async (event) => {
-  const userId = getRouterParam(event, 'id')
-  const filename = getRouterParam(event, 'filename')
-  if (!userId || !filename) {
-    return { statusCode: 400, message: 'Missing user id or filename' }
-  }
-  const filePath = join(process.cwd(), 'dynamic', 'bg', userId, filename)
-  if (!existsSync(filePath)) {
-    return { statusCode: 404, message: 'File not found' }
-  }
-  return sendStream(event, createReadStream(filePath))
-})
+    const userId = getRouterParam(event, 'id');
+    const filename = getRouterParam(event, 'filename');
+    if (!userId || !filename) {
+        return { statusCode: 400, message: 'Missing user id or filename' };
+    }
+    const filePath = join(process.cwd(), 'dynamic', 'bg', userId, filename);
+    if (!existsSync(filePath)) {
+        return { statusCode: 404, message: 'File not found' };
+    }
+    return sendStream(event, createReadStream(filePath));
+});

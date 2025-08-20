@@ -1,30 +1,30 @@
 <template>
-  <v-app v-if="!$colorMode.unknown" :theme="theme.global.name">
-    <NavBar />
-    <v-main>
-      <slot />
-    </v-main>
-  </v-app>
+    <v-app v-if="!$colorMode.unknown" :theme="theme.global.name">
+        <NavBar />
+        <v-main>
+            <slot />
+        </v-main>
+    </v-app>
 </template>
 
 <script setup>
-import { watch } from 'vue'
-import { useColorMode } from '@vueuse/core'
-import { useTheme } from 'vuetify'
-import NavBar from '~/components/NavBar.vue'
+    import { watch } from 'vue';
+    import { useColorMode } from '@vueuse/core';
+    import { useTheme } from 'vuetify';
+    import NavBar from '~/components/NavBar.vue';
 
-const colorMode = useColorMode({ preference: 'system' })
-const theme = useTheme()
+    const colorMode = useColorMode({ preference: 'system' });
+    const theme = useTheme();
 
-onMounted(async () => {
-    await fetchAuthUser();
-});
+    onMounted(async () => {
+        await fetchAuthUser();
+    });
 
-watch(
-  () => colorMode.value,
-  (val) => {
-    theme.change(val === 'dark' ? 'dark' : 'light')
-  },
-  { immediate: true }
-)
+    watch(
+        () => colorMode.value,
+        (val) => {
+            theme.change(val === 'dark' ? 'dark' : 'light');
+        },
+        { immediate: true },
+    );
 </script>

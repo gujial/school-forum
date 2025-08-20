@@ -1,7 +1,7 @@
-import { defineEventHandler, getRouterParam } from 'h3'
-import { useDatabase } from '../../util/database'
+import { defineEventHandler, getRouterParam } from 'h3';
+import { useDatabase } from '../../util/database';
 import authMiddleware from '../../util/auth';
-import adminAuthMiddleware from '../../util/adminAuth'
+import adminAuthMiddleware from '../../util/adminAuth';
 
 /**
  * 删除评论（包含其子评论）。
@@ -21,12 +21,12 @@ import adminAuthMiddleware from '../../util/adminAuth'
  */
 export default defineEventHandler(async (event) => {
     authMiddleware(event);
-    const db = useDatabase()
+    const db = useDatabase();
     const commentId = getRouterParam(event, 'id');
     const userInfo = event.context.auth;
 
     try {
-        const { rows } = await db.sql`select user_id from Comments where comment_id = ${commentId}`
+        const { rows } = await db.sql`select user_id from Comments where comment_id = ${commentId}`;
 
         if (rows[0].user_id != userInfo.userId) {
             adminAuthMiddleware(event);
@@ -37,13 +37,13 @@ export default defineEventHandler(async (event) => {
 
         return {
             success: true,
-            message: '评论已删除'
-        }
+            message: '评论已删除',
+        };
     } catch (error) {
-        console.error('Database error:', error)
+        console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to delete comment'
-        }
+            message: 'Failed to delete comment',
+        };
     }
-})
+});

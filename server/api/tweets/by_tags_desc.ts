@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, getQuery } from 'h3'
+import { defineEventHandler, readBody, getQuery } from 'h3';
 import { useDatabase } from '../../util/database';
 
 /**
@@ -39,19 +39,22 @@ export default defineEventHandler(async (event) => {
     if (!tags || (Array.isArray(tags) && tags.length === 0)) {
         return {
             success: false,
-            message: 'Tags parameter is required'
+            message: 'Tags parameter is required',
         };
     }
 
     const tagStr = Array.isArray(tags) ? tags.join(',') : tags;
 
-    const tagArray = tagStr.split(',').map((t: string) => t.trim()).filter((t: string | any[]) => t.length > 0);
+    const tagArray = tagStr
+        .split(',')
+        .map((t: string) => t.trim())
+        .filter((t: string | any[]) => t.length > 0);
     const uniqueTags = new Set(tagArray);
 
     if (uniqueTags.size !== tagArray.length) {
         return {
             success: false,
-            message: 'Tags parameter contains duplicate tags'
+            message: 'Tags parameter contains duplicate tags',
         };
     }
 
@@ -75,25 +78,26 @@ export default defineEventHandler(async (event) => {
         const total = countRows?.[0]?.total || 0;
         const maxPages = Math.ceil(total / pageSize);
         // 调用支持分页的存储过程
-        const { rows } = await db.sql`CALL get_tweets_by_tags_desc(${tagStr}, ${pageSize}, ${offset})`;
+        const { rows } =
+            await db.sql`CALL get_tweets_by_tags_desc(${tagStr}, ${pageSize}, ${offset})`;
 
         const tweets = Array.isArray(rows) && Array.isArray(rows[0]) ? rows[0] : rows;
 
-        const processedTweets = tweets.map(tweet => ({
+        const processedTweets = tweets.map((tweet) => ({
             ...tweet,
-            tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : []
+            tags: typeof tweet.tags === 'string' ? tweet.tags.split(',') : [],
         }));
 
         return {
             success: true,
             data: processedTweets,
-            maxPages: maxPages
+            maxPages: maxPages,
         };
     } catch (error) {
         console.error('Database error:', error);
         return {
             success: false,
-            message: 'Failed to fetch tweets by tags'
+            message: 'Failed to fetch tweets by tags',
         };
     }
 });

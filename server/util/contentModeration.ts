@@ -1,9 +1,9 @@
-import OpenAI from "openai";
-import { useDatabase } from "../util/database";  // 你之前的数据库封装
+import OpenAI from 'openai';
+import { useDatabase } from '../util/database'; // 你之前的数据库封装
 
 const client = new OpenAI({
     baseURL: 'https://api.deepseek.com',
-    apiKey: process.env.DEEPSEEK_API_KEY
+    apiKey: process.env.DEEPSEEK_API_KEY,
 });
 
 export interface AuditResult {
@@ -26,27 +26,27 @@ export async function moderateContent(content: string): Promise<AuditResult> {
             `;
 
     const response = await client.chat.completions.create({
-        model: "deepseek-chat",
+        model: 'deepseek-chat',
         messages: [
-            { role: "system", content: "你是一个内容审核助手" },
-            { role: "user", content: prompt }
+            { role: 'system', content: '你是一个内容审核助手' },
+            { role: 'user', content: prompt },
         ],
-        temperature: 0
+        temperature: 0,
     });
 
     try {
-        const raw = response.choices[0].message?.content?.trim() || "{}";
+        const raw = response.choices[0].message?.content?.trim() || '{}';
         return JSON.parse(raw) as AuditResult;
     } catch (e) {
-        console.error("解析审核结果失败:", e);
-        return { needs_report: false, reason: "审核失败，默认通过" };
+        console.error('解析审核结果失败:', e);
+        return { needs_report: false, reason: '审核失败，默认通过' };
     }
 }
 
 export async function auditAndReport(
     content: string,
     tweetId?: number,
-    commentId?: number
+    commentId?: number,
 ): Promise<AuditResult> {
     const db = useDatabase();
     const result = await moderateContent(content);
@@ -58,7 +58,7 @@ export async function auditAndReport(
         VALUES (${tweetId || null}, ${commentId || null}, ${result.reason})
       `;
         } catch (err) {
-            console.error("写入 Reports 表失败:", err);
+            console.error('写入 Reports 表失败:', err);
         }
     }
 

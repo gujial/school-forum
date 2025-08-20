@@ -7,14 +7,24 @@
                     <v-card-text>
                         <v-form>
                             <v-text-field
-                                v-model="username" :label="$t('username')" :rules="[required]"
-                                autocomplete="username" />
+                                v-model="username"
+                                :label="$t('username')"
+                                :rules="[required]"
+                                autocomplete="username"
+                            />
                             <v-text-field
-                                v-model="email" :label="$t('email')" :rules="[required]"
-                                autocomplete="email" />
+                                v-model="email"
+                                :label="$t('email')"
+                                :rules="[required]"
+                                autocomplete="email"
+                            />
                             <v-text-field
-                                v-model="password" :label="$t('password')" type="password" :rules="[required]"
-                                autocomplete="new-password" />
+                                v-model="password"
+                                :label="$t('password')"
+                                type="password"
+                                :rules="[required]"
+                                autocomplete="new-password"
+                            />
                         </v-form>
                         <v-alert v-if="error != null" type="error">
                             {{ error }}
@@ -30,56 +40,55 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
 
-const { t } = useI18n()
-const username = ref('')
-const email = ref('');
-const password = ref('');
-const error = ref(null)
-const router = useRouter()
+    const { t } = useI18n();
+    const username = ref('');
+    const email = ref('');
+    const password = ref('');
+    const error = ref(null);
+    const router = useRouter();
 
-const required = value => !!value || t('fieldIsRequired')
+    const required = (value) => !!value || t('fieldIsRequired');
 
-const register = async () => {
-    if (email.value == '' || password.value == '') {
-        error.value = t('registerInfoCantBeEmpty')
-        return
-    }
-
-    try {
-        const response = await $fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username.value,
-                email: email.value,
-                password: password.value
-            })
-        })
-
-        if (!response.success) {
-            throw { massage: response.message, statusCode: response.statusCode }
+    const register = async () => {
+        if (email.value == '' || password.value == '') {
+            error.value = t('registerInfoCantBeEmpty');
+            return;
         }
 
-        if (response.success) {
-            router.push('/login')
-        } else {
-            error.value = response.message
-        }
+        try {
+            const response = await $fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username.value,
+                    email: email.value,
+                    password: password.value,
+                }),
+            });
 
-    } catch (err) {
-        if (err.statusCode == 400) {
-            error.value = t('emailExists')
+            if (!response.success) {
+                throw { massage: response.message, statusCode: response.statusCode };
+            }
+
+            if (response.success) {
+                router.push('/login');
+            } else {
+                error.value = response.message;
+            }
+        } catch (err) {
+            if (err.statusCode == 400) {
+                error.value = t('emailExists');
+            }
         }
-    }
-}
+    };
 </script>
 
 <style scoped>
-.headline {
-    font-weight: bold;
-}
+    .headline {
+        font-weight: bold;
+    }
 </style>

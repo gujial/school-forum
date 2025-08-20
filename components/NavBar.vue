@@ -62,7 +62,11 @@ const user = useAuthUser()
 const theme = useTheme()
 
 const updateAvatar = async () => {
-    if (user.value.user_id === -1) return
+    if (user.value.user_id === -1) {
+        src.value = '/icon.png'
+        return
+    }
+
     try {
         const data = await $fetch('/api/avatar/' + user.value.user_id);
         src.value = data.data;
@@ -72,7 +76,11 @@ const updateAvatar = async () => {
 }
 
 const updateBg = async () => {
-    if (user.value.user_id === -1) return
+    if (user.value.user_id === -1) {
+        bgSrc = '/card-image.jpg'
+        return
+    }
+    
     try {
         const data = await $fetch('/api/bg/' + user.value.user_id);
         bgSrc.value = data.data || '/card-image.jpg';

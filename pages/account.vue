@@ -152,7 +152,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import Avatar from '~/components/AvatarEditor.vue';
-import moment from 'moment-timezone';
 import renderMarkdown from '~/util/renderPreviewMarkdown';
 
 const user = useAuthUser()
@@ -380,7 +379,7 @@ const confirmEdit = async () => {
 }
 
 onMounted(async () => {
-    if (user.value.user_id === -1) {
+    if (user.value && user.value.user_id === -1) {
          navigateTo(localePath('/login'))
     }
     try {

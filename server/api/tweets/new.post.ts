@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import authMiddleware from '../../util/auth';
 import { useDatabase } from '../../util/database';
+import { auditAndReport } from "../../util/contentModeration";
 
 export default defineEventHandler(async (event) => {
     const db = useDatabase()
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         await db.sql`INSERT INTO Tweets (user_id, parent_id, content) VALUES (${newTweet.user_id}, ${newTweet.parent_id}, ${newTweet.content})`;
-        const { rows } = await db.sql`SELECT * FROM Tweets WHERE user_id = ${newTweet.user_id} ORDER BY created_at DESC LIMIT 1`;
+        const { rows } = await db.sql`SELECT LAST_INSERT_ID() as tweet_id`;
         if (rows == undefined) {
             throw createError({
                 statusCode: 401,
@@ -32,6 +33,8 @@ export default defineEventHandler(async (event) => {
             })
         }
         const tweetId = rows[0].tweet_id;
+
+        auditAndReport(newTweet.content, tweetId, undefined)
 
         for (const file of body['attachments'] || []) {
             await db.sql`UPDATE Media SET tweet_id = ${rows[0].tweet_id} WHERE tweet_id IS NULL AND media_type = ${'all'} AND media_url = ${file}`

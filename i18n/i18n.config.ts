@@ -116,6 +116,8 @@ export default defineI18nConfig(() => ({
       adminDashboard: 'Administrator Dashboard',
       userManage: 'User Manage',
       searchUser: 'Search User',
+      addAdmin: 'Add Admin',
+      deleteAdmin: 'Delete Admin',
       $vuetify: {
         input: {
           prependAction: 'Add image',
@@ -274,6 +276,8 @@ export default defineI18nConfig(() => ({
       adminDashboard: '管理员面板',
       userManage: '用户管理',
       searchUser: '搜索用户',
+      addAdmin: '添加管理员',
+      deleteAdmin: '移除管理员',
       $vuetify: {
         input: {
           prependAction: '添加图片',

@@ -7,8 +7,15 @@
         <!-- 用户表格 -->
         <v-data-table :headers="headers" :items="users" :items-per-page="pageSize" :page.sync="page" :loading="loading"
             :server-items-length="totalUsers" class="elevation-1">
+
             <template #item.created_at="{ item }">
                 {{ new Date(item.created_at).toLocaleString() }}
+            </template>
+
+            <template #item.actions="{ item }">
+                <v-btn flat color="primary" :to="localePath(`/profile/${item.user_id}`)">
+                    {{ $t('profile') }}
+                </v-btn>
             </template>
         </v-data-table>
 
@@ -20,12 +27,13 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-
+const localePath = useLocalePath()
 const headers = [
     { title: t('id'), key: 'user_id' },
     { title: t('username'), key: 'username' },
     { title: t('email'), key: 'email' },
-    { title: t('createdAt'), key: 'created_at' }
+    { title: t('createdAt'), key: 'created_at' },
+    { title: t('actions'), key: 'actions' }
 ]
 
 const users = ref<any[]>([])

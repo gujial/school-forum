@@ -14,14 +14,17 @@
 
       <template #item.admin="{ item }">
         <v-btn v-if="item.admin" flat color="primary" @click="deleteAdmin(item.user_id)">
-          取消管理员权限
+          {{ $t('deleteAdmin') }}
         </v-btn>
         <v-btn v-else flat color="secondary" @click="addAdmin(item.user_id)">
-          设置管理员权限
+          {{ $t('addAdmin') }}
         </v-btn>
       </template>
 
       <template #item.actions="{ item }">
+        <v-btn flat color="primary" :to="localePath(`/profile/${item.user_id}`)">
+          {{ $t('profile') }}
+        </v-btn>
         <v-btn flat color="red" @click="confirmDelete(item)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -54,7 +57,7 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-
+const localePath = useLocalePath()
 const headers = [
   { title: t('id'), key: 'user_id' },
   { title: t('username'), key: 'username' },
@@ -83,7 +86,7 @@ async function addAdmin(user_id: number) {
   }
   loading.value = true
   try {
-    await $fetch('/api/admin/add/'+user_id)
+    await $fetch('/api/admin/add/' + user_id)
     fetchUsers()
   } catch (err) {
     console.error(err)
@@ -99,7 +102,7 @@ async function deleteAdmin(user_id: number) {
   }
   loading.value = true
   try {
-    await $fetch('/api/admin/delete/'+user_id,{method:'DELETE'})
+    await $fetch('/api/admin/delete/' + user_id, { method: 'DELETE' })
     fetchUsers()
   } catch (err) {
     console.error(err)

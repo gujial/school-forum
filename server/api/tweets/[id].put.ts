@@ -1,5 +1,6 @@
 import { useDatabase } from '../../util/database';
 import authMiddleware from '../../util/auth';
+import { auditAndReport } from '../../util/contentModeration';
 
 /**
  * 修改指定推文内容。
@@ -34,6 +35,9 @@ export default defineEventHandler(async (event) => {
             await db.sql`
         UPDATE Tweets SET content = ${body.content} WHERE tweet_id = ${tweetId}
       `;
+
+            auditAndReport(body.content, Number(tweetId));
+
             return { success: true };
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : '数据库错误';

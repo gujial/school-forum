@@ -1,0 +1,110 @@
+graph ER {
+    fontname="Helvetica,Arial,sans-serif"
+    node [fontname="Helvetica,Arial,sans-serif"]
+    edge [fontname="Helvetica,Arial,sans-serif"]
+    layout=neato
+
+    // 实体节点
+    node [shape=box]; Users; Tweets; Comments; Media; Likes; Messages; TAGS; TweetTags; Follows; Avatar; Admins; Reports;
+
+    // 属性节点
+    node [shape=ellipse]; 
+    {node [label="user_id"] user_id; username; email; password; bg_url; created_at;}
+    {node [label="tweet_id"] tweet_id; parent_id; content; tweet_created_at;}
+    {node [label="comment_id"] comment_id; comment_content; comment_parent_id; comment_created_at;}
+    {node [label="media_id"] media_id; media_url; media_type;}
+    {node [label="like_id"] like_id; like_created_at;}
+    {node [label="message_id"] message_id; sender_id; receiver_id; message_content; message_created_at;}
+    {node [label="tag_id"] tag_id; tag_name;}
+    {node [label="report_id"] report_id; report_content; report_created_at;}
+    {node [label="follower_id"] follower_id; following_id;}
+
+    // 关系节点
+    node [shape=diamond,style=filled,color=lightgrey]; 
+    "U-T"; "U-C"; "U-L"; "U-Msg"; "U-F"; "U-Admin"; "U-Avatar"; 
+    "T-M"; "T-L"; "T-Tags"; "T-Reports"; "C-Msg"; "C-Reports"; 
+    "TweetTag-Tag";
+
+    // 用户与属性
+    user_id -- Users [len=2.0];
+    username -- Users [len=2.0];
+    email -- Users [len=2.0];
+    password -- Users [len=2.0];
+    bg_url -- Users [len=2.0];
+    created_at -- Users [len=2.0];
+
+    // 用户关系
+    Users -- "U-Avatar" [label="1",len=2.0];
+    "U-Avatar" -- Avatar [label="1",len=2.0];
+    Users -- "U-Admin" [label="1",len=2.0];
+    "U-Admin" -- Admins [label="1",len=2.0];
+    Users -- "U-F" [label="N",len=2.0];
+    "U-F" -- Follows [label="N",len=2.0];
+
+    Users -- "U-T" [label="1",len=2.0];
+    "U-T" -- Tweets [label="N",len=2.0];
+    Users -- "U-C" [label="1",len=2.0];
+    "U-C" -- Comments [label="N",len=2.0];
+    Users -- "U-L" [label="1",len=2.0];
+    "U-L" -- Likes [label="N",len=2.0];
+    Users -- "U-Msg" [label="1",len=2.0];
+    "U-Msg" -- Messages [label="N",len=2.0];
+
+    // Tweets与属性
+    tweet_id -- Tweets [len=2.0];
+    parent_id -- Tweets [len=2.0];
+    content -- Tweets [len=2.0];
+    tweet_created_at -- Tweets [len=2.0];
+
+    // Tweets关系
+    Tweets -- "T-M" [label="1",len=2.0];
+    "T-M" -- Media [label="N",len=2.0];
+    Tweets -- "T-L" [label="1",len=2.0];
+    "T-L" -- Likes [label="N",len=2.0];
+    Tweets -- "T-Tags" [label="1",len=2.0];
+    "T-Tags" -- TweetTags [label="N",len=2.0];
+    Tweets -- "T-Reports" [label="1",len=2.0];
+    "T-Reports" -- Reports [label="N",len=2.0];
+
+    // Comments与属性
+    comment_id -- Comments [len=2.0];
+    comment_content -- Comments [len=2.0];
+    comment_parent_id -- Comments [len=2.0];
+    comment_created_at -- Comments [len=2.0];
+
+    Comments -- "C-Msg" [label="1",len=2.0];
+    "C-Msg" -- Messages [label="N",len=2.0];
+    Comments -- "C-Reports" [label="1",len=2.0];
+    "C-Reports" -- Reports [label="N",len=2.0];
+
+    // 标签关系
+    tag_id -- TAGS [len=2.0];
+    tag_name -- TAGS [len=2.0];
+    TweetTags -- "TweetTag-Tag" [label="N",len=2.0];
+    "TweetTag-Tag" -- TAGS [label="1",len=2.0];
+
+    // Follows属性
+    follower_id -- Follows [len=2.0];
+    following_id -- Follows [len=2.0];
+
+    // Messages属性
+    message_id -- Messages [len=2.0];
+    sender_id -- Messages [len=2.0];
+    receiver_id -- Messages [len=2.0];
+    message_content -- Messages [len=2.0];
+    message_created_at -- Messages [len=2.0];
+
+    // Likes属性
+    like_id -- Likes [len=2.0];
+    like_created_at -- Likes [len=2.0];
+
+    // Media属性
+    media_id -- Media [len=2.0];
+    media_url -- Media [len=2.0];
+    media_type -- Media [len=2.0];
+
+    // Reports属性
+    report_id -- Reports [len=2.0];
+    report_content -- Reports [len=2.0];
+    report_created_at -- Reports [len=2.0];
+}

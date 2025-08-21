@@ -26,7 +26,7 @@
             </v-col>
         </v-row>
         <v-alert v-else-if="loaded && !loading && !error" type="info">{{ t('noTweets') }}</v-alert>
-        <v-alert v-else-if="!error" type="info">{{ t('loading') }}</v-alert>
+        <v-alert v-else-if="loaded && !error" type="info">{{ t('loading') }}</v-alert>
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>

@@ -137,7 +137,7 @@
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
-        }else if (tab.value === 5) {
+        } else if (tab.value === 5) {
             const data = await $fetch<TweetListApiResponse>(
                 `/api/tweets/follow?&page=${currentPage.value}?pageSize=20`,
             );

@@ -1,4 +1,4 @@
-import { defineEventHandler, getRouterParam } from 'h3';
+import { defineEventHandler } from 'h3';
 import { useDatabase } from '../../util/database';
 import authMiddleware from '../../util/auth';
 
@@ -11,7 +11,7 @@ import authMiddleware from '../../util/auth';
  * 参数来源:
  * - GET 查询参数: tags, page?, pageSize?
  * - POST JSON 体: tags, page?, pageSize?
- * 
+ *
  * 返回:
  * - { success: true, data: any[], maxPages: number }
  * - { success: false, message }
@@ -23,18 +23,16 @@ export default defineEventHandler(async (event) => {
     await authMiddleware(event);
     const userInfo = event.context.auth;
     const db = useDatabase();
-    let tags, page, pageSize;
+    let page, pageSize;
 
     if (event.method === 'GET') {
         const query = getQuery(event);
-        tags = query.tags;
         page = parseInt(<string>query.page || '1', 10);
         pageSize = parseInt(<string>query.pageSize || '10', 10);
     } else {
         const body = await readBody(event);
-        tags = body.tags;
         page = parseInt(body.page || '1', 10);
-        pageSize = parseInt(body.pageSize || '10', 10);
+        pageSize = parseInt(body.pageSize || '20', 20);
     }
 
     if (page < 0) {
@@ -43,11 +41,12 @@ export default defineEventHandler(async (event) => {
             message: 'Wrong page number',
         };
     }
-    const limit = 20;
+    const limit = pageSize;
     const offset = (page - 1) * limit;
 
     try {
-        const result = await db.sql`SELECT COUNT(*) AS total FROM Tweets where user_id in (select Follows.following_id from Follows where Follows.follower_id = ${userInfo.userId})`;
+        const result =
+            await db.sql`SELECT COUNT(*) AS total FROM Tweets where user_id in (select Follows.following_id from Follows where Follows.follower_id = ${userInfo.userId})`;
         if (result.rows === undefined) {
             throw new Error('Failed to retrieve tweet count');
         }

@@ -124,6 +124,15 @@
         }
     });
 
+    watch(theme.global.name, () => {
+        if (vditor.value) {
+            vditor.value.setTheme(
+                theme.global.name.value === 'dark' ? 'dark' : 'classic',
+                theme.global.name.value === 'dark' ? 'dark' : 'light',
+            );
+        }
+    });
+
     onUnmounted(() => {
         if (vditor.value) {
             vditor.value.destroy();

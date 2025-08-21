@@ -21,9 +21,9 @@
     onMounted(async () => {
         await fetchAuthUser();
         if (localStorage.getItem('nuxt-color-mode') === 'light') {
-            colorMode.value = 'light'
+            colorMode.value = 'light';
         } else if (localStorage.getItem('nuxt-color-mode') === 'dark') {
-            colorMode.value = 'dark'
+            colorMode.value = 'dark';
         }
     });
 

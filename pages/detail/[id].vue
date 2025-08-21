@@ -81,7 +81,7 @@
                             />
                         </v-card-text>
                         <v-card-text>
-                            <Markdown :md="tweet.content" :id="`preview${tweet.tweet_id}`" />
+                            <Markdown :id="`preview${tweet.tweet_id}`" :md="tweet.content" />
                         </v-card-text>
                         <hr />
                         <v-card-actions class="d-flex justify-end">

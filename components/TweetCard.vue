@@ -6,8 +6,8 @@
         :title="user.username"
         :subtitle="userTime"
         style="display: flex; flex-direction: column"
-        :height="props.height"
-        :max-height="props.maxHeight"
+        :height="props.height || '500px'"
+        :max-height="props.maxHeight || '500px'"
         @click="goToDetail"
     >
         <v-divider />
@@ -92,6 +92,7 @@
         height?: string;
         maxHeight?: string;
     }>();
+    
 
     const { tweet } = toRefs(props);
     const router = useRouter();

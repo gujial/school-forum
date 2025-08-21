@@ -40,7 +40,7 @@
     "vditor": "^3.11.1",
     "vue": "latest",
     "vuetify": "^3.9.5",
-    "vuetify-nuxt-module": "^0.14.1"
+    "vuetify-nuxt-module": "^0.18.7"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",

@@ -1,4 +1,4 @@
-import type { AuthUser } from '~/types/models';
+import type { AuthUser } from '../../types/models';
 
 type AuthUserState = AuthUser | null;
 

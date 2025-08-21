@@ -1,13 +1,13 @@
 <template>
     <div>
-        <h2 style="margin-bottom: 20px">{{ $t('userTweets') }}</h2>
+        <h2 style="margin-bottom: 20px">{{ t('userTweets') }}</h2>
         <v-row>
             <v-col v-for="tweet in tweets" :key="tweet.tweet_id" cols="12" md="6" lg="4">
                 <v-lazy>
                     <TweetCard :tweet="tweet" />
                 </v-lazy>
             </v-col>
-            <v-alert v-if="tweets.length === 0" type="info">{{ $t('noTweets') }}</v-alert>
+            <v-alert v-if="tweets.length === 0" type="info">{{ t('noTweets') }}</v-alert>
         </v-row>
         <v-alert v-if="error" type="error">{{ error }}</v-alert>
         <v-pagination v-if="pageCount > 1" v-model="currentPage" :length="pageCount" class="my-4" />
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
     import { ref, watch, onMounted } from 'vue';
-    import TweetCard from '~/components/TweetCard.vue';
+    import TweetCard from './TweetCard.vue';
     import type { Tweet } from '~/types/models';
 
     const props = defineProps<{
@@ -28,6 +28,7 @@
     const currentPage = ref<number>(1);
     const pageCount = ref<number>(1);
     const pageSize = 9;
+        const { t } = useI18n();
 
     const scrollToTop = () => {
         window.scrollTo({

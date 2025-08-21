@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue';
-    import FollowListItem from '@/components/FollowListItem.vue';
-    import type { Follow } from '~/types/models';
+    import FollowListItem from '../components/FollowListItem.vue';
+    import type { Follow } from '../../types/models';
 
     const followers = ref<Follow[]>([]);
     const page = ref(1);

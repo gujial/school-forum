@@ -4,7 +4,7 @@
             <!-- 输入关键词 -->
             <v-text-field
                 v-model="keyword"
-                :label="$t('enterKeyword')"
+                :label="t('enterKeyword')"
                 clearable
                 class="mr-4"
                 @keyup.enter="applyFilter"
@@ -12,15 +12,15 @@
 
             <!-- 排序按钮 -->
             <v-btn-toggle v-model="order" mandatory>
-                <v-btn value="asc" flat :title="$t('ascending')">
+                <v-btn value="asc" flat :title="t('ascending')">
                     <v-icon>mdi-arrow-up</v-icon>
                 </v-btn>
-                <v-btn value="desc" flat :title="$t('descending')">
+                <v-btn value="desc" flat :title="t('descending')">
                     <v-icon>mdi-arrow-down</v-icon>
                 </v-btn>
             </v-btn-toggle>
 
-            <v-btn flat @click="applyFilter">🔍 {{ $t('search') }}</v-btn>
+            <v-btn flat @click="applyFilter">🔍 {{ t('search') }}</v-btn>
         </v-row>
 
         <!-- 推文结果 -->
@@ -31,10 +31,10 @@
         </v-row>
 
         <v-alert v-else-if="!loading && !error && loaded" type="info">
-            {{ $t('noTweets') }}
+            {{ t('noTweets') }}
         </v-alert>
         <v-alert v-else-if="loading && !error" type="info">
-            {{ $t('loading') }}
+            {{ t('loading') }}
         </v-alert>
         <v-alert v-if="error" type="error">
             {{ error }}
@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-    import TweetCard from '~/components/TweetCard.vue';
-    import type { Tweet } from '~/types/models';
+    import TweetCard from '../../components/TweetCard.vue';
+    import type { Tweet } from '../../../types/models';
     const { t } = useI18n();
 
     const keyword = ref<string>('');

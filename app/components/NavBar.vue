@@ -15,11 +15,11 @@
         <v-avatar size="40" class="mx-2" @click="navigateTo(localePath('/'))">
             <v-img cover src="/icon.png" />
         </v-avatar>
-        <v-toolbar-title>{{ $t('TwitterClone') }}</v-toolbar-title>
+        <v-toolbar-title>{{ t('TwitterClone') }}</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer
         v-model="navOpen"
-        :location="$vuetify.display.mobile ? 'bottom' : undefined"
+        :location="display.mobile ? 'bottom' : undefined"
         temporary
     >
         <v-card>
@@ -29,10 +29,10 @@
                     <v-img cover :src="src" />
                 </v-avatar>
                 <v-card-title style="z-index: 99; position: relative">{{
-                    user && user.username !== 'guest' ? user.username : $t('guestUser')
+                    user && user.username !== 'guest' ? user.username : t('guestUser')
                 }}</v-card-title>
                 <v-card-subtitle v-if="user" style="z-index: 99; position: relative">{{
-                    user ? user.email : $t('clickAccountToLogin')
+                    user ? user.email : t('clickAccountToLogin')
                 }}</v-card-subtitle>
             </v-img>
         </v-card>
@@ -44,14 +44,14 @@
                 <template #prepend>
                     <v-icon>mdi-home</v-icon>
                 </template>
-                <v-list-item-title>{{ $t('home') }}</v-list-item-title>
+                <v-list-item-title>{{ t('home') }}</v-list-item-title>
             </v-list-item>
 
             <v-list-item :to="localePath('/account')" @click="navOpen = false">
                 <template #prepend>
                     <v-icon>mdi-account</v-icon>
                 </template>
-                <v-list-item-title>{{ $t('account') }}</v-list-item-title>
+                <v-list-item-title>{{ t('account') }}</v-list-item-title>
             </v-list-item>
 
             <v-list-item :to="localePath('/messages')" @click="navOpen = false">
@@ -66,7 +66,7 @@
                         inline
                     ></v-badge>
                 </template>
-                <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
+                <v-list-item-title>{{ t('messages') }}</v-list-item-title>
             </v-list-item>
         </v-list>
         <v-btn
@@ -74,11 +74,11 @@
             flat
             style="width: 100%"
             @click="navigateTo(localePath('/admin'))"
-            >{{ $t('adminDashboard') }}</v-btn
+            >{{ t('adminDashboard') }}</v-btn
         >
         <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
         <v-btn flat @click="toggleTheme()"
-            >{{ $t(colorMode.preference) }}
+            >{{ t(colorMode.preference) }}
             <template #prepend>
                 <v-icon>mdi-theme-light-dark</v-icon>
             </template>
@@ -87,8 +87,9 @@
 </template>
 
 <script setup lang="ts">
-    import { useTheme } from 'vuetify';
-    import type { MessageListResponse } from '~/types/models';
+    import { useTheme, useDisplay } from 'vuetify';
+    import type { MessageListResponse } from '../../types/models';
+    import { navigateTo } from '#app';
 
     const colorMode = useColorMode();
     const { locale, setLocale } = useI18n();
@@ -99,6 +100,8 @@
     const user = useAuthUser();
     const theme = useTheme();
     const messageCount = ref<number>(0);
+    const { t } = useI18n();
+    const display = useDisplay();
 
     const updateAvatar = async () => {
         if (user.value && user.value.user_id === -1) {

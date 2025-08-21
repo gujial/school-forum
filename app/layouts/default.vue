@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="!$colorMode.unknown" :theme="theme.global.name.value">
+    <v-app v-if="!colorMode.unknown" :theme="theme.global.name.value">
         <NavBar />
         <v-main>
             <slot />
@@ -10,7 +10,7 @@
 <script setup lang="ts">
     import { onMounted, watch } from 'vue';
     import { useTheme } from 'vuetify';
-    import NavBar from '~/components/NavBar.vue';
+    import NavBar from '../components/NavBar.vue';
 
     // 获取 colorMode
     const colorMode = useColorMode();

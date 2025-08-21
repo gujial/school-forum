@@ -2,7 +2,6 @@
 
 export default {
     devtools: { enabled: false },
-    compatibilityDate: '2024-07-08',
     modules: [
         'vuetify-nuxt-module',
         '@nuxt/eslint',

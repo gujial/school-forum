@@ -33,7 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.48",
     "mysql2": "^3.14.3",
-    "nuxt": "^3.18.1",
+    "nuxt": "^4.0.3",
     "openai": "^5.13.1",
     "semver": "^7.7.2",
     "ts-node": "^10.9.2",

@@ -3,7 +3,7 @@
         <!-- 搜索框 -->
         <v-text-field
             v-model="search"
-            :label="$t('searchUser')"
+            :label="t('searchUser')"
             prepend-inner-icon="mdi-magnify"
             clearable
             class="mb-4"
@@ -26,16 +26,16 @@
 
             <template #item.admin="{ item }">
                 <v-btn v-if="item.admin" flat color="primary" @click="deleteAdmin(item.user_id)">
-                    {{ $t('deleteAdmin') }}
+                    {{ t('deleteAdmin') }}
                 </v-btn>
                 <v-btn v-else flat color="secondary" @click="addAdmin(item.user_id)">
-                    {{ $t('addAdmin') }}
+                    {{ t('addAdmin') }}
                 </v-btn>
             </template>
 
             <template #item.actions="{ item }">
                 <v-btn flat color="primary" :to="localePath(`/profile/${item.user_id}`)">
-                    {{ $t('profile') }}
+                    {{ t('profile') }}
                 </v-btn>
                 <v-btn flat color="red" @click="confirmDelete(item)">
                     <v-icon>mdi-delete</v-icon>
@@ -51,15 +51,15 @@
         <v-dialog v-model="deleteDialog" max-width="400px">
             <v-card>
                 <v-card-title class="text-h6">
-                    {{ $t('confirmDeleteTitle') }}
+                    {{ t('confirmDeleteTitle') }}
                 </v-card-title>
                 <v-card-text>
-                    {{ $t('confirmDeleteMessage') }}
+                    {{ t('confirmDeleteMessage') }}
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
-                    <v-btn color="red" text @click="deleteUser">{{ $t('confirm') }}</v-btn>
+                    <v-btn text @click="deleteDialog = false">{{ t('cancel') }}</v-btn>
+                    <v-btn color="red" text @click="deleteUser">{{ t('confirm') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -70,7 +70,7 @@
     import type { Ref } from 'vue';
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { ApiResponse, User, UserListResponse } from '~/types/models';
+    import type { ApiResponse, User, UserListResponse } from '../../../types/models';
 
     const { t } = useI18n();
     const localePath: (_path: string) => string = useLocalePath();

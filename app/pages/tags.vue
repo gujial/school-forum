@@ -10,14 +10,14 @@
                 @keyup.enter="applyFilter"
             />
             <v-btn-toggle v-model="order" mandatory>
-                <v-btn value="asc" flat :title="$t('ascending')">
+                <v-btn value="asc" flat :title="t('ascending')">
                     <v-icon>mdi-arrow-up</v-icon>
                 </v-btn>
-                <v-btn value="desc" flat :title="$t('descending')">
+                <v-btn value="desc" flat :title="t('descending')">
                     <v-icon>mdi-arrow-down</v-icon>
                 </v-btn>
             </v-btn-toggle>
-            <v-btn flat @click="applyFilter">🔍{{ $t('filter') }}</v-btn>
+            <v-btn flat @click="applyFilter">🔍{{ t('filter') }}</v-btn>
         </v-row>
 
         <v-row v-if="tweets.length > 0">
@@ -25,8 +25,8 @@
                 <TweetCard :tweet="tweet" />
             </v-col>
         </v-row>
-        <v-alert v-else-if="loaded && !loading && !error" type="info">{{ $t('noTweets') }}</v-alert>
-        <v-alert v-else-if="!error" type="info">{{ $t('loading') }}</v-alert>
+        <v-alert v-else-if="loaded && !loading && !error" type="info">{{ t('noTweets') }}</v-alert>
+        <v-alert v-else-if="!error" type="info">{{ t('loading') }}</v-alert>
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-    import TweetCard from '~/components/TweetCard.vue';
+    import TweetCard from '../components/TweetCard.vue';
     import type { Tweet } from '~/types/models';
 
     const tagInput = ref<string>('');
@@ -47,6 +47,7 @@
     const loading = ref<boolean>(false);
     const loaded = ref<boolean>(false);
     const error = ref<string | null>(null);
+    const { t } = useI18n();
 
     async function fetchTweets() {
         if (!tagInput.value.trim()) {

@@ -6,15 +6,15 @@
                 {{ user.username }}
             </v-card-title>
             <v-card-text>
-                {{ $t('email') + ' ' + user.email }}
+                {{ t('email') + ' ' + user.email }}
                 <br />
-                {{ $t('joinTime') + ' ' + userTime }}
+                {{ t('joinTime') + ' ' + userTime }}
                 <br />
                 <v-btn flat @click="navigateTo(localePath('/userfollower/' + user.user_id))">{{
-                    $t('followerCount') + ' ' + followerCount
+                    t('followerCount') + ' ' + followerCount
                 }}</v-btn>
                 <v-btn flat @click="navigateTo(localePath('/userfollowing/' + user.user_id))">{{
-                    $t('followingCount') + ' ' + followingCount
+                    t('followingCount') + ' ' + followingCount
                 }}</v-btn>
             </v-card-text>
         </v-card>
@@ -26,10 +26,11 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
-    import Avatar from '~/components/Avatar.vue';
-    import UserTweetList from '~/components/UserTweetList.vue';
+    import Avatar from '../../components/Avatar.vue';
+    import UserTweetList from '../../components/UserTweetList.vue';
     import moment from 'moment-timezone';
     import type { User } from '~/types/models';
+    import { navigateTo } from '#app';
 
     const route = useRoute();
     const user = ref<User | null>(null);
@@ -38,6 +39,7 @@
     const followerCount = ref<number>(0);
     const followingCount = ref<number>(0);
     const localePath = useLocalePath();
+        const { t } = useI18n();
 
     const fetchFollower = async () => {
         if (!user.value) return;

@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue';
-    import FollowListItem from '@/components/FollowListItem.vue';
+    import FollowListItem from '../../components/FollowListItem.vue';
 
     interface Following {
         following_id: number;

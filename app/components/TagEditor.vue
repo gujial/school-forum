@@ -2,17 +2,17 @@
     <div class="tag-editor">
         <v-text-field
             v-model="inputTag"
-            :label="$t('tags')"
+            :label="t('tags')"
             placeholder="请输入标签，按回车或逗号添加"
             clearable
             @keydown.enter.prevent="addTag"
             @blur="addTag"
         />
-        <span>{{ $t('presetTags') }}: </span>
-        <v-btn flat @click="addTagFromPreset(['school'])">{{ $t('school') }}</v-btn>
-        <v-btn flat @click="addTagFromPreset(['school', 'biaobai'])">{{ $t('biaobai') }}</v-btn>
-        <v-btn flat @click="addTagFromPreset(['school', 'help'])">{{ $t('help') }}</v-btn>
-        <v-btn flat @click="addTagFromPreset(['school', 'news'])">{{ $t('news') }}</v-btn>
+        <span>{{ t('presetTags') }}: </span>
+        <v-btn flat @click="addTagFromPreset(['school'])">{{ t('school') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'biaobai'])">{{ t('biaobai') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'help'])">{{ t('help') }}</v-btn>
+        <v-btn flat @click="addTagFromPreset(['school', 'news'])">{{ t('news') }}</v-btn>
         <div v-if="tags.length > 0" class="tag-list">
             <v-chip
                 v-for="(tag, index) in tags"
@@ -42,6 +42,7 @@
 
     const inputTag = ref<string>('');
     const tags = ref<string[]>([...props.modelValue]);
+        const { t } = useI18n();
 
     watch(
         () => props.modelValue,

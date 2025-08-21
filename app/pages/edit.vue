@@ -3,7 +3,7 @@
         <v-row>
             <v-col>
                 <v-card>
-                    <v-card-title>{{ $t('newTweetEdit') }}</v-card-title>
+                    <v-card-title>{{ t('newTweetEdit') }}</v-card-title>
                     <v-card-text>
                         <v-form>
                             <div id="vditor" />
@@ -14,7 +14,7 @@
                     </v-card-text>
                     <MediaEditor ref="mediaEditorRef" />
                     <v-card-actions>
-                        <v-btn text @click="postTweet">{{ $t('post') }}</v-btn>
+                        <v-btn text @click="postTweet">{{ t('post') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -26,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
-    import MediaEditor from '~/components/MediaEditor.vue';
+    import MediaEditor from '../components/MediaEditor.vue';
     import Vditor from 'vditor';
-    import TagEditor from '~/components/TagEditor.vue';
+    import TagEditor from '../components/TagEditor.vue';
     import 'vditor/dist/index.css';
-    import type { AuthUser, ApiResponse } from '~/types/models';
+    import type { AuthUser, ApiResponse } from '../../types/models';
+import { useTheme } from 'vuetify';
 
     const user = ref<AuthUser | null>(null);
     const error = ref<string | null>(null);

@@ -2,7 +2,7 @@
     <v-container>
         <v-card>
             <v-card-title>
-                {{ $t('reportManage') }}
+                {{ t('reportManage') }}
             </v-card-title>
             <v-card-text>
                 <v-data-table
@@ -20,7 +20,7 @@
                         <v-btn v-if="item.user_id" flat :to="`/profile/${item.user_id}`">{{
                             usernames?.[item.user_id ?? ''] || 'Loading...'
                         }}</v-btn>
-                        <span v-else>{{ $t('AIReports') }}</span>
+                        <span v-else>{{ t('AIReports') }}</span>
                     </template>
 
                     <template #item.tweet_id="{ item }">
@@ -59,7 +59,7 @@
                     prepend-icon="mdi-delete"
                     rounded="lg"
                     color="red"
-                    :text="$t('deleteAllReports')"
+                    :text="t('deleteAllReports')"
                     @click="deleteAllReports"
                 />
             </v-card-text>
@@ -74,7 +74,7 @@
 <script setup lang="ts">
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { Report, ReportListResponse, UserApiResponse } from '~/types/models';
+    import type { Report, ReportListResponse, UserApiResponse } from '../../../types/models';
 
     const { t } = useI18n();
     const page = ref<number>(1);

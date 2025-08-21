@@ -3,7 +3,7 @@
         <v-row>
             <v-col>
                 <v-btn class="button">
-                    {{ $t('MediaSelector') }}
+                    {{ t('MediaSelector') }}
                     <v-menu activator="parent">
                         <v-list>
                             <v-list-item
@@ -21,14 +21,14 @@
                 <v-file-input
                     v-if="selectedMedia == 1"
                     v-model="imageFiles"
-                    :label="$t('uploadImages')"
+                    :label="t('uploadImages')"
                     accept="image/*"
                     multiple
                 />
                 <v-file-input
                     v-if="selectedMedia == 2"
                     v-model="videoFile"
-                    :label="$t('uploadvideo')"
+                    :label="t('uploadvideo')"
                     accept="video/*"
                 />
                 <p>附件大小最大为200M</p>
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-    import { MAX_FILE_SIZE } from '~/types/models';
+    import { MAX_FILE_SIZE } from '../../types/models';
     const imageFiles = ref<File[]>([]);
 
     const videoFile = ref<File | null>(null);

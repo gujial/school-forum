@@ -3,17 +3,17 @@
         <v-row>
             <v-col>
                 <v-card>
-                    <v-card-title>{{ $t('adminDashboard') }}</v-card-title>
+                    <v-card-title>{{ t('adminDashboard') }}</v-card-title>
                     <v-list>
                         <v-list-item :to="localePath('/dashboard/user')">
                             <v-list-item-title>
-                                {{ $t('userManage') }}
+                                {{ t('userManage') }}
                             </v-list-item-title>
                         </v-list-item>
 
                         <v-list-item :to="localePath('/dashboard/report')">
                             <v-list-item-title>
-                                {{ $t('reportManage') }}
+                                {{ t('reportManage') }}
                             </v-list-item-title>
                         </v-list-item>
                     </v-list>
@@ -26,6 +26,8 @@
 <script setup lang="ts">
     const currentUser = useAuthUser();
     const localePath = useLocalePath();
+    import { navigateTo } from '#app';
+        const { t } = useI18n();
 
     onMounted(() => {
         if (currentUser.value !== null && !currentUser.value.admin) {

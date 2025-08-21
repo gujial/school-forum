@@ -2,14 +2,14 @@
     <v-container>
         <v-card>
             <v-tabs v-model="activeTab" bg-color="primary" dark>
-                <v-tab :value="'received'">{{ $t('received') }}</v-tab>
-                <v-tab :value="'sent'">{{ $t('sent') }}</v-tab>
+                <v-tab :value="'received'">{{ t('received') }}</v-tab>
+                <v-tab :value="'sent'">{{ t('sent') }}</v-tab>
             </v-tabs>
 
             <template #text>
                 <v-text-field
                     v-model="search"
-                    :label="$t('searchIdContentTime')"
+                    :label="t('searchIdContentTime')"
                     prepend-inner-icon="mdi-magnify"
                     variant="outlined"
                     hide-details
@@ -78,7 +78,7 @@
                     prepend-icon="mdi-delete"
                     rounded="lg"
                     color="red"
-                    :text="$t('deleteAllMessages')"
+                    :text="t('deleteAllMessages')"
                     @click="deleteAllMessages"
                 />
             </v-card-text>
@@ -93,7 +93,7 @@
 <script setup lang="ts">
     import { ref, watch, onMounted, type Ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { Message, User, MessageListResponse } from '~/types/models';
+    import type { Message, User, MessageListResponse } from '../../types/models';
 
     const { t } = useI18n();
 

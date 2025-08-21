@@ -14,17 +14,17 @@
             <v-col cols="6" sm="auto" class="d-flex justify-space-between">
                 <div style="color: white">
                     <v-card-title style="z-index: 99; position: relative">
-                        {{ user ? user.username : $t('guestUser') }}
+                        {{ user ? user.username : t('guestUser') }}
                     </v-card-title>
                     <v-card-subtitle v-if="user" style="z-index: 99; position: relative">
-                        {{ user.email || $t('clickAccountToLogin') }}
+                        {{ user.email || t('clickAccountToLogin') }}
                     </v-card-subtitle>
                 </div>
             </v-col>
         </v-row>
         <v-card-actions v-if="props.unfollowable">
             <v-btn style="z-index: 99; position: relative" @click.stop="unfollowUser(props.userId)">
-                {{ $t('unfollow') }}
+                {{ t('unfollow') }}
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -32,7 +32,8 @@
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-    import type { User } from '~/types/models';
+    import type { User } from '../../types/models';
+    import { navigateTo } from '#app';
 
     interface Props {
         userId: number;
@@ -47,6 +48,7 @@
     const src = ref<string>('/icon.png');
     const bgSrc = ref<string>('/card-image.jpg');
     const user = ref<User | null>(null);
+    const { t } = useI18n();
 
     const localePath = useLocalePath();
 

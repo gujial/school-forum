@@ -3,26 +3,26 @@
         <v-row class="d-flex justify-center">
             <v-col cols="12" md="6">
                 <v-card>
-                    <v-card-title class="headline">{{ $t('register') }}</v-card-title>
+                    <v-card-title class="headline">{{ t('register') }}</v-card-title>
                     <v-card-text>
                         <v-form>
                             <v-text-field
                                 v-model="username"
-                                :label="$t('username')"
+                                :label="t('username')"
                                 :rules="[required]"
                                 autocomplete="username"
                                 @keydown.enter.prevent="register"
                             />
                             <v-text-field
                                 v-model="email"
-                                :label="$t('email')"
+                                :label="t('email')"
                                 :rules="[required]"
                                 autocomplete="email"
                                 @keydown.enter.prevent="register"
                             />
                             <v-text-field
                                 v-model="password"
-                                :label="$t('password')"
+                                :label="t('password')"
                                 type="password"
                                 :rules="[required]"
                                 autocomplete="new-password"
@@ -34,7 +34,7 @@
                         </v-alert>
                     </v-card-text>
                     <v-card-actions class="d-flex justify-end">
-                        <v-btn color="primary" @click="register">{{ $t('register') }}</v-btn>
+                        <v-btn color="primary" @click="register">{{ t('register') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>

@@ -10,30 +10,30 @@
         </v-alert>
         <v-card-text>
             <v-form>
-                <v-textarea v-model="comment" :label="$t('inputComments')" auto-grow />
+                <v-textarea v-model="comment" :label="t('inputComments')" auto-grow />
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn text @click="postComment">{{ $t('postComment') }}</v-btn>
+            <v-btn text @click="postComment">{{ t('postComment') }}</v-btn>
             <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
-                    <v-card-text>{{ $t('commentCanntBeEmpty') }}</v-card-text>
-                    <v-btn @click="dialog = false">{{ $t('confirm') }}</v-btn>
+                    <v-card-text>{{ t('commentCanntBeEmpty') }}</v-card-text>
+                    <v-btn @click="dialog = false">{{ t('confirm') }}</v-btn>
                 </v-card>
             </v-dialog>
         </v-card-actions>
-        <v-card-title>{{ $t('commentAreaTitle') }}</v-card-title>
+        <v-card-title>{{ t('commentAreaTitle') }}</v-card-title>
         <CommentArea ref="areaRef" :tweet-id="props['tweetId']" />
     </v-card>
     <v-card v-else>
-        <v-card-title>{{ $t('loginFirst') }}</v-card-title>
-        <v-card-title>{{ $t('commentAreaTitle') }}</v-card-title>
+        <v-card-title>{{ t('loginFirst') }}</v-card-title>
+        <v-card-title>{{ t('commentAreaTitle') }}</v-card-title>
         <CommentArea ref="areaRef" :tweet-id="props['tweetId']" />
     </v-card>
 </template>
 
 <script setup lang="ts">
-    import CommentArea from '~/components/CommentArea.vue';
+    import CommentArea from './CommentArea.vue';
     import { ref } from 'vue';
 
     const user = useAuthUser();
@@ -46,6 +46,7 @@
         receiverId: number;
     }>();
     const areaRef = ref<typeof CommentArea>();
+    const { t } = useI18n();
 
     const emit = defineEmits<{
         'comment-posted': [];

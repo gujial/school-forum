@@ -6,25 +6,25 @@
         {{ suc }}
     </v-alert>
     <v-alert v-if="currentUser && currentUser.user_id === -1">
-        {{ $t('pleaseLogin') }}
+        {{ t('pleaseLogin') }}
     </v-alert>
-    <v-card-text v-if="comments.length == 0">{{ $t('noComments') }}</v-card-text>
+    <v-card-text v-if="comments.length == 0">{{ t('noComments') }}</v-card-text>
     <div v-else-if="ready">
         <v-btn variant="flat" @click="toggleApi">{{
-            commentApi == 'order_by_time' ? $t('timeDesc') : $t('timeAsc')
+            commentApi == 'order_by_time' ? t('timeDesc') : t('timeAsc')
         }}</v-btn>
         <v-card
             v-for="(comment, index) in comments"
             :id="`comment-${comment.comment_id}`"
             :key="comment.comment_id"
-            :title="users[index].username"
+            :title="users[index]?.username"
             :subtitle="
                 moment.utc(comment.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')
             "
             :variant="'flat'"
         >
             <template #prepend>
-                <v-avatar size="40" @click="navigateTo(`/profile/${users[index].user_id}`)">
+                <v-avatar size="40" @click="navigateTo(`/profile/${users[index]?.user_id}`)">
                     <v-img v-if="avatars[index]" :src="avatars[index]" />
                 </v-avatar>
             </template>
@@ -34,23 +34,23 @@
                     <v-btn
                         v-if="currentUser && currentUser.user_id !== -1"
                         @click="showReplyBox(comment.comment_id)"
-                        >{{ $t('reply') }}</v-btn
+                        >{{ t('reply') }}</v-btn
                     >
                     <v-btn
                         v-if="currentUser && currentUser.user_id !== -1"
                         @click="openCommentReportDialog(comment.comment_id)"
-                        >{{ $t('report') }}</v-btn
+                        >{{ t('report') }}</v-btn
                     >
                     <v-btn
                         v-if="
                             currentUser &&
-                            (currentUser.user_id === users[index].user_id || currentUser.admin)
+                            (currentUser.user_id === users[index]?.user_id || currentUser.admin)
                         "
                         color="red"
                         variant="text"
                         @click="showDeleteDialog(comment)"
                     >
-                        {{ $t('delete') }}
+                        {{ t('delete') }}
                     </v-btn>
                 </v-card-actions>
                 <!-- 二级评论展示 -->
@@ -82,7 +82,7 @@
                             <v-btn
                                 v-if="currentUser && currentUser.user_id !== -1"
                                 @click="openCommentReportDialog(reply.comment_id)"
-                                >{{ $t('report') }}</v-btn
+                                >{{ t('report') }}</v-btn
                             >
                             <v-btn
                                 v-if="currentUser && currentUser.user_id === reply.user_id"
@@ -90,22 +90,22 @@
                                 variant="text"
                                 @click="showDeleteDialog(reply)"
                             >
-                                {{ $t('delete') }}
+                                {{ t('delete') }}
                             </v-btn>
                         </v-card-actions>
                     </v-card>
                 </div>
                 <!-- 回复输入框 -->
                 <div v-if="replyBoxVisible === comment.comment_id" class="mt-2">
-                    <v-textarea v-model="replyContent" :label="$t('replyContent')" auto-grow />
+                    <v-textarea v-model="replyContent" :label="t('replyContent')" auto-grow />
                     <v-btn
                         size="small"
                         variant="flat"
                         @click="submitReply(comment.comment_id, comment.user_id)"
-                        >{{ $t('submit') }}</v-btn
+                        >{{ t('submit') }}</v-btn
                     >
                     <v-btn size="small" variant="flat" @click="replyBoxVisible = null">{{
-                        $t('cancel')
+                        t('cancel')
                     }}</v-btn>
                 </div>
             </v-card-text>
@@ -115,7 +115,7 @@
 
     <v-dialog v-model="showDelete" max-width="400">
         <v-card>
-            <v-card-title>{{ $t('deleteComment') }}</v-card-title>
+            <v-card-title>{{ t('deleteComment') }}</v-card-title>
             <v-card-text
                 >{{ commentToDelete?.content }} ({{
                     commentToDelete?.created_at
@@ -129,25 +129,25 @@
             <v-divider />
             <v-card-actions>
                 <v-spacer />
-                <v-btn text @click="showDelete = false">{{ $t('cancel') }}</v-btn>
-                <v-btn color="red" @click="handleDeleteConfirm">{{ $t('confirm') }}</v-btn>
+                <v-btn text @click="showDelete = false">{{ t('cancel') }}</v-btn>
+                <v-btn color="red" @click="handleDeleteConfirm">{{ t('confirm') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 
     <v-dialog v-model="reportDialog" max-width="400">
         <v-card>
-            <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
-            <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条评论吗？' }}</v-card-text>
+            <v-card-title class="headline">{{ t('confirmReport') }}</v-card-title>
+            <v-card-text>{{ t('confirmReportMsg') || '确定要举报这条评论吗？' }}</v-card-text>
             <v-text-field
                 v-model="reportContent"
-                :label="$t('reportContent')"
+                :label="t('reportContent')"
                 :rules="[required]"
             />
             <v-card-actions>
                 <v-spacer />
-                <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
-                <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
+                <v-btn text @click="reportDialog = false">{{ t('cancel') }}</v-btn>
+                <v-btn color="error" text @click="confirmReport">{{ t('report') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -155,7 +155,8 @@
 
 <script setup lang="ts">
     import moment from 'moment-timezone';
-    import type { Comment, User } from '~/types/models';
+    import type { Comment, User } from '../../types/models';
+    import { navigateTo } from '#app';
 
     const props = defineProps<{
         tweetId: number;

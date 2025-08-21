@@ -3,7 +3,7 @@
         <!-- 搜索框 -->
         <v-text-field
             v-model="search"
-            :label="$t('searchUser')"
+            :label="t('searchUser')"
             prepend-inner-icon="mdi-magnify"
             clearable
             class="mb-4"
@@ -26,7 +26,7 @@
 
             <template #item.actions="{ item }">
                 <v-btn flat color="primary" :to="localePath(`/profile/${item.user_id}`)">
-                    {{ $t('profile') }}
+                    {{ t('profile') }}
                 </v-btn>
             </template>
         </v-data-table>
@@ -41,7 +41,7 @@
     import type { Ref } from 'vue';
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { User, UserListResponse } from '~/types/models';
+    import type { User, UserListResponse } from '../../../types/models';
 
     const { t } = useI18n();
     const localePath: (_path: string) => string = useLocalePath();

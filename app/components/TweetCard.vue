@@ -72,6 +72,7 @@
 <script setup lang="ts">
     import moment from 'moment-timezone';
     import MarkdownPreview from './MarkdownPreview.vue';
+    import { navigateTo } from '#app';
     import type {
         Tweet,
         User,
@@ -83,7 +84,7 @@
         AvatarApiResponse,
         MediaApiResponse,
         TweetApiResponse,
-    } from '~/types/models';
+    } from '../../types/models';
 
     const isLike = ref(false);
     const localePath = useLocalePath();
@@ -177,7 +178,7 @@
 
             const media_data = await $fetch<MediaApiResponse>(`/api/media/${tweet.value.tweet_id}`);
             if (media_data.data && media_data.data.length > 0) {
-                if (media_data.data[0].media_type == 'video') {
+                if (media_data.data[0]?.media_type == 'video') {
                     video.value = media_data.data[0].media_url;
                 } else {
                     for (const data of media_data.data) {

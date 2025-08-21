@@ -6,21 +6,21 @@
                 <v-img cover :src="src" />
             </v-avatar>
             <v-container>
-                <v-card-title>{{ $t('welcome') + ' ' + username }}</v-card-title>
-                <v-card-text>{{ $t('greeting') }}</v-card-text>
+                <v-card-title>{{ t('welcome') + ' ' + username }}</v-card-title>
+                <v-card-text>{{ t('greeting') }}</v-card-text>
             </v-container>
             <v-card-actions>
-                <v-btn text :to="localePath('/edit')">{{ $t('newTweet') }}</v-btn>
+                <v-btn text :to="localePath('/edit')">{{ t('newTweet') }}</v-btn>
             </v-card-actions>
         </v-card>
         <v-tabs v-model="tab" background-color="primary">
-            <v-tab key="all">{{ $t('all') }}</v-tab>
-            <v-tab key="school">{{ $t('school') }}</v-tab>
-            <v-tab key="biaobai">{{ $t('biaobai') }}</v-tab>
-            <v-tab key="help">{{ $t('help') }}</v-tab>
-            <v-tab key="news">{{ $t('news') }}</v-tab>
-            <v-tab key="follow">{{ $t('follow') }}</v-tab>
-            <v-tab key="map">{{ $t('map') }}</v-tab>
+            <v-tab key="all">{{ t('all') }}</v-tab>
+            <v-tab key="school">{{ t('school') }}</v-tab>
+            <v-tab key="biaobai">{{ t('biaobai') }}</v-tab>
+            <v-tab key="help">{{ t('help') }}</v-tab>
+            <v-tab key="news">{{ t('news') }}</v-tab>
+            <v-tab key="follow">{{ t('follow') }}</v-tab>
+            <v-tab key="map">{{ t('map') }}</v-tab>
             <v-tab
                 key="more"
                 @click="
@@ -29,7 +29,7 @@
                         navigateTo(localePath('/tags'));
                     }
                 "
-                >{{ $t('more') }}</v-tab
+                >{{ t('more') }}</v-tab
             >
             <v-tab
                 key="searchUser"
@@ -39,7 +39,7 @@
                         navigateTo(localePath('/search/user'));
                     }
                 "
-                >{{ $t('searchUser') }}</v-tab
+                >{{ t('searchUser') }}</v-tab
             >
             <v-tab
                 key="searchTweet"
@@ -49,12 +49,12 @@
                         navigateTo(localePath('/search/tweet'));
                     }
                 "
-                >{{ $t('searchTweet') }}</v-tab
+                >{{ t('searchTweet') }}</v-tab
             >
         </v-tabs>
         <v-row v-if="tweets != null">
             <v-alert v-if="tweets.length == 0 && tab != 6" type="info" style="margin: 20px">{{
-                $t('noTweets')
+                t('noTweets')
             }}</v-alert>
             <v-col v-for="tweet in tweets" v-else :key="tweet.tweet_id" cols="12" md="6" lg="4">
                 <v-lazy>
@@ -62,7 +62,7 @@
                 </v-lazy>
             </v-col>
         </v-row>
-        <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
+        <v-alert v-else type="info">{{ t('loading') }}</v-alert>
         <v-row v-if="tab == 6">
             <iframe
                 width="100%"
@@ -77,7 +77,7 @@
         </v-row>
         <v-pagination v-if="tab != 6" v-model="currentPage" :length="pageCount" />
         <v-alert v-if="authError">
-            {{ $t('pleaseLogin') }}
+            {{ t('pleaseLogin') }}
         </v-alert>
         <v-alert v-if="error != null" v-show="!authError" type="error">
             {{ error }}
@@ -86,7 +86,8 @@
 </template>
 
 <script setup lang="ts">
-    import TweetCard from '~/components/TweetCard.vue';
+    import TweetCard from '../components/TweetCard.vue';
+    import { navigateTo } from '#app';
     import type {
         Tweet,
         AuthUser,
@@ -105,6 +106,7 @@
     const authError = ref<boolean>(false);
     const bgSrc = ref<string>('/card-image.jpg');
     const tab = ref<number>(0);
+        const { t } = useI18n();
 
     const updateTweets = async () => {
         if (tab.value === 0) {

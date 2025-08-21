@@ -19,24 +19,24 @@
                             <v-btn
                                 flat
                                 :href="`mailto:${user.email}?subject=Re:${tweet.content}`"
-                                >{{ $t('email') }}</v-btn
+                                >{{ t('email') }}</v-btn
                             >
                             <v-btn v-if="!follow_status" flat @click="followUser(user.user_id)">{{
-                                $t('follow')
+                                t('follow')
                             }}</v-btn>
                             <v-btn v-else flat @click="unfolowUser(user.user_id)">{{
-                                $t('unfollow')
+                                t('unfollow')
                             }}</v-btn>
                             <v-btn
                                 flat
                                 @click="navigateTo(localePath(`/profile/${user.user_id}`))"
-                                >{{ $t('profile') }}</v-btn
+                                >{{ t('profile') }}</v-btn
                             >
                             <v-btn
                                 v-if="currentUser && currentUser.user_id !== -1"
                                 flat
                                 @click="openTweetReportDialog(tweet.tweet_id)"
-                                >{{ $t('report') }}</v-btn
+                                >{{ t('report') }}</v-btn
                             >
                             <v-btn
                                 v-if="
@@ -47,7 +47,7 @@
                                 color="error"
                                 @click="openDeleteDialog()"
                             >
-                                {{ $t('delete') }}
+                                {{ t('delete') }}
                             </v-btn>
                         </v-card-actions>
                         <hr />
@@ -113,12 +113,12 @@
                             </v-chip>
                         </div>
                         <CommentEditor
-                            :tweet-id="Number($route.params.id)"
+                            :tweet-id="Number(route.params.id)"
                             :receiver-id="tweet.user_id"
                             @comment-posted="fetchCounts"
                         />
                     </v-card>
-                    <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
+                    <v-alert v-else type="info">{{ t('loading') }}</v-alert>
                 </v-col>
             </v-row>
             <v-btn
@@ -131,28 +131,28 @@
         </v-container>
         <v-dialog v-model="deleteDialog" max-width="400">
             <v-card>
-                <v-card-title class="headline">{{ $t('confirmDelete') }}</v-card-title>
-                <v-card-text>{{ $t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
+                <v-card-title class="headline">{{ t('confirmDelete') }}</v-card-title>
+                <v-card-text>{{ t('confirmDeleteMsg') || '确定要删除这条推文吗？' }}</v-card-text>
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn text @click="deleteDialog = false">{{ $t('cancel') }}</v-btn>
-                    <v-btn color="error" text @click="confirmDelete">{{ $t('delete') }}</v-btn>
+                    <v-btn text @click="deleteDialog = false">{{ t('cancel') }}</v-btn>
+                    <v-btn color="error" text @click="confirmDelete">{{ t('delete') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
         <v-dialog v-model="reportDialog" max-width="400">
             <v-card>
-                <v-card-title class="headline">{{ $t('confirmReport') }}</v-card-title>
-                <v-card-text>{{ $t('confirmReportMsg') || '确定要举报这条推文吗？' }}</v-card-text>
+                <v-card-title class="headline">{{ t('confirmReport') }}</v-card-title>
+                <v-card-text>{{ t('confirmReportMsg') || '确定要举报这条推文吗？' }}</v-card-text>
                 <v-text-field
                     v-model="reportContent"
-                    :label="$t('reportContent')"
+                    :label="t('reportContent')"
                     :rules="[(v: string) => !!v || t('fieldIsRequired')]"
                 />
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn text @click="reportDialog = false">{{ $t('cancel') }}</v-btn>
-                    <v-btn color="error" text @click="confirmReport">{{ $t('report') }}</v-btn>
+                    <v-btn text @click="reportDialog = false">{{ t('cancel') }}</v-btn>
+                    <v-btn color="error" text @click="confirmReport">{{ t('report') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -161,10 +161,11 @@
 
 <script setup lang="ts">
     import moment from 'moment-timezone';
-    import CommentEditor from '~/components/CommentEditor.vue';
-    import Markdown from '~/components/Markdown.vue';
-    import TweetCard from '~/components/TweetCard.vue';
-    import type { User, Tweet, Media } from '~/types/models';
+    import CommentEditor from '../../components/CommentEditor.vue';
+    import Markdown from '../../components/Markdown.vue';
+    import TweetCard from '../../components/TweetCard.vue';
+    import type { User, Tweet, Media } from '../../../types/models';
+    import { navigateTo } from '#app';
 
     const route = useRoute();
     const user = ref<User | null>(null);
@@ -383,7 +384,7 @@
                 `/api/media/${tweet.value.tweet_id}`,
             );
             if (media_data.data && media_data.data.length > 0) {
-                if (media_data.data[0].media_type == 'video') {
+                if (media_data.data[0]?.media_type == 'video') {
                     video.value = media_data.data[0].media_url;
                 } else {
                     for (const data of media_data.data) {

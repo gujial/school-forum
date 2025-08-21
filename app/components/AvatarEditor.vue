@@ -15,7 +15,7 @@
                     style="z-index: 99"
                     @click="sheet = !sheet"
                 >
-                    {{ $t('changeAvatar') }}
+                    {{ t('changeAvatar') }}
                 </v-btn>
                 <v-btn
                     variant="text"
@@ -24,7 +24,7 @@
                     style="z-index: 99"
                     @click="bgSheet = !bgSheet"
                 >
-                    {{ $t('changeBg') }}
+                    {{ t('changeBg') }}
                 </v-btn>
             </v-col>
         </v-row>
@@ -37,14 +37,14 @@
             <v-card-text>
                 <v-file-input
                     v-model="file"
-                    :label="$t('inputImage')"
+                    :label="t('inputImage')"
                     accept="image/*"
                     prepend-icon="mdi-camera"
                 />
             </v-card-text>
             <v-card-actions>
-                <v-btn text @click="submit">{{ $t('upload') }}</v-btn>
-                <v-btn text @click="sheet = !sheet">{{ $t('close') }}</v-btn>
+                <v-btn text @click="submit">{{ t('upload') }}</v-btn>
+                <v-btn text @click="sheet = !sheet">{{ t('close') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-bottom-sheet>
@@ -55,14 +55,14 @@
             <v-card-text>
                 <v-file-input
                     v-model="bgFile"
-                    :label="$t('inputBg')"
+                    :label="t('inputBg')"
                     accept="image/*"
                     prepend-icon="mdi-image"
                 />
             </v-card-text>
             <v-card-actions>
-                <v-btn text @click="submitBg">{{ $t('upload') }}</v-btn>
-                <v-btn text @click="bgSheet = !bgSheet">{{ $t('close') }}</v-btn>
+                <v-btn text @click="submitBg">{{ t('upload') }}</v-btn>
+                <v-btn text @click="bgSheet = !bgSheet">{{ t('close') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-bottom-sheet>
@@ -72,8 +72,8 @@
         <v-card
             max-width="400"
             prepend-icon="mdi-update"
-            :text="$t('inputImageFirst')"
-            :title="$t('noSelectedFile')"
+            :text="t('inputImageFirst')"
+            :title="t('noSelectedFile')"
         >
             <template #actions>
                 <v-btn class="ms-auto" text @click="dialog = false">Ok</v-btn>
@@ -84,7 +84,8 @@
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-    import type { User } from '~/types/models';
+    import type { User } from '../../types/models';
+    const { t } = useI18n();
     // ==== Props ====
     const props = defineProps<{
         user: User;

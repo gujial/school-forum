@@ -44,6 +44,7 @@
                     <template #item.tweet_id="{ item }">
                         <v-btn
                             v-if="item.tweet_id"
+                            flat
                             :to="`/detail/${item.tweet_id}?from=${route.path}`"
                             >{{ item.tweet_id }}</v-btn
                         >
@@ -53,6 +54,7 @@
                     <template #item.comment_id="{ item }">
                         <v-btn
                             v-if="item.comment_id"
+                            flat
                             :to="`/detail/${item.tweet_id}#comment-${item.comment_id}`"
                             text
                             >{{ item.comment_id }}</v-btn

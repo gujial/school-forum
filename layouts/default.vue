@@ -17,16 +17,14 @@
     const colorMode = useColorMode();
     const theme = useTheme();
 
-    // 初始化为系统偏好
-    if (colorMode.value === undefined || colorMode.value === null) {
-        colorMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light';
-    }
-
     // 组件挂载时获取用户信息
     onMounted(async () => {
         await fetchAuthUser();
+        if (localStorage.getItem('nuxt-color-mode') === 'light') {
+            colorMode.value = 'light'
+        } else if (localStorage.getItem('nuxt-color-mode') === 'dark') {
+            colorMode.value = 'dark'
+        }
     });
 
     // 响应暗/亮主题变化

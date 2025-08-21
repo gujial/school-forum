@@ -77,7 +77,11 @@
             >{{ $t('adminDashboard') }}</v-btn
         >
         <v-btn flat icon="mdi-translate" @click="setLocale(locale === 'en' ? 'zh' : 'en')" />
-        <v-btn flat icon="mdi-theme-light-dark" @click="toggleTheme()" />
+        <v-btn flat @click="toggleTheme()">{{ $t(colorMode.preference) }}
+            <template #prepend>
+                    <v-icon>mdi-theme-light-dark</v-icon>
+                </template>
+        </v-btn>
     </v-navigation-drawer>
 </template>
 
@@ -124,12 +128,14 @@
     };
 
     const toggleTheme = () => {
-        if (colorMode.value === 'light') {
-            colorMode.preference = 'dark';
-        } else if (colorMode.value === 'dark') {
-            colorMode.preference = 'light';
-        }
-    };
+    if (colorMode.preference === 'light') {
+        colorMode.preference = 'dark';
+    } else if (colorMode.preference === 'dark') {
+        colorMode.preference = 'system';
+    } else {
+        colorMode.preference = 'light';
+    }
+};
 
     const updateMessageCount = async () => {
         try {

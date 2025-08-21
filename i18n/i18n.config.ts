@@ -132,6 +132,9 @@ export default defineI18nConfig(() => ({
             deleteAllReports: 'Delete All Reports',
             user: 'User',
             userId: 'User ID',
+            light: 'Light',
+            dark: 'Dark',
+            system: 'System',
             $vuetify: {
                 input: {
                     prependAction: 'Add image',
@@ -306,6 +309,9 @@ export default defineI18nConfig(() => ({
             deleteAllReports: '删除所有举报信息',
             user: '用户',
             userId: '用户 ID',
+            light: '浅色',
+            dark: '深色',
+            system: '跟随系统',
             $vuetify: {
                 input: {
                     prependAction: '添加图片',

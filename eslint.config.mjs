@@ -1,4 +1,4 @@
-import withNuxt from './.nuxt/eslint.config.mjs';
+import withNuxt from '.nuxt/eslint.config.mjs';
 import prettierPlugin from 'eslint-plugin-prettier';
 
 // 使用 Nuxt 预设并追加自定义配置（Flat config）

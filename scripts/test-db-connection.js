@@ -1,4 +1,4 @@
-import { testConnection } from '../server/config/database.ts'
+import { testConnection } from '../server/config/database.js'
 
 async function testDBConnection() {
     console.log('🔍 测试MySQL数据库连接...')

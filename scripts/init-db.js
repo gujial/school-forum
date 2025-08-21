@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import fs from 'fs';
 import path from 'path';
-import { executeTransaction, testConnection } from '../server/config/database.ts';
+import { executeTransaction, testConnection } from '../server/config/database.js';
 
 async function initDatabase() {
     // 测试数据库连接

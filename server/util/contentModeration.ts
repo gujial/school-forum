@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { useDatabase } from '../util/database'; // 你之前的数据库封装
+import { useDatabase } from './database';
 
 const client = new OpenAI({
     baseURL: process.env.LLM_API_URL || 'https://api.deepseek.com',

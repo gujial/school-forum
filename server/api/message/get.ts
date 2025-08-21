@@ -13,7 +13,7 @@ import authMiddleware from '../../util/auth';
  * - pageSize?: number 每页数量，默认 20
  *
  * 返回:
- * - { success: true, data: any[], maxPages: number }
+ * - { success: true, data: any[], maxPages: number, total: number }
  * - { success: false, message }
  *
  * @param {import('h3').H3Event} event H3 请求事件对象
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         };
     }
 
-    const page = query.page as number;
+    const page = (query.page as number) || 1;
 
     if (page < 0) {
         return {
@@ -63,6 +63,7 @@ export default defineEventHandler(async (event) => {
             success: true,
             data: rows,
             maxPages: maxPages,
+            total: total,
         };
     } catch (error) {
         console.error('Database error:', error);

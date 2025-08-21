@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/tweets/like/count/\[tweet\_id\].ts:19](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/like/count/[tweet_id].ts#L19)
+Defined in: [api/tweets/like/count/\[tweet\_id\].ts:19](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/tweets/like/count/[tweet_id].ts#L19)
 
 获取某条推文的点赞数。
 

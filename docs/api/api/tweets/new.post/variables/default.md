@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; `tweet_id?`: `undefined`; \} \| \{ `message`: `string`; `success`: `boolean`; `tweet_id`: `any`; \}\>\>
 
-Defined in: [api/tweets/new.post.ts:25](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/new.post.ts#L25)
+Defined in: [api/tweets/new.post.ts:25](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/tweets/new.post.ts#L25)
 
 创建推文（可附带标签与媒体）。
 

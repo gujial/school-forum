@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data?`: `undefined`; `maxPages?`: `undefined`; `message`: `string`; `success`: `boolean`; \} \| \{ `data`: `any`[]; `maxPages`: `number`; `message?`: `undefined`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/comment/by\_tweet/\[id\].ts:23](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/comment/by_tweet/[id].ts#L23)
+Defined in: [api/comment/by\_tweet/\[id\].ts:23](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/comment/by_tweet/[id].ts#L23)
 
 获取某条推文下的顶级评论（不包含子评论），按时间正序，分页返回。
 

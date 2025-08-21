@@ -58,6 +58,14 @@
                 <template #prepend>
                     <v-icon>mdi-message-text</v-icon>
                 </template>
+                <template #append>
+                    <v-badge
+                        v-if="messageCount > 0"
+                        color="primary"
+                        :content="messageCount"
+                        inline
+                    ></v-badge>
+                </template>
                 <v-list-item-title>{{ $t('messages') }}</v-list-item-title>
             </v-list-item>
         </v-list>
@@ -75,6 +83,7 @@
 
 <script setup lang="ts">
     import { useTheme } from 'vuetify';
+    import type { MessageListResponse } from '~/types/models';
 
     const colorMode = useColorMode();
     const { locale, setLocale } = useI18n();
@@ -84,6 +93,7 @@
     const bgSrc = ref('/card-image.jpg');
     const user = useAuthUser();
     const theme = useTheme();
+    const messageCount = ref<number>(0);
 
     const updateAvatar = async () => {
         if (user.value && user.value.user_id === -1) {
@@ -120,6 +130,19 @@
             colorMode.preference = 'light';
         }
     };
+
+    const updateMessageCount = async () => {
+        try {
+            const res = await $fetch<MessageListResponse>('/api/message/get');
+            messageCount.value = res.total;
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    watch(navOpen, () => {
+        updateMessageCount();
+    });
 
     watch(
         user,

@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data?`: `undefined`; `maxPages?`: `undefined`; `message`: `string`; `success`: `boolean`; \} \| \{ `data`: `any`[]; `maxPages`: `number`; `message?`: `undefined`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/admin/report/list.ts:22](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/admin/report/list.ts#L22)
+Defined in: [api/admin/report/list.ts:22](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/admin/report/list.ts#L22)
 
 管理端分页获取举报列表。
 

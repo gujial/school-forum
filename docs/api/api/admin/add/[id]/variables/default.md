@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/admin/add/\[id\].ts:21](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/admin/add/[id].ts#L21)
+Defined in: [api/admin/add/\[id\].ts:21](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/admin/add/[id].ts#L21)
 
 添加管理员权限给指定用户。
 

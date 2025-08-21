@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `follow?`: `undefined`; `message`: `string`; `success`: `boolean`; \} \| \{ `follow`: `boolean`; `message?`: `undefined`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/follow/check/\[id\].ts:21](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/follow/check/[id].ts#L21)
+Defined in: [api/follow/check/\[id\].ts:21](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/follow/check/[id].ts#L21)
 
 检查当前用户是否已关注目标用户。
 

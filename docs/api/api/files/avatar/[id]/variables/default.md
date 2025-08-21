@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>\>
 
-Defined in: [api/files/avatar/\[id\].ts:20](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/files/avatar/[id].ts#L20)
+Defined in: [api/files/avatar/\[id\].ts:20](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/files/avatar/[id].ts#L20)
 
 读取某用户目录下最新头像文件。
 

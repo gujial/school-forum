@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/bg/\[id\].ts:19](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/bg/[id].ts#L19)
+Defined in: [api/bg/\[id\].ts:19](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/bg/[id].ts#L19)
 
 获取指定用户的背景图 URL。
 

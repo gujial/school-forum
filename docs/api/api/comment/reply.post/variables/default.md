@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/comment/reply.post.ts:23](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/comment/reply.post.ts#L23)
+Defined in: [api/comment/reply.post.ts:23](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/comment/reply.post.ts#L23)
 
 回复评论（子评论）。
 

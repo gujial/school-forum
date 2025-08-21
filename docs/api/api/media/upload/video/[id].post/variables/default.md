@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/media/upload/video/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/media/upload/video/[id].post.ts#L23)
+Defined in: [api/media/upload/video/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/media/upload/video/[id].post.ts#L23)
 
 上传单个视频到指定推文目录，并记录到 `Media` 表。
 

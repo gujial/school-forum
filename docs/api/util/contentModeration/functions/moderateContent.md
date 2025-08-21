@@ -8,7 +8,7 @@
 
 > **moderateContent**(`content`): `Promise`\<[`AuditResult`](../interfaces/AuditResult.md)\>
 
-Defined in: [util/contentModeration.ts:14](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/util/contentModeration.ts#L14)
+Defined in: [util/contentModeration.ts:14](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/contentModeration.ts#L14)
 
 ## Parameters
 

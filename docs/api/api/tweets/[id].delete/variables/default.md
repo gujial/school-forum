@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/tweets/\[id\].delete.ts:44](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/[id].delete.ts#L44)
+Defined in: [api/tweets/\[id\].delete.ts:44](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/tweets/[id].delete.ts#L44)
 
 删除指定推文，连带清理关联媒体与无引用标签。
 

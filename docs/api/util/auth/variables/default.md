@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<`void`\>\>
 
-Defined in: [util/auth.ts:18](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/util/auth.ts#L18)
+Defined in: [util/auth.ts:18](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/auth.ts#L18)
 
 认证中间件：从 Cookie 中读取 `auth_token`，校验 JWT，
 并在 `event.context.auth` 上注入 `{ userId, username }`。

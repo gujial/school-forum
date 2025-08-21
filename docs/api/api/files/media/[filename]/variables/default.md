@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>\>
 
-Defined in: [api/files/media/\[filename\].ts:19](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/files/media/[filename].ts#L19)
+Defined in: [api/files/media/\[filename\].ts:19](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/files/media/[filename].ts#L19)
 
 读取通用媒体文件（未关联推文目录）。
 

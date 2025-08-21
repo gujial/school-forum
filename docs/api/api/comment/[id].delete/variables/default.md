@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/comment/\[id\].delete.ts:22](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/comment/[id].delete.ts#L22)
+Defined in: [api/comment/\[id\].delete.ts:22](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/comment/[id].delete.ts#L22)
 
 删除评论（包含其子评论）。
 

@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/admin/delete/\[id\].delete.ts:21](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/admin/delete/[id].delete.ts#L21)
+Defined in: [api/admin/delete/\[id\].delete.ts:21](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/admin/delete/[id].delete.ts#L21)
 
 移除指定用户的管理员权限。
 

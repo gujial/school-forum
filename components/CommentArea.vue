@@ -205,7 +205,7 @@
             } else {
                 suc.value = t('reportSuccess');
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         } finally {
             reportDialog.value = false;
@@ -234,8 +234,8 @@
                 method: 'DELETE',
             });
             updateComments();
-        } catch (err: any) {
-            error.value = err.message || String(err);
+        } catch (err: unknown) {
+            error.value = String(err);
         }
     };
 
@@ -267,8 +267,8 @@
             replyBoxVisible.value = null;
             replyContent.value = '';
             updateComments();
-        } catch (err: any) {
-            error.value = err.message || String(err);
+        } catch (err: unknown) {
+            error.value = String(err);
         }
     };
 
@@ -340,8 +340,8 @@
                     }
                 }
             });
-        } catch (err: any) {
-            error.value = err.message || String(err);
+        } catch (err: unknown) {
+            error.value = String(err);
         }
     };
 

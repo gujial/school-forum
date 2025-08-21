@@ -12,8 +12,8 @@ interface LoginBody {
 }
 
 interface UserRows {
-    username: any;
-    user_id: any;
+    username: string;
+    user_id: number;
     password: string;
     rows: User[];
 }

@@ -76,9 +76,13 @@
             } else {
                 error.value = response.message;
             }
-        } catch (err: any) {
-            if (err.statusCode == 400) {
-                error.value = t('checkEmailAndPassword');
+        } catch (err: unknown) {
+            // 由于 err 是 unknown 类型，需要先进行类型断言
+            if (typeof err === 'object' && err !== null && 'statusCode' in err) {
+                const e = err as { statusCode?: number };
+                if (e.statusCode === 400) {
+                    error.value = t('checkEmailAndPassword');
+                }
             }
         }
     };

@@ -71,8 +71,8 @@
             followers.value = res.data;
             maxPages.value = res.maxPages;
             total.value = res.total;
-        } catch (err: any) {
-            error.value = err.message || '加载失败';
+        } catch (err: unknown) {
+            error.value = String(err) || '加载失败';
         } finally {
             loading.value = false;
         }

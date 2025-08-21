@@ -114,7 +114,7 @@
             });
             sheet.value = false;
             await updateAvatar();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Upload failed:', err);
         }
     };
@@ -133,7 +133,7 @@
             });
             bgSheet.value = false;
             await updateBg();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Upload bg failed:', err);
         }
     };
@@ -142,7 +142,7 @@
         try {
             const res = await $fetch<{ data?: string }>(`/api/avatar/${props.user.user_id}`);
             src.value = res.data ?? '/icon.png';
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
             src.value = '/icon.png';
         }
@@ -152,7 +152,7 @@
         try {
             const res = await $fetch<{ data?: string }>(`/api/bg/${props.user.user_id}`);
             bgSrc.value = res.data ?? '/card-image.jpg';
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
             bgSrc.value = '/card-image.jpg';
         }

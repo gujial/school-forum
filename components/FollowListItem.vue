@@ -55,7 +55,7 @@
         try {
             const data: { user: User } = await $fetch<{ user: User }>(`/api/user/${props.userId}`);
             user.value = data.user;
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         }
     };
@@ -67,7 +67,7 @@
                 `/api/avatar/${props.userId}`,
             );
             src.value = data.data || '/icon.png';
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         }
     };
@@ -90,7 +90,7 @@
         try {
             await $fetch(`/api/follow/${id}`, { method: 'DELETE' });
             emit('unfollow');
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         }
     };

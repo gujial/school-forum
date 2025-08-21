@@ -143,7 +143,7 @@
                 messages.value = [];
                 maxPages.value = 1;
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error fetching messages:', error);
             messages.value = [];
             maxPages.value = 1;
@@ -171,7 +171,7 @@
             await $fetch(ep, { method: 'DELETE' });
             messages.value = [];
             maxPages.value = 1;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error deleting messages:', error);
         }
     };
@@ -180,7 +180,7 @@
         try {
             await $fetch(`/api/message/${messageId}`, { method: 'DELETE' });
             fetchMessages();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error deleting message:', error);
         }
     };

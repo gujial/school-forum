@@ -117,8 +117,8 @@
             await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`);
             updateLike();
             await fetchCounts();
-        } catch (err: any) {
-            if (err.statusCode == 401) {
+        } catch (err: unknown) {
+            if ((err as { statusCode?: number })?.statusCode === 401) {
                 navigateTo(localePath('/login'));
             }
         }
@@ -198,7 +198,7 @@
                     } as Tweet;
                 }
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
         updateLike();

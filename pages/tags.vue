@@ -66,7 +66,7 @@
 
             const res = await $fetch<{
                 success: boolean;
-                data?: any[];
+                data?: Tweet[];
                 maxPages?: number;
                 message?: string;
             }>(url);
@@ -79,7 +79,7 @@
                 tweets.value = [];
                 maxPages.value = 1;
             }
-        } catch (e: any) {
+        } catch (e: unknown) {
             tweets.value = [];
             maxPages.value = 1;
             console.error(e);

@@ -230,7 +230,7 @@
                 error.value = res.message || '修改失败';
                 emailDialog.value = false;
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             emailDialog.value = false;
             error.value = String(err);
         }
@@ -266,7 +266,7 @@
                 error.value = res.message || '修改失败';
                 usernameDialog.value = false;
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             usernameDialog.value = false;
             error.value = String(err);
         }
@@ -286,7 +286,7 @@
                 error.value = res.message || '修改失败';
                 passwordDialog.value = false;
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             passwordDialog.value = false;
             error.value = String(err);
         }
@@ -302,7 +302,7 @@
             } else {
                 error.value = res.message || '删除失败';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -312,7 +312,7 @@
         try {
             const res = await $fetch<{ total: number }>(`/api/follow/get_follower_list`);
             followerCount.value = res.total || 0;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -322,7 +322,7 @@
         try {
             const res = await $fetch<{ total: number }>(`/api/follow/get_following_list`);
             followingCount.value = res.total || 0;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -335,7 +335,7 @@
             );
             tweets.value = tweetRes.data || [];
             total.value = tweetRes.total || 0;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -356,7 +356,7 @@
             } else {
                 error.value = res.message || '删除失败';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -396,7 +396,7 @@
             } else {
                 error.value = res.message || '修改失败';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -409,8 +409,10 @@
             await fetchTweets();
             await fetchFollower();
             await fetchFollowing();
-        } catch (err: any) {
-            if (err?.statusCode === 401) {
+        } catch (err: unknown) {
+            const statusCode = (err as { statusCode?: number })?.statusCode;
+
+            if (statusCode === 401) {
                 navigateTo(localePath('/login'));
             } else {
                 error.value = String(err);
@@ -438,7 +440,7 @@
             } else {
                 error.value = result.message || '登出失败';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };

@@ -34,7 +34,7 @@
 
     const user = ref<AuthUser | null>(null);
     const error = ref<string | null>(null);
-    const mediaEditorRef = ref<any>(null);
+    const mediaEditorRef = ref<typeof MediaEditor | null>();
     const localePath = useLocalePath();
     const vditor = ref<Vditor | null>(null);
     const { t, locale } = useI18n();
@@ -67,7 +67,7 @@
             if (mediaEditorRef.value != null && data.data?.tweet_id) {
                 mediaEditorRef.value.upload(data.data.tweet_id);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
         navigateTo(localePath('/'));
@@ -83,7 +83,7 @@
                 accept: 'image/*',
                 token: useCookie('token').value || undefined,
                 async handler(files) {
-                    let res: any;
+                    let res: { filePath: string } = { filePath: '' };
                     for (const file of files) {
                         const name = file.name;
                         const formData = new FormData();
@@ -97,7 +97,7 @@
                         }
                         attachments.value.push(res.filePath);
                     }
-                    if (res?.filePath) {
+                    if (res && res.filePath !== '') {
                         return '上传成功';
                     }
                     return '上传失败';
@@ -115,8 +115,8 @@
         try {
             const data = await $fetch<{ success: boolean; user?: AuthUser }>('/api/auth/user');
             user.value = data.user || null;
-        } catch (err: any) {
-            if (err.statusCode == 401) {
+        } catch (err: unknown) {
+            if ((err as { statusCode?: number })?.statusCode === 401) {
                 navigateTo(localePath('/login'));
             } else {
                 error.value = String(err);

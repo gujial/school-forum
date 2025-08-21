@@ -79,9 +79,12 @@
             } else {
                 error.value = response.message;
             }
-        } catch (err: any) {
-            if (err.statusCode == 400) {
-                error.value = t('emailExists');
+        } catch (err: unknown) {
+            if (typeof err === 'object' && err !== null && 'statusCode' in err) {
+                const e = err as { statusCode?: number };
+                if (e.statusCode === 400) {
+                    error.value = t('emailExists');
+                }
             }
         }
     };

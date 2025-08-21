@@ -97,13 +97,12 @@ export interface Message {
  * 举报相关类型
  */
 export interface Report {
+    user_id?: number;
     report_id: number;
-    reporter_id: number;
-    target_type: 'tweet' | 'comment';
-    target_id: number;
-    reason: string;
+    tweet_id?: number;
+    comment_id?: number;
+    content: string;
     created_at?: string;
-    status?: 'pending' | 'resolved' | 'rejected';
 }
 
 /**
@@ -226,9 +225,7 @@ export interface ShareCountResponse {
 /**
  * 消息相关API响应
  */
-export interface MessageResponse extends ApiResponse<Message> {
-    maxPages: number;
-}
+export interface MessageResponse extends PaginatedResponse<Message> {}
 
 export interface MessageListResponse extends ApiResponse<Message[]> {}
 
@@ -237,7 +234,7 @@ export interface MessageListResponse extends ApiResponse<Message[]> {}
  */
 export interface ReportResponse extends ApiResponse<Report> {}
 
-export interface ReportListResponse extends ApiResponse<Report[]> {}
+export interface ReportListResponse extends PaginatedResponse<Report> {}
 
 /**
  * 文件相关API响应
@@ -261,11 +258,12 @@ export interface PaginationParams {
 }
 
 export interface PaginatedResponse<T> {
+    success: boolean;
     data: T[];
     total: number;
     page: number;
     pageSize: number;
-    totalPages: number;
+    maxPages: number;
 }
 
 // ===== 表单相关类型 =====

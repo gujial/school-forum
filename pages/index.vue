@@ -179,10 +179,14 @@
             username.value = data.user.username;
             user_id.value = data.user.user_id;
             updateBg();
-        } catch (err: any) {
-            // 检查是否为 401 未认证错误
-            if (err?.status === 401 || (err?.response && err.response.status === 401)) {
-                authError.value = true;
+        } catch (err: unknown) {
+            if (typeof err === 'object' && err !== null && ('status' in err || 'response' in err)) {
+                const e = err as { status?: number; response?: { status?: number } };
+                if (e.status === 401 || e.response?.status === 401) {
+                    authError.value = true;
+                } else {
+                    error.value = String(err);
+                }
             } else {
                 error.value = String(err);
             }

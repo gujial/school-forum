@@ -46,7 +46,7 @@
                 `/api/follow/get_follower_list/${user.value.user_id}`,
             );
             followerCount.value = res.total || 0;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -58,7 +58,7 @@
                 `/api/follow/get_following_list/${user.value.user_id}`,
             );
             followingCount.value = res.total || 0;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -80,8 +80,8 @@
             } else {
                 error.value = userRes.message || '用户不存在';
             }
-        } catch (err: any) {
-            error.value = err.message || String(err);
+        } catch (err: unknown) {
+            error.value = String(err) || String(err);
         }
     });
 </script>

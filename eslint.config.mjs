@@ -31,9 +31,6 @@ export default withNuxt([
                 { args: 'after-used', argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
             ],
 
-            // TypeScript 允许 any
-            '@typescript-eslint/no-explicit-any': 'off',
-
             // Vue 插槽报错关闭
             'vue/valid-v-slot': 'off',
             'vue/html-self-closing': 'off',
@@ -52,6 +49,12 @@ export default withNuxt([
                     vueIndentScriptAndStyle: true,
                 },
             ],
+        },
+    },
+    {
+        files: ['types/**', 'server/util/**'],
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
         },
     },
 ]);

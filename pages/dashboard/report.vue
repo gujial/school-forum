@@ -13,14 +13,14 @@
                     class="elevation-1"
                 >
                     <template #item.created_at="{ item }">
-                        {{ new Date(item.created_at).toLocaleString() }}
+                        {{ new Date(item.created_at || '').toLocaleString() }}
                     </template>
 
                     <template #item.user="{ item }">
                         <v-btn v-if="item.user_id" flat :to="`/profile/${item.user_id}`">{{
-                            usernames[item.user_id] || 'Loading...'
+                            usernames?.[item.user_id ?? ''] || 'Loading...'
                         }}</v-btn>
-                        <span v-else>{{ usernames[item.user_id] || 'Loading...' }}</span>
+                        <span v-else>{{ $t('AIReports') }}</span>
                     </template>
 
                     <template #item.tweet_id="{ item }">
@@ -74,12 +74,13 @@
 <script setup lang="ts">
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
+    import type { Report, ReportListResponse, UserApiResponse } from '~/types/models';
 
     const { t } = useI18n();
     const page = ref<number>(1);
     const pageSize = 20;
     const maxPages = ref<number>(1);
-    const reports = ref<any[]>([]);
+    const reports = ref<Report[]>([]);
     const loading = ref<boolean>(false);
     const usernames = ref<Record<number, string>>({});
     const currentUser = useAuthUser();
@@ -99,7 +100,7 @@
         loading.value = true;
 
         try {
-            const data = await $fetch<any>(`/api/admin/report/list`, {
+            const data = await $fetch<ReportListResponse>(`/api/admin/report/list`, {
                 params: {
                     page: page.value,
                     pageSize,
@@ -107,13 +108,13 @@
             });
 
             if (data.success) {
-                reports.value = data.data;
+                reports.value = data.data || [];
                 maxPages.value = data.maxPages;
             } else {
                 reports.value = [];
                 maxPages.value = 1;
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error fetching reports:', error);
             reports.value = [];
             maxPages.value = 1;
@@ -130,8 +131,9 @@
         }
         if (usernames.value[id]) return;
         try {
-            const { user } = await $fetch<any>(`/api/user/${id}`);
-            usernames.value[id] = user.username || 'Unknown User';
+            const response = await $fetch<UserApiResponse>(`/api/user/${id}`);
+            const username = response?.user?.username;
+            usernames.value[id] = username ? username : 'Unknown User';
         } catch {
             usernames.value[id] = 'Unknown User';
         }
@@ -142,7 +144,7 @@
             await $fetch(`/api/admin/report/delete_all`, { method: 'DELETE' });
             reports.value = [];
             maxPages.value = 1;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error deleting reports:', error);
         }
     };
@@ -151,14 +153,16 @@
         try {
             await $fetch(`/api/admin/report/${reportId}`, { method: 'DELETE' });
             fetchReports();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error deleting report:', error);
         }
     };
 
     watch(reports, (reports) => {
-        reports.forEach((report: any) => {
-            loadUsername(report.user_id);
+        reports.forEach((report: Report) => {
+            if (report.user_id) {
+                loadUsername(report.user_id);
+            }
         });
     });
 

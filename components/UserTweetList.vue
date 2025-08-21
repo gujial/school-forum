@@ -44,8 +44,8 @@
             tweets.value = res.data || [];
             pageCount.value = res.maxPages || 1;
             error.value = null;
-        } catch (err: any) {
-            error.value = err.message || String(err);
+        } catch (err: unknown) {
+            error.value = String(err);
             tweets.value = [];
         }
     };

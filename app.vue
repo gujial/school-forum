@@ -17,7 +17,7 @@
         twitterTitle: '推特山寨版',
         twitterDescription: 'Web应用开发大作业🥵🥵🥵',
         twitterImage: '/icon.png',
-        twitterCard: '呕心沥血之作🥵',
+        twitterCard: 'summary_large_image',
     });
 
     useHead({

@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     const tagArray = tagStr
         .split(',')
         .map((t: string) => t.trim())
-        .filter((t: string | any[]) => t.length > 0);
+        .filter((t: string | string[]) => t.length > 0);
     const uniqueTags = new Set(tagArray);
 
     if (uniqueTags.size !== tagArray.length) {

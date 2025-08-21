@@ -31,11 +31,11 @@ export default defineEventHandler(async (event) => {
             success: true,
             follow: true,
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Database error:', error);
         return {
             success: false,
-            message: error.toString(),
+            message: String(error),
         };
     }
 });

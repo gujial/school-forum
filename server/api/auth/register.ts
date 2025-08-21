@@ -12,7 +12,7 @@ interface RegisterBody {
 }
 
 interface UserRows {
-    user_id: any;
+    user_id: number;
     rows: User[];
 }
 

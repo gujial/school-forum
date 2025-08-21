@@ -70,7 +70,7 @@
     import type { Ref } from 'vue';
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { User, UserListResponse } from '~/types/models';
+    import type { ApiResponse, User, UserListResponse } from '~/types/models';
 
     const { t } = useI18n();
     const localePath: (_path: string) => string = useLocalePath();
@@ -114,9 +114,9 @@
         }
         loading.value = true;
         try {
-            await $fetch<any>(`/api/admin/add/${user_id}`);
+            await $fetch<ApiResponse>(`/api/admin/add/${user_id}`);
             fetchUsers();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         } finally {
             loading.value = false;
@@ -131,9 +131,9 @@
         }
         loading.value = true;
         try {
-            await $fetch<any>(`/api/admin/delete/${user_id}`, { method: 'DELETE' });
+            await $fetch<ApiResponse>(`/api/admin/delete/${user_id}`, { method: 'DELETE' });
             fetchUsers();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         } finally {
             loading.value = false;
@@ -156,7 +156,7 @@
                 users.value = res.data || [];
                 totalUsers.value = res.maxPages * pageSize;
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         } finally {
             loading.value = false;
@@ -187,7 +187,7 @@
             } else {
                 console.error(res.message);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         } finally {
             deleteDialog.value = false;

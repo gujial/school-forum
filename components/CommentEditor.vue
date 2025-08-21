@@ -45,7 +45,7 @@
         tweetId: number;
         receiverId: number;
     }>();
-    const areaRef = ref<any>(null);
+    const areaRef = ref<typeof CommentArea>();
 
     const emit = defineEmits<{
         'comment-posted': [];
@@ -62,7 +62,7 @@
                         );
                         avatar_url.value = avatar_data.data || '/icon.png';
                     }
-                } catch (err: any) {
+                } catch (err: unknown) {
                     error.value = String(err);
                 }
             } else {
@@ -107,7 +107,7 @@
                 areaRef.value.updateComments();
                 emit('comment-posted');
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };

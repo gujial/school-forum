@@ -92,9 +92,9 @@
                 totalUsers.value = 0;
                 error.value = res.message || 'Failed to fetch users';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
-            error.value = err?.message || 'Error fetching users';
+            error.value = String(err) || 'Error fetching users';
         } finally {
             loading.value = false;
         }

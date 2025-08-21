@@ -211,7 +211,7 @@
             } else {
                 suc.value = t('reportSuccess');
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         } finally {
             reportDialog.value = false;
@@ -250,7 +250,7 @@
             } else {
                 error.value = res.message || '删除失败';
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -277,8 +277,10 @@
                 `/api/follow/check/${user.value.user_id}`,
             );
             follow_status.value = res.follow || false;
-        } catch (err: any) {
-            if (err.statusCode === 401) {
+        } catch (err: unknown) {
+            const statusCode = (err as { statusCode?: number })?.statusCode;
+
+            if (statusCode === 401) {
                 // 在评论区组件已经提示过了这里就不提示了
             } else {
                 error.value = String(err);
@@ -297,7 +299,7 @@
                     error.value = null;
                 }, 2000);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -308,7 +310,7 @@
                 method: 'DELETE',
             });
             follow_status.value = res.follow || false;
-        } catch (err: any) {
+        } catch (err: unknown) {
             error.value = String(err);
         }
     };
@@ -319,8 +321,9 @@
             await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`);
             updateLike();
             await fetchCounts();
-        } catch (err: any) {
-            if (err.statusCode == 401) {
+        } catch (err: unknown) {
+            const statusCode = (err as { statusCode?: number })?.statusCode;
+            if (statusCode === 401) {
                 navigateTo(localePath('/login'));
             }
         }
@@ -333,7 +336,7 @@
                 `/api/tweets/like/check/${tweet.value.tweet_id}`,
             );
             isLike.value = data.like || false;
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
         }
     };
@@ -353,7 +356,7 @@
                 `/api/tweets/share/count/${tweet.value.tweet_id}`,
             );
             shareCount.value = shareRes.count || 0;
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error('Error fetching counts:', e);
         }
     };
@@ -404,7 +407,7 @@
                 }
             }
         }
-    } catch (err: any) {
+    } catch (err: unknown) {
         error.value = String(err);
     }
 

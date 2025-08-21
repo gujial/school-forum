@@ -173,7 +173,6 @@
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue';
     import Avatar from '~/components/AvatarEditor.vue';
-    import renderMarkdown from '~/util/renderPreviewMarkdown';
     import type { Tweet, ApiResponse } from '~/types/models';
 
     // ==== 状态 ====
@@ -389,7 +388,6 @@
             });
             if (res.success) {
                 await fetchTweets();
-                renderMarkdown(editContent.value, `preview${editId.value}`);
                 editDialog.value = false;
                 editId.value = null;
                 editContent.value = '';

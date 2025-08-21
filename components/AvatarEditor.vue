@@ -151,7 +151,9 @@
     const updateBg = async (): Promise<void> => {
         try {
             const res = await $fetch<{ data?: string }>(`/api/bg/${props.user.user_id}`);
-            bgSrc.value = res.data ?? '/card-image.jpg';
+            if (res.data) {
+                bgSrc.value = res.data === '' ? '/card-image.jpg' : res.data;
+            }
         } catch (err: unknown) {
             console.error(err);
             bgSrc.value = '/card-image.jpg';

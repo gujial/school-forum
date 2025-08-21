@@ -117,11 +117,13 @@
         <v-card>
             <v-card-title>{{ $t('deleteComment') }}</v-card-title>
             <v-card-text
-                >{{ commentToDelete.content }} ({{
-                    moment
-                        .utc(commentToDelete.created_at)
-                        .tz(userTimeZone)
-                        .format('YYYY-MM-DD HH:mm:ss')
+                >{{ commentToDelete?.content }} ({{
+                    commentToDelete?.created_at
+                        ? moment
+                              .utc(commentToDelete.created_at)
+                              .tz(userTimeZone)
+                              .format('YYYY-MM-DD HH:mm:ss')
+                        : ''
                 }})</v-card-text
             >
             <v-divider />
@@ -151,32 +153,35 @@
     </v-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import moment from 'moment-timezone';
+    import type { Comment, User } from '~/types/models';
 
-    const props = defineProps({
-        tweetId: Number(),
-    });
-    const error = ref(null);
-    const comments = ref([]);
-    const users = ref([]);
-    const avatars = ref([]);
-    const ready = ref(false);
-    const currentPage = ref(1);
-    const pageCount = ref(1);
+    const props = defineProps<{
+        tweetId: number;
+    }>();
+    const error = ref<string | null>(null);
+    const comments = ref<Comment[]>([]);
+    const users = ref<User[]>([]);
+    const avatars = ref<string[]>([]);
+    const ready = ref<boolean>(false);
+    const currentPage = ref<number>(1);
+    const pageCount = ref<number>(1);
     const currentUser = useAuthUser();
-    const replyBoxVisible = ref(null);
-    const replyContent = ref('');
-    const showDelete = ref(false);
-    const commentToDelete = ref(null);
-    const commentApi = ref('order_by_time');
-    const reportDialog = ref(false);
-    const reportCommentId = ref(null);
-    const reportContent = ref('');
-    const suc = ref(null);
+    const replyBoxVisible = ref<number | null>(null);
+    const replyContent = ref<string>('');
+    const showDelete = ref<boolean>(false);
+    const commentToDelete = ref<Comment | null>(null);
+    const commentApi = ref<string>('order_by_time');
+    const reportDialog = ref<boolean>(false);
+    const reportCommentId = ref<number | null>(null);
+    const reportContent = ref<string>('');
+    const suc = ref<string | null>(null);
     const { t } = useI18n();
 
-    const openCommentReportDialog = (commentId) => {
+    const required = (v: string) => !!v || t('fieldIsRequired');
+
+    const openCommentReportDialog = (commentId: number) => {
         reportDialog.value = true;
         reportCommentId.value = commentId;
     };
@@ -200,8 +205,8 @@
             } else {
                 suc.value = t('reportSuccess');
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         } finally {
             reportDialog.value = false;
             reportContent.value = '';
@@ -218,23 +223,23 @@
         updateComments();
     };
 
-    const showReplyBox = (commentId) => {
+    const showReplyBox = (commentId: number) => {
         replyBoxVisible.value = commentId;
         replyContent.value = '';
     };
 
-    const handleDelete = async (commentId) => {
+    const handleDelete = async (commentId: number) => {
         try {
             await $fetch(`/api/comment/${commentId}`, {
                 method: 'DELETE',
             });
             updateComments();
-        } catch (err) {
-            error.value = err.message || err;
+        } catch (err: any) {
+            error.value = err.message || String(err);
         }
     };
 
-    const submitReply = async (parentCommentId, parentUserId) => {
+    const submitReply = async (parentCommentId: number, parentUserId: number) => {
         if (!replyContent.value.trim()) return;
         try {
             await $fetch('/api/comment/reply', {
@@ -262,48 +267,57 @@
             replyBoxVisible.value = null;
             replyContent.value = '';
             updateComments();
-        } catch (err) {
-            error.value = err.message || err;
+        } catch (err: any) {
+            error.value = err.message || String(err);
         }
     };
 
     const updateComments = async () => {
         ready.value = false;
         try {
-            const data = await $fetch(
-                `/api/comment/${commentApi.value}/${props['tweetId']}?page=${currentPage.value}`,
-            );
+            const data = await $fetch<{
+                success: boolean;
+                data?: Comment[];
+                maxPages?: number;
+                message?: string;
+            }>(`/api/comment/${commentApi.value}/${props['tweetId']}?page=${currentPage.value}`);
             if (!data.success) {
-                throw createError(data.message);
+                throw createError(data.message || '获取评论失败');
             }
 
-            pageCount.value = data.maxPages;
-            comments.value = data.data;
+            pageCount.value = data.maxPages || 1;
+            comments.value = data.data || [];
 
             // 获取用户和头像
             const userPromises = comments.value.map((comment) =>
-                $fetch(`/api/user/${comment.user_id}`),
+                $fetch<{ success: boolean; user?: User }>(`/api/user/${comment.user_id}`),
             );
             const avatarPromises = comments.value.map((comment) =>
-                $fetch(`/api/avatar/${comment.user_id}`),
+                $fetch<{ success: boolean; data?: string }>(`/api/avatar/${comment.user_id}`),
             );
             const usersData = await Promise.all(userPromises);
             const avatarsData = await Promise.all(avatarPromises);
-            users.value = usersData.map((userResponse) => userResponse.user);
-            avatars.value = avatarsData.map((avatarResponse) => avatarResponse.data);
+            users.value = usersData.map((userResponse) => userResponse.user || ({} as User));
+            avatars.value = avatarsData.map((avatarResponse) => avatarResponse.data || '');
 
             // 获取二级评论
             for (const comment of comments.value) {
-                const replyRes = await $fetch(`/api/comment/replies/${comment.comment_id}`);
-                if (replyRes.success) {
+                const replyRes = await $fetch<{ success: boolean; data?: Comment[] }>(
+                    `/api/comment/replies/${comment.comment_id}`,
+                );
+                if (replyRes.success && replyRes.data) {
                     // 并发获取每个二级评论的用户和头像
                     const replyUsers = await Promise.all(
-                        replyRes.data.map((r) => $fetch(`/api/user/${r.user_id}`)),
+                        replyRes.data.map((r: Comment) =>
+                            $fetch<{ success: boolean; user?: User }>(`/api/user/${r.user_id}`),
+                        ),
                     );
                     const replyAvatars = await Promise.all(
-                        replyRes.data.map((r) => $fetch(`/api/avatar/${r.user_id}`)),
+                        replyRes.data.map((r: Comment) =>
+                            $fetch<{ success: boolean; data?: string }>(`/api/avatar/${r.user_id}`),
+                        ),
                     );
-                    comment.replies = replyRes.data.map((r, idx) => ({
+                    comment.replies = replyRes.data.map((r: Comment, idx: number) => ({
                         ...r,
                         username: replyUsers[idx]?.user?.username || '',
                         avatar: replyAvatars[idx]?.data || '',
@@ -326,8 +340,8 @@
                     }
                 }
             });
-        } catch (err) {
-            error.value = err.message || err;
+        } catch (err: any) {
+            error.value = err.message || String(err);
         }
     };
 
@@ -346,7 +360,7 @@
         showDelete.value = false;
     };
 
-    const showDeleteDialog = (comment) => {
+    const showDeleteDialog = (comment: Comment) => {
         commentToDelete.value = comment;
         showDelete.value = true;
     };

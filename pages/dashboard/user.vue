@@ -70,6 +70,7 @@
     import type { Ref } from 'vue';
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
+    import type { User, UserListResponse } from '~/types/models';
 
     const { t } = useI18n();
     const localePath: (_path: string) => string = useLocalePath();
@@ -79,14 +80,6 @@
         title: string;
         key: string;
         sortable?: boolean;
-    }
-
-    interface User {
-        user_id: number;
-        username: string;
-        email?: string;
-        admin?: boolean;
-        created_at?: string;
     }
 
     const headers: TableHeader[] = [
@@ -123,7 +116,7 @@
         try {
             await $fetch<any>(`/api/admin/add/${user_id}`);
             fetchUsers();
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         } finally {
             loading.value = false;
@@ -140,25 +133,17 @@
         try {
             await $fetch<any>(`/api/admin/delete/${user_id}`, { method: 'DELETE' });
             fetchUsers();
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         } finally {
             loading.value = false;
         }
     }
 
-    // 获取用户列表
-    interface FetchUsersResponse {
-        success: boolean;
-        data: User[];
-        maxPages: number;
-        message?: string;
-    }
-
     async function fetchUsers(): Promise<void> {
         loading.value = true;
         try {
-            const res = await $fetch<FetchUsersResponse>('/api/user/list', {
+            const res = await $fetch<UserListResponse>('/api/user/list', {
                 method: 'GET',
                 query: {
                     page: page.value,
@@ -168,10 +153,10 @@
             });
 
             if (res.success) {
-                users.value = res.data;
+                users.value = res.data || [];
                 totalUsers.value = res.maxPages * pageSize;
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         } finally {
             loading.value = false;
@@ -202,7 +187,7 @@
             } else {
                 console.error(res.message);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         } finally {
             deleteDialog.value = false;

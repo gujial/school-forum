@@ -174,13 +174,7 @@
     import { ref, onMounted, watch } from 'vue';
     import Avatar from '~/components/AvatarEditor.vue';
     import renderMarkdown from '~/util/renderPreviewMarkdown';
-
-    // ==== 类型定义 ====
-    interface Tweet {
-        tweet_id: number;
-        content: string;
-        created_at?: string;
-    }
+    import type { Tweet, ApiResponse } from '~/types/models';
 
     // ==== 状态 ====
     const user = useAuthUser();
@@ -223,13 +217,10 @@
 
     const confirmEmail = async () => {
         try {
-            const res = await $fetch<{ success: boolean; message?: string }>(
-                '/api/user/modify_email',
-                {
-                    method: 'PUT',
-                    body: { email: newEmail.value },
-                },
-            );
+            const res = await $fetch<ApiResponse>('/api/user/modify_email', {
+                method: 'PUT',
+                body: { email: newEmail.value },
+            });
             if (res.success) {
                 error.value = null;
                 suc.value = '修改成功';
@@ -262,13 +253,10 @@
 
     const confirmUsername = async () => {
         try {
-            const res: { success: boolean; message?: string } = await $fetch(
-                '/api/user/modify_username',
-                {
-                    method: 'PUT',
-                    body: { newUsername: newUsername.value },
-                },
-            );
+            const res = await $fetch<ApiResponse>('/api/user/modify_username', {
+                method: 'PUT',
+                body: { username: newUsername.value },
+            });
             if (res.success) {
                 error.value = null;
                 suc.value = '修改成功';
@@ -286,13 +274,10 @@
 
     const confirmPassword = async () => {
         try {
-            const res: { success: boolean; message?: string } = await $fetch(
-                '/api/user/modify_password',
-                {
-                    method: 'PUT',
-                    body: { oldPassword: oldPassword.value, newPassword: newPassword.value },
-                },
-            );
+            const res = await $fetch<ApiResponse>('/api/user/modify_password', {
+                method: 'PUT',
+                body: { oldPassword: oldPassword.value, newPassword: newPassword.value },
+            });
             if (res.success) {
                 error.value = null;
                 suc.value = '修改成功';
@@ -309,10 +294,7 @@
 
     const confirmDeleteAccount = async () => {
         try {
-            const res: { success: boolean; message?: string } = await $fetch(
-                '/api/user/delete_account',
-                { method: 'DELETE' },
-            );
+            const res = await $fetch<ApiResponse>('/api/user/delete_account', { method: 'DELETE' });
             if (res.success) {
                 error.value = null;
                 await fetchAuthUser();
@@ -328,7 +310,7 @@
     const fetchFollower = async () => {
         if (!user.value) return;
         try {
-            const res: { total: number } = await $fetch(`/api/follow/get_follower_list`);
+            const res = await $fetch<{ total: number }>(`/api/follow/get_follower_list`);
             followerCount.value = res.total || 0;
         } catch (err: any) {
             error.value = String(err);
@@ -338,7 +320,7 @@
     const fetchFollowing = async () => {
         if (!user.value) return;
         try {
-            const res: { total: number } = await $fetch(`/api/follow/get_following_list`);
+            const res = await $fetch<{ total: number }>(`/api/follow/get_following_list`);
             followingCount.value = res.total || 0;
         } catch (err: any) {
             error.value = String(err);
@@ -348,7 +330,7 @@
     const fetchTweets = async () => {
         if (!user.value) return;
         try {
-            const tweetRes: { data: Tweet[]; total: number } = await $fetch(
+            const tweetRes = await $fetch<{ data: Tweet[]; total: number }>(
                 `/api/tweets/user/${user.value.user_id}?page=${page.value}&pageSize=${pageSize}`,
             );
             tweets.value = tweetRes.data || [];
@@ -364,10 +346,7 @@
 
     const deleteTweet = async (tweetId: number) => {
         try {
-            const res: { success: boolean; message?: string } = await $fetch(
-                `/api/tweets/${tweetId}`,
-                { method: 'DELETE' },
-            );
+            const res = await $fetch<ApiResponse>(`/api/tweets/${tweetId}`, { method: 'DELETE' });
             if (res.success) {
                 await fetchTweets();
                 if (tweets.value.length === 0 && page.value > 1) {
@@ -404,13 +383,10 @@
     const confirmEdit = async () => {
         if (!editId.value) return;
         try {
-            const res: { success: boolean; message?: string } = await $fetch(
-                `/api/tweets/${editId.value}`,
-                {
-                    method: 'PUT',
-                    body: { content: editContent.value },
-                },
-            );
+            const res = await $fetch<ApiResponse>(`/api/tweets/${editId.value}`, {
+                method: 'PUT',
+                body: { content: editContent.value },
+            });
             if (res.success) {
                 await fetchTweets();
                 renderMarkdown(editContent.value, `preview${editId.value}`);
@@ -455,7 +431,7 @@
 
     const logout = async () => {
         try {
-            const result: { success: boolean; message?: string } = await $fetch('/api/auth/logout');
+            const result = await $fetch<ApiResponse>('/api/auth/logout');
             if (result.success) {
                 await fetchAuthUser();
                 navigateTo(localePath('/'));

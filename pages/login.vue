@@ -40,8 +40,8 @@
     import { ref } from 'vue';
     const localePath = useLocalePath();
 
-    const email = ref('');
-    const password = ref('');
+    const email = ref<string>('');
+    const password = ref<string>('');
     const error = ref<string | null>(null);
     // const router = useRouter()
     const { t } = useI18n();
@@ -67,7 +67,7 @@
             });
 
             if (!response.success) {
-                throw { massage: response.message, statusCode: response.statusCode };
+                throw { message: response.message, statusCode: 400 };
             }
 
             if (response.success) {
@@ -76,7 +76,7 @@
             } else {
                 error.value = response.message;
             }
-        } catch (err) {
+        } catch (err: any) {
             if (err.statusCode == 400) {
                 error.value = t('checkEmailAndPassword');
             }

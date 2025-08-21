@@ -84,19 +84,7 @@
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-
-    // ==== 类型定义 ====
-    interface User {
-        user_id: number;
-        username: string;
-        email?: string;
-        admin?: boolean;
-        created_at?: string;
-    }
-    interface FetchResponse {
-        data: any;
-    }
-
+    import type { User } from '~/types/models';
     // ==== Props ====
     const props = defineProps<{
         user: User;
@@ -126,7 +114,7 @@
             });
             sheet.value = false;
             await updateAvatar();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Upload failed:', err);
         }
     };
@@ -145,16 +133,16 @@
             });
             bgSheet.value = false;
             await updateBg();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Upload bg failed:', err);
         }
     };
 
     const updateAvatar = async (): Promise<void> => {
         try {
-            const res: FetchResponse = await $fetch(`/api/avatar/${props.user.user_id}`);
+            const res = await $fetch<{ data?: string }>(`/api/avatar/${props.user.user_id}`);
             src.value = res.data ?? '/icon.png';
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
             src.value = '/icon.png';
         }
@@ -162,9 +150,9 @@
 
     const updateBg = async (): Promise<void> => {
         try {
-            const res: FetchResponse = await $fetch(`/api/bg/${props.user.user_id}`);
+            const res = await $fetch<{ data?: string }>(`/api/bg/${props.user.user_id}`);
             bgSrc.value = res.data ?? '/card-image.jpg';
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
             bgSrc.value = '/card-image.jpg';
         }

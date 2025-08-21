@@ -4,18 +4,11 @@ import { defineEventHandler, readBody, createError, setCookie } from 'h3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { useDatabase } from '../../util/database';
+import type { User } from '~/types/models';
 
 interface LoginBody {
     email: string;
     password: string;
-}
-
-interface User {
-    user_id: number;
-    username: string;
-    email: string;
-    password: string;
-    created_at: string;
 }
 
 interface UserRows {

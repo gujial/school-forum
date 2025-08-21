@@ -39,17 +39,17 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { ref } from 'vue';
 
     const { t } = useI18n();
-    const username = ref('');
-    const email = ref('');
-    const password = ref('');
-    const error = ref(null);
+    const username = ref<string>('');
+    const email = ref<string>('');
+    const password = ref<string>('');
+    const error = ref<string | null>(null);
     const router = useRouter();
 
-    const required = (value) => !!value || t('fieldIsRequired');
+    const required = (value: string) => !!value || t('fieldIsRequired');
 
     const register = async () => {
         if (email.value == '' || password.value == '') {
@@ -71,7 +71,7 @@
             });
 
             if (!response.success) {
-                throw { massage: response.message, statusCode: response.statusCode };
+                throw { message: response.message, statusCode: 400 };
             }
 
             if (response.success) {
@@ -79,7 +79,7 @@
             } else {
                 error.value = response.message;
             }
-        } catch (err) {
+        } catch (err: any) {
             if (err.statusCode == 400) {
                 error.value = t('emailExists');
             }

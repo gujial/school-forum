@@ -10,7 +10,7 @@
                         {{ suc }}
                     </v-alert>
                     <v-card
-                        v-if="user != null"
+                        v-if="user != null && tweet != null"
                         :prepend-avatar="avatar_url"
                         :title="user.username"
                         :subtitle="userTime"
@@ -111,7 +111,7 @@
                             </v-chip>
                         </div>
                         <CommentEditor
-                            :tweet-id="$route.params.id"
+                            :tweet-id="Number($route.params.id)"
                             :receiver-id="tweet.user_id"
                             @comment-posted="fetchCounts"
                         />
@@ -145,7 +145,7 @@
                 <v-text-field
                     v-model="reportContent"
                     :label="$t('reportContent')"
-                    :rules="[required]"
+                    :rules="[(v: string) => !!v || t('fieldIsRequired')]"
                 />
                 <v-card-actions>
                     <v-spacer />
@@ -157,37 +157,38 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import moment from 'moment-timezone';
     import CommentEditor from '~/components/CommentEditor.vue';
     import renderMarkdown from '~/util/renderMarkdown';
     import TweetCard from '~/components/TweetCard.vue';
     import 'vditor/dist/index.css';
+    import type { User, Tweet, Media } from '~/types/models';
 
     const route = useRoute();
-    const user = ref(null);
-    const avatar_url = ref('/icon.png');
-    const error = ref(null);
-    const tweet = ref(null);
-    const images = ref([]);
-    const video = ref(null);
-    const isLike = ref(false);
-    const likeCount = ref(0);
-    const commentCount = ref(0);
-    const shareCount = ref(0);
+    const user = ref<User | null>(null);
+    const avatar_url = ref<string>('/icon.png');
+    const error = ref<string | null>(null);
+    const tweet = ref<Tweet | null>(null);
+    const images = ref<Media[]>([]);
+    const video = ref<string | null>(null);
+    const isLike = ref<boolean>(false);
+    const likeCount = ref<number>(0);
+    const commentCount = ref<number>(0);
+    const shareCount = ref<number>(0);
     const localePath = useLocalePath();
     const { t } = useI18n();
-    const parent_tweet_data = ref(null);
-    const follow_status = ref(false);
-    const showScrollTop = ref(false);
+    const parent_tweet_data = ref<Tweet | null>(null);
+    const follow_status = ref<boolean>(false);
+    const showScrollTop = ref<boolean>(false);
     const currentUser = useAuthUser();
-    const deleteDialog = ref(false);
-    const reportDialog = ref(false);
-    const reportTweetId = ref(null);
-    const reportContent = ref('');
-    const suc = ref(null);
+    const deleteDialog = ref<boolean>(false);
+    const reportDialog = ref<boolean>(false);
+    const reportTweetId = ref<number | null>(null);
+    const reportContent = ref<string>('');
+    const suc = ref<string | null>(null);
 
-    const openTweetReportDialog = (tweetId) => {
+    const openTweetReportDialog = (tweetId: number) => {
         reportDialog.value = true;
         reportTweetId.value = tweetId;
     };
@@ -210,8 +211,8 @@
             } else {
                 suc.value = t('reportSuccess');
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         } finally {
             reportDialog.value = false;
             reportContent.value = '';
@@ -234,25 +235,28 @@
         deleteDialog.value = true;
     };
 
-    const deleteTweet = async (tweetId) => {
+    const deleteTweet = async (tweetId: number) => {
         try {
-            const res = await $fetch(`/api/tweets/${tweetId}`, { method: 'DELETE' });
+            const res = await $fetch<{ success: boolean; message?: string }>(
+                `/api/tweets/${tweetId}`,
+                { method: 'DELETE' },
+            );
             if (res.success) {
                 if (route.query.from && route.query.from !== '') {
-                    navigateTo(localePath(route.query.from));
+                    navigateTo(localePath(route.query.from as string));
                 } else {
                     navigateTo(localePath('/'));
                 }
             } else {
                 error.value = res.message || '删除失败';
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         }
     };
 
     const confirmDelete = async () => {
-        if (tweet.value.tweet_id) {
+        if (tweet.value?.tweet_id) {
             await deleteTweet(tweet.value.tweet_id);
         }
         deleteDialog.value = false;
@@ -267,49 +271,55 @@
     });
 
     const fetchFollowStatus = async () => {
+        if (!user.value) return;
         try {
-            const res = await $fetch(`/api/follow/check/${user.value.user_id}`);
-            follow_status.value = res.follow;
-        } catch (err) {
+            const res = await $fetch<{ success: boolean; follow?: boolean }>(
+                `/api/follow/check/${user.value.user_id}`,
+            );
+            follow_status.value = res.follow || false;
+        } catch (err: any) {
             if (err.statusCode === 401) {
                 // 在评论区组件已经提示过了这里就不提示了
             } else {
-                error.value = err;
+                error.value = String(err);
             }
         }
     };
 
-    const followUser = async (id) => {
+    const followUser = async (id: number) => {
         try {
-            const res = await $fetch(`/api/follow/${id}`);
+            const res = await $fetch<{ success: boolean; follow?: boolean }>(`/api/follow/${id}`);
             if (res.success) {
-                follow_status.value = res.follow;
+                follow_status.value = res.follow || false;
             } else {
                 error.value = t('cannotFollowYourself');
                 setTimeout(() => {
                     error.value = null;
                 }, 2000);
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         }
     };
 
-    const unfolowUser = async (id) => {
+    const unfolowUser = async (id: number) => {
         try {
-            const res = await $fetch(`/api/follow/${id}`, { method: 'DELETE' });
-            follow_status.value = res.follow;
-        } catch (err) {
-            error.value = err;
+            const res = await $fetch<{ success: boolean; follow?: boolean }>(`/api/follow/${id}`, {
+                method: 'DELETE',
+            });
+            follow_status.value = res.follow || false;
+        } catch (err: any) {
+            error.value = String(err);
         }
     };
 
     const likeTweet = async () => {
+        if (!tweet.value) return;
         try {
             await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`);
             updateLike();
             await fetchCounts();
-        } catch (err) {
+        } catch (err: any) {
             if (err.statusCode == 401) {
                 navigateTo(localePath('/login'));
             }
@@ -317,66 +327,93 @@
     };
 
     const updateLike = async () => {
+        if (!tweet.value) return;
         try {
-            const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`);
-            isLike.value = data.like;
-        } catch (err) {
+            const data = await $fetch<{ success: boolean; like?: boolean }>(
+                `/api/tweets/like/check/${tweet.value.tweet_id}`,
+            );
+            isLike.value = data.like || false;
+        } catch (err: any) {
             console.error(err);
         }
     };
 
     const fetchCounts = async () => {
+        if (!tweet.value) return;
         try {
-            const likeRes = await $fetch(`/api/tweets/like/count/${tweet.value.tweet_id}`);
+            const likeRes = await $fetch<{ success: boolean; count?: number }>(
+                `/api/tweets/like/count/${tweet.value.tweet_id}`,
+            );
             likeCount.value = likeRes.count || 0;
-            const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`);
+            const commentRes = await $fetch<{ success: boolean; count?: number }>(
+                `/api/tweets/comment/count/${tweet.value.tweet_id}`,
+            );
             commentCount.value = commentRes.count || 0;
-            const shareRes = await $fetch(`/api/tweets/share/count/${tweet.value.tweet_id}`);
+            const shareRes = await $fetch<{ success: boolean; count?: number }>(
+                `/api/tweets/share/count/${tweet.value.tweet_id}`,
+            );
             shareCount.value = shareRes.count || 0;
-        } catch (e) {
+        } catch (e: any) {
             console.error('Error fetching counts:', e);
         }
     };
 
     try {
-        const tweet_data = await $fetch(`/api/tweets/${route.params.id}`);
-        tweet.value = tweet_data.data;
-        const user_data = await $fetch(`/api/user/${tweet.value.user_id}`);
-        user.value = user_data.user;
-        const avatar_data = await $fetch(`/api/avatar/${tweet.value.user_id}`);
-        avatar_url.value = avatar_data.data;
-        fetchFollowStatus();
+        const tweet_data = await $fetch<{ success: boolean; data?: Tweet }>(
+            `/api/tweets/${route.params.id}`,
+        );
+        tweet.value = tweet_data.data || null;
 
-        const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`);
-        if (media_data.data.length > 0) {
-            if (media_data.data[0].media_type == 'video') {
-                video.value = media_data.data[0].media_url;
-            } else {
-                for (const data of media_data.data) {
-                    images.value.push(data);
+        if (tweet.value) {
+            const user_data = await $fetch<{ success: boolean; user?: User }>(
+                `/api/user/${tweet.value.user_id}`,
+            );
+            user.value = user_data.user || null;
+            const avatar_data = await $fetch<{ success: boolean; data?: string }>(
+                `/api/avatar/${tweet.value.user_id}`,
+            );
+            avatar_url.value = avatar_data.data || '/icon.png';
+            fetchFollowStatus();
+
+            const media_data = await $fetch<{ success: boolean; data?: Media[] }>(
+                `/api/media/${tweet.value.tweet_id}`,
+            );
+            if (media_data.data && media_data.data.length > 0) {
+                if (media_data.data[0].media_type == 'video') {
+                    video.value = media_data.data[0].media_url;
+                } else {
+                    for (const data of media_data.data) {
+                        images.value.push(data);
+                    }
+                }
+            }
+
+            if (tweet.value.parent_id) {
+                const parent_data = await $fetch<{ success: boolean; data?: Tweet }>(
+                    `/api/tweets/${tweet.value.parent_id}`,
+                );
+                if (parent_data.success && parent_data.data) {
+                    parent_tweet_data.value = parent_data.data;
+                } else {
+                    parent_tweet_data.value = {
+                        tweet_id: tweet.value.parent_id,
+                        user_id: 0,
+                        content: t('tweetNotFound'),
+                        tags: [],
+                    };
                 }
             }
         }
-
-        if (tweet.value.parent_id) {
-            const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`);
-            if (parent_data.success) {
-                parent_tweet_data.value = parent_data.data;
-            } else {
-                parent_tweet_data.value = {
-                    tweet_id: tweet.value.parent_id,
-                    content: t('tweetNotFound'),
-                };
-            }
-        }
-    } catch (err) {
-        error.value = err;
+    } catch (err: any) {
+        error.value = String(err);
     }
 
     onMounted(async () => {
         updateLike();
         await fetchCounts();
-        renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
+        if (tweet.value) {
+            renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
+        }
     });
 
     watch(suc, () => {
@@ -396,10 +433,9 @@
     });
 
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const userTime = moment
-        .utc(tweet.value.created_at)
-        .tz(userTimeZone)
-        .format('YYYY-MM-DD HH:mm:ss');
+    const userTime = tweet.value
+        ? moment.utc(tweet.value.created_at).tz(userTimeZone).format('YYYY-MM-DD HH:mm:ss')
+        : '';
 </script>
 <style scoped>
     .scroll-top-btn {

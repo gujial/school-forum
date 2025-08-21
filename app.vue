@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     useSeoMeta({
         title: '推特山寨版',
         description: 'Web应用开发大作业🥵🥵🥵',

@@ -32,12 +32,7 @@
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-
-    interface User {
-        user_id: number;
-        username: string;
-        email?: string;
-    }
+    import type { User } from '~/types/models';
 
     interface Props {
         userId: number;
@@ -60,7 +55,7 @@
         try {
             const data: { user: User } = await $fetch<{ user: User }>(`/api/user/${props.userId}`);
             user.value = data.user;
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         }
     };
@@ -68,9 +63,11 @@
     // 获取头像
     const updateAvatar = async () => {
         try {
-            const data: { data: string } = await $fetch<{ data: string }>(`/api/avatar/${props.userId}`);
+            const data: { data: string } = await $fetch<{ data: string }>(
+                `/api/avatar/${props.userId}`,
+            );
             src.value = data.data || '/icon.png';
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         }
     };
@@ -78,7 +75,9 @@
     // 获取背景
     const updateBg = async () => {
         try {
-            const data: { data?: string } = await $fetch<{ data: string }>(`/api/bg/${props.userId}`);
+            const data: { data?: string } = await $fetch<{ data: string }>(
+                `/api/bg/${props.userId}`,
+            );
             bgSrc.value = data.data || '/card-image.jpg';
         } catch (err) {
             bgSrc.value = '/card-image.jpg';
@@ -91,7 +90,7 @@
         try {
             await $fetch(`/api/follow/${id}`, { method: 'DELETE' });
             emit('unfollow');
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
         }
     };

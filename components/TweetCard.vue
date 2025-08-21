@@ -67,37 +67,40 @@
     </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import moment from 'moment-timezone';
     import renderMarkdown from '~/util/renderPreviewMarkdown';
     import 'vditor/dist/index.css';
+    import type {
+        Tweet,
+        User,
+        Media,
+        LikeCountResponse,
+        CommentCountResponse,
+        ShareCountResponse,
+        UserApiResponse,
+        AvatarApiResponse,
+        MediaApiResponse,
+        TweetApiResponse,
+    } from '~/types/models';
 
     const isLike = ref(false);
     const localePath = useLocalePath();
 
-    const props = defineProps({
-        tweet: {
-            type: Object,
-            required: true,
-        },
-        height: {
-            type: String,
-            default: '500px',
-        },
-        maxHeight: {
-            type: String,
-            default: '500px',
-        },
-    });
+    const props = defineProps<{
+        tweet: Tweet;
+        height?: string;
+        maxHeight?: string;
+    }>();
 
     const { tweet } = toRefs(props);
     const router = useRouter();
 
-    const user = ref(null);
-    const avatar_url = ref('/icon.png');
-    const error = ref(null);
-    const images = ref([]);
-    const video = ref(null);
+    const user = ref<User | null>(null);
+    const avatar_url = ref<string>('/icon.png');
+    const error = ref<string | null>(null);
+    const images = ref<Media[]>([]);
+    const video = ref<string | null>(null);
     const likeCount = ref(0);
     const commentCount = ref(0);
     const shareCount = ref(0);
@@ -114,7 +117,7 @@
             await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`);
             updateLike();
             await fetchCounts();
-        } catch (err) {
+        } catch (err: any) {
             if (err.statusCode == 401) {
                 navigateTo(localePath('/login'));
             }
@@ -123,7 +126,9 @@
 
     const updateLike = async () => {
         try {
-            const data = await $fetch(`/api/tweets/like/check/${tweet.value.tweet_id}`);
+            const data = await $fetch<{ success: boolean; like: boolean }>(
+                `/api/tweets/like/check/${tweet.value.tweet_id}`,
+            );
             isLike.value = data.like;
         } catch (err) {
             console.error(err);
@@ -132,11 +137,17 @@
 
     const fetchCounts = async () => {
         try {
-            const likeRes = await $fetch(`/api/tweets/like/count/${tweet.value.tweet_id}`);
+            const likeRes = await $fetch<LikeCountResponse>(
+                `/api/tweets/like/count/${tweet.value.tweet_id}`,
+            );
             likeCount.value = likeRes.count || 0;
-            const commentRes = await $fetch(`/api/tweets/comment/count/${tweet.value.tweet_id}`);
+            const commentRes = await $fetch<CommentCountResponse>(
+                `/api/tweets/comment/count/${tweet.value.tweet_id}`,
+            );
             commentCount.value = commentRes.count || 0;
-            const shareRes = await $fetch(`/api/tweets/share/count/${tweet.value.tweet_id}`);
+            const shareRes = await $fetch<ShareCountResponse>(
+                `/api/tweets/share/count/${tweet.value.tweet_id}`,
+            );
             shareCount.value = shareRes.count || 0;
         } catch (e) {
             console.error('Error fetching counts:', e);
@@ -145,46 +156,50 @@
 
     onMounted(async () => {
         try {
-            const user_data = await $fetch(`/api/user/${tweet.value.user_id}`);
+            const user_data = await $fetch<UserApiResponse>(`/api/user/${tweet.value.user_id}`);
             if (!user_data.user) {
                 user.value = {
                     username: t('unknownUser'),
                     user_id: tweet.value.user_id,
-                };
+                } as User;
             } else {
                 user.value = user_data.user;
             }
-            const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`);
+            const avatar_data = await $fetch<AvatarApiResponse>(
+                `/api/avatar/${user.value?.user_id}`,
+            );
             if (!avatar_data.data) {
                 avatar_url.value = '/icon.png';
                 return;
             }
             avatar_url.value = avatar_data.data;
 
-            const media_data = await $fetch(`/api/media/${tweet.value.tweet_id}`);
-            if (media_data.data.length > 0) {
+            const media_data = await $fetch<MediaApiResponse>(`/api/media/${tweet.value.tweet_id}`);
+            if (media_data.data && media_data.data.length > 0) {
                 if (media_data.data[0].media_type == 'video') {
                     video.value = media_data.data[0].media_url;
                 } else {
                     for (const data of media_data.data) {
-                        images.value.push(data);
+                        images.value.push(data as Media);
                     }
                 }
             }
 
             if (tweet.value.parent_id) {
-                const parent_data = await $fetch(`/api/tweets/${tweet.value.parent_id}`);
-                if (parent_data.success) {
-                    tweet.value.parent_tweet = parent_data.data;
+                const parent_data = await $fetch<TweetApiResponse>(
+                    `/api/tweets/${tweet.value.parent_id}`,
+                );
+                if (parent_data.success && parent_data.data) {
+                    tweet.value.parent_tweet = parent_data.data as Tweet;
                 } else {
                     tweet.value.parent_tweet = {
                         tweet_id: tweet.value.parent_id,
                         content: t('tweetNotFound'),
-                    };
+                    } as Tweet;
                 }
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         }
         updateLike();
         await fetchCounts();

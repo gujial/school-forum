@@ -37,19 +37,22 @@
     </v-container>
 </template>
 
-<script setup>
-    const imageFiles = ref([]);
+<script setup lang="ts">
+    const imageFiles = ref<File[]>([]);
 
-    const videoFile = ref(null);
+    const videoFile = ref<File | null>(null);
 
     const { t } = useI18n();
-    const items = ref([t('none'), t('images'), t('video')]);
+    const items = ref<string[]>([t('none'), t('images'), t('video')]);
 
-    const selectedMedia = ref(0);
+    const selectedMedia = ref<number>(0);
 
     const MAX_SIZE = 200 * 1024 * 1024; // 200M
 
-    const upload = async (tweet_id) => {
+    const successMessage = ref<string>('');
+    const errorMessage = ref<string>('');
+
+    const upload = async (tweet_id: number) => {
         if (selectedMedia.value == 0) {
             return;
         } else if (selectedMedia.value == 1) {
@@ -70,19 +73,14 @@
             });
 
             try {
-                const response = await $fetch(`/api/media/upload/images/${tweet_id}`, {
+                await $fetch(`/api/media/upload/images/${tweet_id}`, {
                     method: 'POST',
                     body: formData,
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
                 successMessage.value = 'Upload successful!';
                 errorMessage.value = '';
-                console.error('Upload successful:', result);
+                console.error('Upload successful');
             } catch (error) {
                 errorMessage.value = 'Error uploading files!';
                 successMessage.value = '';

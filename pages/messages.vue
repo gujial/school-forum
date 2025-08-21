@@ -26,7 +26,7 @@
                     class="elevation-1"
                 >
                     <template #item.created_at="{ item }">
-                        {{ new Date(item.created_at).toLocaleString() }}
+                        {{ new Date(item.created_at || '').toLocaleString() }}
                     </template>
 
                     <template #item.sender="{ item }">
@@ -91,28 +91,7 @@
 <script setup lang="ts">
     import { ref, watch, onMounted, type Ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-
-    interface Message {
-        message_id: number;
-        sender_id: number;
-        receiver_id: number;
-        tweet_id?: number;
-        comment_id?: number;
-        content: string;
-        created_at: string | number;
-    }
-
-    interface User {
-        user_id: number;
-        username: string;
-    }
-
-    interface FetchMessagesResponse {
-        success: boolean;
-        data: Message[];
-        maxPages: number;
-        message?: string;
-    }
+    import type { Message, User, MessageResponse } from '~/types/models';
 
     const { t } = useI18n();
 
@@ -151,16 +130,15 @@
             activeTab.value === 'received' ? `/api/message/get` : `/api/message/getSent`;
 
         try {
-            const data = await $fetch<FetchMessagesResponse>(endpoint, {
+            const data = await $fetch<MessageResponse>(endpoint, {
                 params: {
                     page: page.value,
                     pageSize,
                 },
             });
-
             if (data.success) {
-                messages.value = data.data;
-                maxPages.value = data.maxPages;
+                messages.value = Array.isArray(data.data) ? data.data : [];
+                maxPages.value = data.maxPages || 1;
             } else {
                 messages.value = [];
                 maxPages.value = 1;

@@ -73,7 +73,7 @@
     </v-navigation-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { useTheme } from 'vuetify';
 
     const colorMode = useColorMode();
@@ -86,27 +86,27 @@
     const theme = useTheme();
 
     const updateAvatar = async () => {
-        if (user.value.user_id === -1) {
+        if (user.value && user.value.user_id === -1) {
             src.value = '/icon.png';
             return;
         }
 
         try {
-            const data = await $fetch('/api/avatar/' + user.value.user_id);
-            src.value = data.data;
+            const data = await $fetch<{ data?: string }>('/api/avatar/' + user.value?.user_id);
+            src.value = data.data || '/icon.png';
         } catch (err) {
             console.error(err);
         }
     };
 
     const updateBg = async () => {
-        if (user.value.user_id === -1) {
+        if (user.value && user.value.user_id === -1) {
             bgSrc.value = '/card-image.jpg';
             return;
         }
 
         try {
-            const data = await $fetch('/api/bg/' + user.value.user_id);
+            const data = await $fetch<{ data?: string }>('/api/bg/' + user.value?.user_id);
             bgSrc.value = data.data || '/card-image.jpg';
         } catch {
             bgSrc.value = '/card-image.jpg';

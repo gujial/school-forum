@@ -29,20 +29,19 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { ref, watch } from 'vue';
 
-    const props = defineProps({
-        modelValue: {
-            type: Array,
-            default: () => [],
-        },
-    });
+    const props = defineProps<{
+        modelValue: string[];
+    }>();
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits<{
+        'update:modelValue': [value: string[]];
+    }>();
 
-    const inputTag = ref('');
-    const tags = ref([...props.modelValue]);
+    const inputTag = ref<string>('');
+    const tags = ref<string[]>([...props.modelValue]);
 
     watch(
         () => props.modelValue,
@@ -63,15 +62,15 @@
         emit('update:modelValue', tags.value);
     }
 
-    function addTagFromPreset(presetTags) {
-        presetTags.forEach((tag) => {
+    function addTagFromPreset(presetTags: string[]) {
+        presetTags.forEach((tag: string) => {
             if (!tags.value.includes(tag)) {
                 tags.value.push(tag);
             }
         });
         emit('update:modelValue', tags.value);
     }
-    function removeTag(index) {
+    function removeTag(index: number) {
         tags.value.splice(index, 1);
         emit('update:modelValue', tags.value);
     }

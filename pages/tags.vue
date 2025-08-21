@@ -37,14 +37,15 @@
 
 <script setup lang="ts">
     import TweetCard from '~/components/TweetCard.vue';
+    import type { Tweet } from '~/types/models';
 
-    const tagInput = ref('');
-    const order = ref('desc');
-    const tweets = ref<any[]>([]);
-    const currentPage = ref(1);
-    const maxPages = ref(1);
-    const loading = ref(false);
-    const loaded = ref(false);
+    const tagInput = ref<string>('');
+    const order = ref<string>('desc');
+    const tweets = ref<Tweet[]>([]);
+    const currentPage = ref<number>(1);
+    const maxPages = ref<number>(1);
+    const loading = ref<boolean>(false);
+    const loaded = ref<boolean>(false);
     const error = ref<string | null>(null);
 
     async function fetchTweets() {
@@ -78,7 +79,7 @@
                 tweets.value = [];
                 maxPages.value = 1;
             }
-        } catch (e) {
+        } catch (e: any) {
             tweets.value = [];
             maxPages.value = 1;
             console.error(e);

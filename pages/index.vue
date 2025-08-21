@@ -84,46 +84,54 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import TweetCard from '~/components/TweetCard.vue';
+    import type {
+        Tweet,
+        AuthUser,
+        TweetListApiResponse,
+        BackgroundApiResponse,
+    } from '~/types/models';
 
-    const tweets = ref(null);
-    const src = ref('');
-    const username = ref('');
-    const user_id = ref(null);
+    const tweets = ref<Tweet[] | null>(null);
+    const src = ref<string>('');
+    const username = ref<string>('');
+    const user_id = ref<number | null>(null);
     const localePath = useLocalePath();
-    const currentPage = useState('currentPage', () => 1);
-    const pageCount = ref(1);
-    const error = ref(null);
-    const authError = ref(false);
-    const bgSrc = ref('/card-image.jpg');
-    const tab = ref(0);
+    const currentPage = useState<number>('currentPage', () => 1);
+    const pageCount = ref<number>(1);
+    const error = ref<string | null>(null);
+    const authError = ref<boolean>(false);
+    const bgSrc = ref<string>('/card-image.jpg');
+    const tab = ref<number>(0);
 
     const updateTweets = async () => {
         if (tab.value === 0) {
-            const data = await $fetch(`/api/tweets/order_by_time/${currentPage.value}`);
+            const data = await $fetch<TweetListApiResponse>(
+                `/api/tweets/order_by_time/${currentPage.value}`,
+            );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 1) {
-            const data = await $fetch(
+            const data = await $fetch<TweetListApiResponse>(
                 `/api/tweets/by_tags_desc?tags=school&page=${currentPage.value}?pageSize=20`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 2) {
-            const data = await $fetch(
+            const data = await $fetch<TweetListApiResponse>(
                 `/api/tweets/by_tags_desc?tags=school,biaobai&page=${currentPage.value}?pageSize=20`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 3) {
-            const data = await $fetch(
+            const data = await $fetch<TweetListApiResponse>(
                 `/api/tweets/by_tags_desc?tags=school,help&page=${currentPage.value}?pageSize=20`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 4) {
-            const data = await $fetch(
+            const data = await $fetch<TweetListApiResponse>(
                 `/api/tweets/by_tags_desc?tags=school,news&page=${currentPage.value}?pageSize=20`,
             );
             tweets.value = data.data;
@@ -136,7 +144,7 @@
 
     const updateBg = async () => {
         try {
-            const data = await $fetch('/api/bg/' + user_id.value);
+            const data = await $fetch<BackgroundApiResponse>('/api/bg/' + user_id.value);
             bgSrc.value = data.data || '/card-image.jpg';
         } catch {
             bgSrc.value = '/card-image.jpg';
@@ -163,7 +171,7 @@
     onMounted(async () => {
         updateTweets();
         try {
-            const data = await $fetch('/api/auth/user');
+            const data = await $fetch<{ success: boolean; user?: AuthUser }>('/api/auth/user');
             if (!data.user) {
                 authError.value = true;
                 return;
@@ -171,12 +179,12 @@
             username.value = data.user.username;
             user_id.value = data.user.user_id;
             updateBg();
-        } catch (err) {
+        } catch (err: any) {
             // 检查是否为 401 未认证错误
             if (err?.status === 401 || (err?.response && err.response.status === 401)) {
                 authError.value = true;
             } else {
-                error.value = err;
+                error.value = String(err);
             }
         }
     });

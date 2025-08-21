@@ -45,17 +45,19 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import TweetCard from '~/components/TweetCard.vue';
+    import type { Tweet } from '~/types/models';
+    const { t } = useI18n();
 
-    const keyword = ref('');
-    const order = ref('desc');
-    const tweets = ref([]);
-    const currentPage = ref(1);
-    const maxPages = ref(1);
-    const loading = ref(false);
-    const loaded = ref(false);
-    const error = ref(null);
+    const keyword = ref<string>('');
+    const order = ref<string>('desc');
+    const tweets = ref<Tweet[]>([]);
+    const currentPage = ref<number>(1);
+    const maxPages = ref<number>(1);
+    const loading = ref<boolean>(false);
+    const loaded = ref<boolean>(false);
+    const error = ref<string | null>(null);
 
     async function fetchTweets() {
         if (!keyword.value.trim()) {
@@ -72,10 +74,15 @@
                 keyword.value,
             )}&page=${currentPage.value}&pageSize=20&order=${order.value}`;
 
-            const res = await $fetch(url);
+            const res = await $fetch<{
+                success: boolean;
+                data?: Tweet[];
+                maxPages?: number;
+                message?: string;
+            }>(url);
             if (res.success) {
-                tweets.value = res.data;
-                maxPages.value = res.maxPages;
+                tweets.value = res.data || [];
+                maxPages.value = res.maxPages || 1;
                 loaded.value = true;
             } else {
                 error.value = res.message || 'Failed to fetch tweets';
@@ -96,7 +103,7 @@
             currentPage.value = 1;
             fetchTweets();
         } else {
-            error.value = $t('pleaseEnterKeyword');
+            error.value = t('pleaseEnterKeyword');
         }
     }
 

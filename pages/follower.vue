@@ -35,12 +35,9 @@
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue';
     import FollowListItem from '@/components/FollowListItem.vue';
+    import type { Follow } from '~/types/models';
 
-    interface Follower {
-        follower_id: number;
-    }
-
-    const followers = ref<Follower[]>([]);
+    const followers = ref<Follow[]>([]);
     const page = ref(1);
     const maxPages = ref(1);
     const total = ref(0);
@@ -54,7 +51,7 @@
         try {
             const res = await $fetch<{
                 success: boolean;
-                data: Follower[];
+                data: Follow[];
                 maxPages: number;
                 total: number;
             }>('/api/follow/get_follower_list', {

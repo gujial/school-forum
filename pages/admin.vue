@@ -23,7 +23,7 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
     const currentUser = useAuthUser();
     const localePath = useLocalePath();
 

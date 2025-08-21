@@ -3,19 +3,12 @@
 import { defineEventHandler, readBody, createError } from 'h3';
 import bcrypt from 'bcryptjs';
 import { useDatabase } from '../../util/database';
+import type { User } from '~/types/models';
 
 interface RegisterBody {
     username: string;
     email: string;
     password: string;
-}
-
-interface User {
-    user_id: number;
-    username: string;
-    email: string;
-    password: string;
-    created_at: string;
 }
 
 interface UserRows {

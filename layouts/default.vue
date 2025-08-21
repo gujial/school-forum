@@ -7,7 +7,7 @@
     </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { watch } from 'vue';
     import { useColorMode } from '@vueuse/core';
     import { useTheme } from 'vuetify';

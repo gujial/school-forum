@@ -25,23 +25,24 @@
     </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import MediaEditor from '~/components/MediaEditor.vue';
     import Vditor from 'vditor';
     import TagEditor from '~/components/TagEditor.vue';
     import 'vditor/dist/index.css';
+    import type { AuthUser, ApiResponse } from '~/types/models';
 
-    const user = ref(null);
-    const error = ref(null);
-    const mediaEditorRef = ref(null);
+    const user = ref<AuthUser | null>(null);
+    const error = ref<string | null>(null);
+    const mediaEditorRef = ref<any>(null);
     const localePath = useLocalePath();
-    const vditor = ref(null);
+    const vditor = ref<Vditor | null>(null);
     const { t, locale } = useI18n();
     const colorMode = useColorMode();
-    const attachments = ref([]);
+    const attachments = ref<string[]>([]);
     const route = useRoute();
-    const parent_id = route.query.parent_id || null;
-    const tags = ref([]);
+    const parent_id = (route.query.parent_id as string | undefined) || null;
+    const tags = ref<string[]>([]);
     const theme = useTheme();
 
     const postTweet = async () => {
@@ -50,24 +51,24 @@
             return;
         }
         try {
-            const data = await $fetch('/api/tweets/new', {
+            const data = await $fetch<ApiResponse<{ tweet_id: number }>>('/api/tweets/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     content: vditor.value.getValue(),
-                    parent_id: parent_id,
+                    parent_id: parent_id || undefined,
                     attachments: attachments.value,
                     tags: tags.value,
                 }),
             });
 
-            if (mediaEditorRef.value != null) {
-                mediaEditorRef.value.upload(data.tweet_id);
+            if (mediaEditorRef.value != null && data.data?.tweet_id) {
+                mediaEditorRef.value.upload(data.data.tweet_id);
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         }
         navigateTo(localePath('/'));
     };
@@ -79,43 +80,46 @@
             lang: locale.value === 'en' ? 'en_US' : 'zh_CN',
             upload: {
                 url: '/api/media/upload',
-                method: 'POST',
                 accept: 'image/*',
-                token: useCookie('token').value,
+                token: useCookie('token').value || undefined,
                 async handler(files) {
-                    let res;
+                    let res: any;
                     for (const file of files) {
                         const name = file.name;
                         const formData = new FormData();
                         formData.append('file', file);
-                        res = await $fetch('/api/media/upload', {
+                        res = await $fetch<{ filePath: string }>('/api/media/upload', {
                             method: 'POST',
                             body: formData,
                         });
-                        vditor.value.insertValue(`![${name}](${res.filePath})`);
+                        if (vditor.value) {
+                            vditor.value.insertValue(`![${name}](${res.filePath})`);
+                        }
                         attachments.value.push(res.filePath);
                     }
-                    if (res.filePath) {
+                    if (res?.filePath) {
                         return '上传成功';
                     }
                     return '上传失败';
                 },
             },
             after: () => {
-                vditor.value.setTheme(
-                    theme.global.name.value === 'dark' ? 'dark' : 'classic',
-                    theme.global.name.value === 'dark' ? 'dark' : 'light',
-                );
+                if (vditor.value) {
+                    vditor.value.setTheme(
+                        theme.global.name.value === 'dark' ? 'dark' : 'classic',
+                        theme.global.name.value === 'dark' ? 'dark' : 'light',
+                    );
+                }
             },
         });
         try {
-            const data = await $fetch('/api/auth/user');
-            user.value = data.user;
-        } catch (err) {
+            const data = await $fetch<{ success: boolean; user?: AuthUser }>('/api/auth/user');
+            user.value = data.user || null;
+        } catch (err: any) {
             if (err.statusCode == 401) {
                 navigateTo(localePath('/login'));
             } else {
-                error.value = err;
+                error.value = String(err);
             }
         }
     });

@@ -21,7 +21,7 @@
             class="elevation-1"
         >
             <template #item.created_at="{ item }">
-                {{ new Date(item.created_at).toLocaleString() }}
+                {{ new Date(item.created_at || '').toLocaleString() }}
             </template>
 
             <template #item.actions="{ item }">
@@ -41,20 +41,7 @@
     import type { Ref } from 'vue';
     import { ref, watch, onMounted } from 'vue';
     import { useI18n } from 'vue-i18n';
-
-    interface User {
-        user_id: number;
-        username: string;
-        email?: string;
-        created_at: string | number;
-    }
-
-    interface FetchUsersResponse {
-        success: boolean;
-        data: User[];
-        maxPages: number;
-        message?: string;
-    }
+    import type { User, UserListResponse } from '~/types/models';
 
     const { t } = useI18n();
     const localePath: (_path: string) => string = useLocalePath();
@@ -88,7 +75,7 @@
     async function fetchUsers(): Promise<void> {
         loading.value = true;
         try {
-            const res = await $fetch<FetchUsersResponse>('/api/user/list', {
+            const res = await $fetch<UserListResponse>('/api/user/list', {
                 method: 'GET',
                 query: {
                     page: page.value,
@@ -98,7 +85,7 @@
             });
 
             if (res.success) {
-                users.value = res.data;
+                users.value = res.data || [];
                 totalUsers.value = res.maxPages * pageSize;
             } else {
                 users.value = [];

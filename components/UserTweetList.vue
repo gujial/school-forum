@@ -14,21 +14,19 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { ref, watch, onMounted } from 'vue';
     import TweetCard from '~/components/TweetCard.vue';
+    import type { Tweet } from '~/types/models';
 
-    const props = defineProps({
-        userId: {
-            type: [String, Number],
-            required: true,
-        },
-    });
+    const props = defineProps<{
+        userId: string | number;
+    }>();
 
-    const tweets = ref([]);
-    const error = ref(null);
-    const currentPage = ref(1);
-    const pageCount = ref(1);
+    const tweets = ref<Tweet[]>([]);
+    const error = ref<string | null>(null);
+    const currentPage = ref<number>(1);
+    const pageCount = ref<number>(1);
     const pageSize = 9;
 
     const scrollToTop = () => {
@@ -40,14 +38,14 @@
 
     const fetchTweets = async () => {
         try {
-            const res = await $fetch(
+            const res = await $fetch<{ success: boolean; data?: Tweet[]; maxPages?: number }>(
                 `/api/tweets/user/${props.userId}?page=${currentPage.value}&pageSize=${pageSize}`,
             );
             tweets.value = res.data || [];
             pageCount.value = res.maxPages || 1;
             error.value = null;
-        } catch (err) {
-            error.value = err.message || err;
+        } catch (err: any) {
+            error.value = err.message || String(err);
             tweets.value = [];
         }
     };

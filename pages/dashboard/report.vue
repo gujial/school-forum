@@ -76,11 +76,11 @@
     import { useI18n } from 'vue-i18n';
 
     const { t } = useI18n();
-    const page = ref(1);
+    const page = ref<number>(1);
     const pageSize = 20;
-    const maxPages = ref(1);
+    const maxPages = ref<number>(1);
     const reports = ref<any[]>([]);
-    const loading = ref(false);
+    const loading = ref<boolean>(false);
     const usernames = ref<Record<number, string>>({});
     const currentUser = useAuthUser();
     const localePath = useLocalePath();
@@ -113,7 +113,7 @@
                 reports.value = [];
                 maxPages.value = 1;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching reports:', error);
             reports.value = [];
             maxPages.value = 1;
@@ -142,7 +142,7 @@
             await $fetch(`/api/admin/report/delete_all`, { method: 'DELETE' });
             reports.value = [];
             maxPages.value = 1;
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting reports:', error);
         }
     };
@@ -151,13 +151,13 @@
         try {
             await $fetch(`/api/admin/report/${reportId}`, { method: 'DELETE' });
             fetchReports();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting report:', error);
         }
     };
 
     watch(reports, (reports) => {
-        reports.forEach((report) => {
+        reports.forEach((report: any) => {
             loadUsername(report.user_id);
         });
     });

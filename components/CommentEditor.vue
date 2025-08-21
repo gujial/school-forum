@@ -32,31 +32,38 @@
     </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import CommentArea from '~/components/CommentArea.vue';
     import { ref, onMounted } from 'vue';
+    import type { AuthUser } from '~/types/models';
 
-    const user = ref(null);
-    const avatar_url = ref('/icon.png');
-    const error = ref(null);
-    const comment = ref('');
-    const dialog = ref(false);
-    const props = defineProps({
-        tweetId: Number(),
-        receiverId: Number(),
-    });
-    const areaRef = ref(null);
+    const user = ref<AuthUser | null>(null);
+    const avatar_url = ref<string>('/icon.png');
+    const error = ref<string | null>(null);
+    const comment = ref<string>('');
+    const dialog = ref<boolean>(false);
+    const props = defineProps<{
+        tweetId: number;
+        receiverId: number;
+    }>();
+    const areaRef = ref<any>(null);
 
-    const emit = defineEmits(['comment-posted']);
+    const emit = defineEmits<{
+        'comment-posted': [];
+    }>();
 
     onMounted(async () => {
         try {
-            const data = await $fetch('/api/auth/user');
-            user.value = data.user;
-            const avatar_data = await $fetch(`/api/avatar/${user.value.user_id}`);
-            avatar_url.value = avatar_data.data;
-        } catch (err) {
-            error.value = err;
+            const data = await $fetch<{ success: boolean; user?: AuthUser }>('/api/auth/user');
+            user.value = data.user || null;
+            if (user.value) {
+                const avatar_data = await $fetch<{ success: boolean; data?: string }>(
+                    `/api/avatar/${user.value.user_id}`,
+                );
+                avatar_url.value = avatar_data.data || '/icon.png';
+            }
+        } catch (err: any) {
+            error.value = String(err);
         }
     });
 
@@ -95,8 +102,8 @@
                 areaRef.value.updateComments();
                 emit('comment-posted');
             }
-        } catch (err) {
-            error.value = err;
+        } catch (err: any) {
+            error.value = String(err);
         }
     };
 </script>

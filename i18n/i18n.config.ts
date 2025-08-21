@@ -177,7 +177,7 @@ export default defineI18nConfig(() => ({
         },
         zh: {
             welcome: '你好',
-            TwitterClone: '可圈可点”校园论坛平台',
+            TwitterClone: '“可圈可点”校园论坛平台',
             loading: '加载中',
             login: '登录',
             register: '注册',

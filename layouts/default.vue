@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="!$colorMode.unknown" :theme="theme.global.name">
+    <v-app v-if="!$colorMode.unknown" :theme="theme.global.name.value">
         <NavBar />
         <v-main>
             <slot />
@@ -8,23 +8,31 @@
 </template>
 
 <script setup lang="ts">
-    import { watch } from 'vue';
-    import { useColorMode } from '@vueuse/core';
-    import { useTheme } from 'vuetify';
-    import NavBar from '~/components/NavBar.vue';
+import { onMounted, watch } from 'vue';
+import { useColorMode } from '@vueuse/core';
+import { useTheme } from 'vuetify';
+import NavBar from '~/components/NavBar.vue';
 
-    const colorMode = useColorMode({ preference: 'system' });
-    const theme = useTheme();
+// 获取 colorMode
+const colorMode = useColorMode();
+const theme = useTheme();
 
-    onMounted(async () => {
-        await fetchAuthUser();
-    });
+// 初始化为系统偏好
+if (colorMode.value === undefined || colorMode.value === null) {
+    colorMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
-    watch(
-        () => colorMode.value,
-        (val) => {
-            theme.change(val === 'dark' ? 'dark' : 'light');
-        },
-        { immediate: true },
-    );
+// 组件挂载时获取用户信息
+onMounted(async () => {
+    await fetchAuthUser();
+});
+
+// 响应暗/亮主题变化
+watch(
+    () => colorMode.value,
+    (val) => {
+        theme.change(val === 'dark' ? 'dark' : 'light');
+    },
+    { immediate: true },
+);
 </script>

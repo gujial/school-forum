@@ -225,9 +225,7 @@ export interface ShareCountResponse {
 /**
  * 消息相关API响应
  */
-export interface MessageResponse extends PaginatedResponse<Message> {}
-
-export interface MessageListResponse extends ApiResponse<Message[]> {}
+export interface MessageListResponse extends PaginatedResponse<Message> {}
 
 /**
  * 举报相关API响应

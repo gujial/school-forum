@@ -93,7 +93,7 @@
 <script setup lang="ts">
     import { ref, watch, onMounted, type Ref } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type { Message, User, MessageResponse } from '~/types/models';
+    import type { Message, User, MessageListResponse } from '~/types/models';
 
     const { t } = useI18n();
 
@@ -132,7 +132,7 @@
             activeTab.value === 'received' ? `/api/message/get` : `/api/message/getSent`;
 
         try {
-            const data = await $fetch<MessageResponse>(endpoint, {
+            const data = await $fetch<MessageListResponse>(endpoint, {
                 params: {
                     page: page.value,
                     pageSize,

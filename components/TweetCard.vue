@@ -92,7 +92,6 @@
         height?: string;
         maxHeight?: string;
     }>();
-    
 
     const { tweet } = toRefs(props);
     const router = useRouter();

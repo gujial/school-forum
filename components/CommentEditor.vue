@@ -1,6 +1,6 @@
 <template>
     <v-card
-        v-if="user != null"
+        v-if="user != null && user.user_id != -1"
         :prepend-avatar="avatar_url"
         :title="user.username"
         :subtitle="user.email"
@@ -34,10 +34,9 @@
 
 <script setup lang="ts">
     import CommentArea from '~/components/CommentArea.vue';
-    import { ref, onMounted } from 'vue';
-    import type { AuthUser } from '~/types/models';
+    import { ref } from 'vue';
 
-    const user = ref<AuthUser | null>(null);
+    const user = useAuthUser();
     const avatar_url = ref<string>('/icon.png');
     const error = ref<string | null>(null);
     const comment = ref<string>('');
@@ -52,20 +51,26 @@
         'comment-posted': [];
     }>();
 
-    onMounted(async () => {
-        try {
-            const data = await $fetch<{ success: boolean; user?: AuthUser }>('/api/auth/user');
-            user.value = data.user || null;
-            if (user.value) {
-                const avatar_data = await $fetch<{ success: boolean; data?: string }>(
-                    `/api/avatar/${user.value.user_id}`,
-                );
-                avatar_url.value = avatar_data.data || '/icon.png';
+    watch(
+        user,
+        async (val) => {
+            if (val) {
+                try {
+                    if (user.value && user.value.user_id != -1) {
+                        const avatar_data = await $fetch<{ success: boolean; data?: string }>(
+                            `/api/avatar/${user.value.user_id}`,
+                        );
+                        avatar_url.value = avatar_data.data || '/icon.png';
+                    }
+                } catch (err: any) {
+                    error.value = String(err);
+                }
+            } else {
+                avatar_url.value = '/icon.png';
             }
-        } catch (err: any) {
-            error.value = String(err);
-        }
-    });
+        },
+        { immediate: true },
+    );
 
     const postComment = async () => {
         if (comment.value.trim() === '') {

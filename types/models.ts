@@ -12,7 +12,7 @@ export interface User {
 }
 
 export interface AuthUser extends User {
-    admin?: boolean;
+    admin: boolean;
 }
 
 /**

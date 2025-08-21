@@ -19,6 +19,7 @@
             <v-tab key="biaobai">{{ $t('biaobai') }}</v-tab>
             <v-tab key="help">{{ $t('help') }}</v-tab>
             <v-tab key="news">{{ $t('news') }}</v-tab>
+            <v-tab key="follow">{{ $t('follow') }}</v-tab>
             <v-tab key="map">{{ $t('map') }}</v-tab>
             <v-tab
                 key="more"
@@ -52,7 +53,7 @@
             >
         </v-tabs>
         <v-row v-if="tweets != null">
-            <v-alert v-if="tweets.length == 0 && tab != 5" type="info" style="margin: 20px">{{
+            <v-alert v-if="tweets.length == 0 && tab != 6" type="info" style="margin: 20px">{{
                 $t('noTweets')
             }}</v-alert>
             <v-col v-for="tweet in tweets" v-else :key="tweet.tweet_id" cols="12" md="6" lg="4">
@@ -62,7 +63,7 @@
             </v-col>
         </v-row>
         <v-alert v-else type="info">{{ $t('loading') }}</v-alert>
-        <v-row v-if="tab == 5">
+        <v-row v-if="tab == 6">
             <iframe
                 width="100%"
                 height="700"
@@ -74,7 +75,7 @@
                 ></small
             >
         </v-row>
-        <v-pagination v-if="tab != 5" v-model="currentPage" :length="pageCount" />
+        <v-pagination v-if="tab != 6" v-model="currentPage" :length="pageCount" />
         <v-alert v-if="authError">
             {{ $t('pleaseLogin') }}
         </v-alert>
@@ -136,7 +137,13 @@
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
-        } else if (tab.value === 5) {
+        }else if (tab.value === 5) {
+            const data = await $fetch<TweetListApiResponse>(
+                `/api/tweets/follow?&page=${currentPage.value}?pageSize=20`,
+            );
+            tweets.value = data.data;
+            pageCount.value = data.maxPages;
+        } else if (tab.value === 6) {
             tweets.value = [];
             pageCount.value = 1;
         }

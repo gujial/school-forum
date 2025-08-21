@@ -80,7 +80,9 @@
                                 @click.stop
                             />
                         </v-card-text>
-                        <v-card-text :id="`preview${tweet.tweet_id}`" />
+                        <v-card-text>
+                            <Markdown :md="tweet.content" :id="`preview${tweet.tweet_id}`" />
+                        </v-card-text>
                         <hr />
                         <v-card-actions class="d-flex justify-end">
                             <v-btn icon @click.stop="likeTweet">
@@ -160,9 +162,8 @@
 <script setup lang="ts">
     import moment from 'moment-timezone';
     import CommentEditor from '~/components/CommentEditor.vue';
-    import renderMarkdown from '~/util/renderMarkdown';
+    import Markdown from '~/components/Markdown.vue';
     import TweetCard from '~/components/TweetCard.vue';
-    import 'vditor/dist/index.css';
     import type { User, Tweet, Media } from '~/types/models';
 
     const route = useRoute();
@@ -414,9 +415,6 @@
     onMounted(async () => {
         updateLike();
         await fetchCounts();
-        if (tweet.value) {
-            renderMarkdown(tweet.value.content, `preview${tweet.value.tweet_id}`);
-        }
     });
 
     watch(suc, () => {

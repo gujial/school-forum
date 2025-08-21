@@ -2,8 +2,8 @@ import OpenAI from 'openai';
 import { useDatabase } from '../util/database'; // 你之前的数据库封装
 
 const client = new OpenAI({
-    baseURL: 'https://api.deepseek.com',
-    apiKey: process.env.DEEPSEEK_API_KEY,
+    baseURL: process.env.LLM_API_URL || 'https://api.deepseek.com',
+    apiKey: process.env.DEEPSEEK_API_KEY || 'ollama',
 });
 
 export interface AuditResult {
@@ -26,7 +26,7 @@ export async function moderateContent(content: string): Promise<AuditResult> {
             `;
 
     const response = await client.chat.completions.create({
-        model: 'deepseek-chat',
+        model: process.env.LLM_MODEL || 'deepseek-chat',
         messages: [
             { role: 'system', content: '你是一个内容审核助手' },
             { role: 'user', content: prompt },

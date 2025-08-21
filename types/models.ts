@@ -431,7 +431,7 @@ export const DEFAULT_PAGE_SIZE = 10;
 /**
  * 文件上传相关常量
  */
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+export const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 export const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg'];
 

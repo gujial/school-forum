@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+    import { MAX_FILE_SIZE } from '~/types/models';
     const imageFiles = ref<File[]>([]);
 
     const videoFile = ref<File | null>(null);
@@ -46,8 +47,6 @@
     const items = ref<string[]>([t('none'), t('images'), t('video')]);
 
     const selectedMedia = ref<number>(0);
-
-    const MAX_SIZE = 200 * 1024 * 1024; // 200M
 
     const successMessage = ref<string>('');
     const errorMessage = ref<string>('');
@@ -61,7 +60,7 @@
             }
             // 检查所有图片文件大小
             for (const file of imageFiles.value) {
-                if (file.size > MAX_SIZE) {
+                if (file.size > MAX_FILE_SIZE) {
                     alert('有图片文件超过200M，无法上传！');
                     return;
                 }
@@ -91,7 +90,7 @@
                 return;
             }
             // 检查视频文件大小
-            if (videoFile.value.size > MAX_SIZE) {
+            if (videoFile.value.size > MAX_FILE_SIZE) {
                 alert('视频文件超过200M，无法上传！');
                 return;
             }

@@ -431,6 +431,12 @@
         }
     });
 
+    watch(error, () => {
+        if (error.value) {
+            setTimeout(() => (error.value = null), 2000);
+        }
+    });
+
     const logout = async () => {
         try {
             const result = await $fetch<ApiResponse>('/api/auth/logout');

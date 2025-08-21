@@ -11,12 +11,14 @@
                                 :label="$t('username')"
                                 :rules="[required]"
                                 autocomplete="username"
+                                @keydown.enter.prevent="register"
                             />
                             <v-text-field
                                 v-model="email"
                                 :label="$t('email')"
                                 :rules="[required]"
                                 autocomplete="email"
+                                @keydown.enter.prevent="register"
                             />
                             <v-text-field
                                 v-model="password"
@@ -24,6 +26,7 @@
                                 type="password"
                                 :rules="[required]"
                                 autocomplete="new-password"
+                                @keydown.enter.prevent="register"
                             />
                         </v-form>
                         <v-alert v-if="error != null" type="error">

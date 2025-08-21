@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data?`: `undefined`; `maxPages?`: `undefined`; `message`: `string`; `success`: `boolean`; \} \| \{ `data`: `any`[]; `maxPages`: `number`; `message?`: `undefined`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/tweets/by\_tags\_desc.ts:23](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/tweets/by_tags_desc.ts#L23)
+Defined in: [api/tweets/by\_tags\_desc.ts:23](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/by_tags_desc.ts#L23)
 
 按标签过滤推文（需同时包含全部指定标签），按时间倒序分页。
 

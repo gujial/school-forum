@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; `token`: `string`; \}\>\>
 
-Defined in: [api/auth/login.ts:47](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/auth/login.ts#L47)
+Defined in: [api/auth/login.ts:40](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/auth/login.ts#L40)
 
 用户登录，验证邮箱与密码，签发 JWT 并设置到 Cookie `auth_token`。
 

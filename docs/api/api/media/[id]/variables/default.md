@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data`: `any`[]; `message?`: `undefined`; `success`: `boolean`; \} \| \{ `data?`: `undefined`; `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/media/\[id\].ts:20](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/media/[id].ts#L20)
+Defined in: [api/media/\[id\].ts:20](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/media/[id].ts#L20)
 
 获取某条推文下的媒体列表（不包含 `media_type = all` 的通用项）。
 

@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/files/avatar/\[id\]/\[filename\].ts:20](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/files/avatar/[id]/[filename].ts#L20)
+Defined in: [api/files/avatar/\[id\]/\[filename\].ts:20](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/files/avatar/[id]/[filename].ts#L20)
 
 读取某用户目录下的指定头像文件。
 

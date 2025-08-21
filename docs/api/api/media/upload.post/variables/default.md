@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/media/upload.post.ts:21](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/media/upload.post.ts#L21)
+Defined in: [api/media/upload.post.ts:21](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/media/upload.post.ts#L21)
 
 上传媒体文件（未关联推文，得到通用 URL）。
 

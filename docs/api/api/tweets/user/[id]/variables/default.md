@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/tweets/user/\[id\].ts:23](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/tweets/user/[id].ts#L23)
+Defined in: [api/tweets/user/\[id\].ts:23](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/user/[id].ts#L23)
 
 获取指定用户的推文列表（带标签），按时间倒序，分页返回。
 

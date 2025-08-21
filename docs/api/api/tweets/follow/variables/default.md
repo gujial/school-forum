@@ -1,22 +1,23 @@
-[**nuxt-app**](../../../../../README.md)
+[**nuxt-app**](../../../../README.md)
 
 ***
 
-[nuxt-app](../../../../../README.md) / [api/tweets/order\_by\_time/\[id\]](../README.md) / default
+[nuxt-app](../../../../README.md) / [api/tweets/follow](../README.md) / default
 
 # Variable: default
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data?`: `undefined`; `maxPages?`: `undefined`; `message`: `string`; `success`: `boolean`; \} \| \{ `data`: `any`[]; `maxPages`: `number`; `message?`: `undefined`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/tweets/order\_by\_time/\[id\].ts:20](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/order_by_time/[id].ts#L20)
+Defined in: [api/tweets/follow.ts:22](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/follow.ts#L22)
 
-按时间倒序分页获取推文列表。
+按关注分页获取推文列表。
 
 路由: GET /api/tweets/order_by_time/:id
 权限: 公开
 
-路径参数:
-- id: string 页号（page）
+参数来源:
+- GET 查询参数: tags, page?, pageSize?
+- POST JSON 体: tags, page?, pageSize?
 
 返回:
 - { success: true, data: any[], maxPages: number }

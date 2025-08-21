@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/tweets/like/\[id\].ts:21](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/tweets/like/[id].ts#L21)
+Defined in: [api/tweets/like/\[id\].ts:21](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/tweets/like/[id].ts#L21)
 
 点赞或取消点赞指定推文（幂等切换）。
 

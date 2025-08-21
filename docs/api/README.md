@@ -57,6 +57,7 @@
 - [api/tweets/by\_tags\_asc](api/tweets/by_tags_asc/README.md)
 - [api/tweets/by\_tags\_desc](api/tweets/by_tags_desc/README.md)
 - [api/tweets/comment/count/\[tweet\_id\]](api/tweets/comment/count/[tweet_id]/README.md)
+- [api/tweets/follow](api/tweets/follow/README.md)
 - [api/tweets/like/\[id\]](api/tweets/like/[id]/README.md)
 - [api/tweets/like/check/\[id\]](api/tweets/like/check/[id]/README.md)
 - [api/tweets/like/count/\[tweet\_id\]](api/tweets/like/count/[tweet_id]/README.md)

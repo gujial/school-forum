@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/user/modify\_email.put.ts:20](https://github.com/gujial/school-forum/blob/bd7112d3c56318830c9c57a38cf40d5ca9366cca/server/api/user/modify_email.put.ts#L20)
+Defined in: [api/user/modify\_email.put.ts:20](https://github.com/gujial/school-forum/blob/d3dfcba3990433a263f51380abf1db2e35ed6fbd/server/api/user/modify_email.put.ts#L20)
 
 修改当前用户的邮箱。
 

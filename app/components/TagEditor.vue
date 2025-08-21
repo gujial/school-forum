@@ -42,7 +42,7 @@
 
     const inputTag = ref<string>('');
     const tags = ref<string[]>([...props.modelValue]);
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     watch(
         () => props.modelValue,

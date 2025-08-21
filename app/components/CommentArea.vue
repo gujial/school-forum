@@ -139,11 +139,7 @@
         <v-card>
             <v-card-title class="headline">{{ t('confirmReport') }}</v-card-title>
             <v-card-text>{{ t('confirmReportMsg') || '确定要举报这条评论吗？' }}</v-card-text>
-            <v-text-field
-                v-model="reportContent"
-                :label="t('reportContent')"
-                :rules="[required]"
-            />
+            <v-text-field v-model="reportContent" :label="t('reportContent')" :rules="[required]" />
             <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="reportDialog = false">{{ t('cancel') }}</v-btn>

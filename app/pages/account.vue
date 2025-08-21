@@ -117,16 +117,8 @@
             <v-card>
                 <v-card-title class="headline">{{ t('modifyPassword') }}</v-card-title>
                 <v-card-text>
-                    <v-text-field
-                        v-model="oldPassword"
-                        :label="t('oldPassword')"
-                        type="password"
-                    />
-                    <v-text-field
-                        v-model="newPassword"
-                        :label="t('newPassword')"
-                        type="password"
-                    />
+                    <v-text-field v-model="oldPassword" :label="t('oldPassword')" type="password" />
+                    <v-text-field v-model="newPassword" :label="t('newPassword')" type="password" />
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
@@ -180,7 +172,7 @@
     const user = useAuthUser();
     const error = ref<string | null>(null);
     const suc = ref<string | null>(null);
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     const localePath = useLocalePath();
     const userTime = ref<string>('');

@@ -39,7 +39,7 @@
     const followerCount = ref<number>(0);
     const followingCount = ref<number>(0);
     const localePath = useLocalePath();
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     const fetchFollower = async () => {
         if (!user.value) return;

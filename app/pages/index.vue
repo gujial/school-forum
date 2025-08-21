@@ -106,7 +106,7 @@
     const authError = ref<boolean>(false);
     const bgSrc = ref<string>('/card-image.jpg');
     const tab = ref<number>(0);
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     const updateTweets = async () => {
         if (tab.value === 0) {

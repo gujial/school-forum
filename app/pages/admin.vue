@@ -24,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
+    import { navigateTo } from '#app';
     const currentUser = useAuthUser();
     const localePath = useLocalePath();
-    import { navigateTo } from '#app';
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     onMounted(() => {
         if (currentUser.value !== null && !currentUser.value.admin) {

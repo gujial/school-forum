@@ -135,6 +135,8 @@ export default defineI18nConfig(() => ({
             light: 'Light',
             dark: 'Dark',
             system: 'System',
+            accessDenied: 'Access Denied',
+            backToHome: 'Back to Home',
             $vuetify: {
                 input: {
                     prependAction: 'Add image',
@@ -312,6 +314,8 @@ export default defineI18nConfig(() => ({
             light: '浅色',
             dark: '深色',
             system: '跟随系统',
+            accessDenied: '访问被拒绝',
+            backToHome: '返回主页',
             $vuetify: {
                 input: {
                     prependAction: '添加图片',

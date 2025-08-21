@@ -31,7 +31,7 @@
     import TagEditor from '../components/TagEditor.vue';
     import 'vditor/dist/index.css';
     import type { AuthUser, ApiResponse } from '../../types/models';
-import { useTheme } from 'vuetify';
+    import { useTheme } from 'vuetify';
 
     const user = ref<AuthUser | null>(null);
     const error = ref<string | null>(null);

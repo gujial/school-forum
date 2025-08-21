@@ -28,7 +28,7 @@
     const currentPage = ref<number>(1);
     const pageCount = ref<number>(1);
     const pageSize = 9;
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     const scrollToTop = () => {
         window.scrollTo({

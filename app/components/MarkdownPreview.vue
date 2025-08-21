@@ -6,7 +6,7 @@
     import { ref, onMounted, watch } from 'vue';
     import Vditor from 'vditor';
     import 'vditor/dist/index.css';
-import { useTheme } from 'vuetify';
+    import { useTheme } from 'vuetify';
 
     interface Props {
         md: string;

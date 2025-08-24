@@ -133,4 +133,7 @@ watch(
     background: rgba(0, 0, 0, 0);
     /* 悬浮时透明 */
 }
+.v-list-item-title {
+    
+}
 </style>

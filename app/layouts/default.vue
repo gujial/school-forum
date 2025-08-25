@@ -51,12 +51,14 @@
         position: absolute;
         inset: 0;
         z-index: 1; /* 遮罩层在内容下面 */
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(6px);
         transition: background 0.5s ease;
     }
 
     .background-image.dark::before {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(6px);
     }
 
     /* 背景图层（用伪元素叠加才能动画切换） */

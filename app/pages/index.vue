@@ -205,9 +205,10 @@
 
 <style scoped>
     .head-card {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         position: relative;
         overflow: hidden;
+        height: 300px;
     }
 
     .bg-mask {

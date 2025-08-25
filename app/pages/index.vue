@@ -93,7 +93,7 @@
         AuthUser,
         TweetListApiResponse,
         BackgroundApiResponse,
-    } from '~/types/models';
+    } from '../../types/models';
 
     const tweets = ref<Tweet[] | null>(null);
     const src = ref<string>('');

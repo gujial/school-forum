@@ -55,6 +55,7 @@
 
 <script setup>
 import TweetCard from '~/components/TweetCard.vue';
+import { useTheme } from  'vuetify';
 
 const tweets = ref(null)
 const src = ref('')
@@ -66,9 +67,14 @@ const pageCount = ref(1)
 const error = ref(null)
 const authError = ref(false)
 const bgSrc = ref('/card-image.jpg')
-// 使用特定的固定背景图路径
-const pageBgSrc = ref('/background_image.jpg')
 const tab = ref(0)
+const theme = useTheme()
+const pageBgSrc = computed(() => {
+  return theme.global.name.value === 'dark' 
+    ? '/background_imagedark.jpg' 
+    : '/background_imagelight.jpg'
+})
+
 
 const updateTweets = async () => {
   if (tab.value === 0) {
@@ -161,7 +167,7 @@ onMounted(async () => {
 }
 
 .head-card {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   position: relative;
   overflow: hidden;
   min-height: 300px;
@@ -184,19 +190,19 @@ onMounted(async () => {
 .background-image {
   position: absolute;
   top: -50px;
-  /* 向上扩展50px */
   left: -80px;
-  /* 向左扩展50px */
   right: -80px;
-  /* 向右扩展50px */
   bottom: -20px;
-  /* 向下扩展50px */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-image: url('/background_imagelight.jpg'); /* 默认背景图片 */
   transform: scale(1.2);
-  /* 放大1.2倍 */
   z-index: -2;
+}
+
+:global(.theme--dark) .background-image {
+  background-image: url('/background_imagedark.jpg'); /* 暗色主题背景图片 */
 }
 
 .bg-mask {

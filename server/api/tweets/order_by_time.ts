@@ -1,5 +1,5 @@
 import { defineEventHandler, getRouterParam } from 'h3';
-import { useDatabase } from '../../../util/database';
+import { useDatabase } from '../../util/database';
 
 /**
  * 按时间倒序分页获取推文列表。
@@ -19,16 +19,17 @@ import { useDatabase } from '../../../util/database';
  */
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
-    const pageParam = getRouterParam(event, 'id');
+    let page, pageSize;
 
-    if (pageParam == undefined) {
-        return {
-            success: false,
-            message: 'Need page number',
-        };
+    if (event.method === 'GET') {
+        const query = getQuery(event);
+        page = parseInt(<string>query.page || '1', 10);
+        pageSize = parseInt(<string>query.pageSize || '10', 10);
+    } else {
+        const body = await readBody(event);
+        page = parseInt(body.page || '1', 10);
+        pageSize = parseInt(body.pageSize || '10', 10);
     }
-
-    const page = parseInt(pageParam);
 
     if (page < 0) {
         return {
@@ -36,7 +37,7 @@ export default defineEventHandler(async (event) => {
             message: 'Wrong page number',
         };
     }
-    const limit = 10;
+    const limit = pageSize || 10;
     const offset = (page - 1) * limit;
 
     try {

@@ -111,31 +111,31 @@
     const updateTweets = async () => {
         if (tab.value === 0) {
             const data = await $fetch<TweetListApiResponse>(
-                `/api/tweets/order_by_time/${currentPage.value}`,
+                `/api/tweets/order_by_time?page=${currentPage.value}&pageSize=12`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 1) {
             const data = await $fetch<TweetListApiResponse>(
-                `/api/tweets/by_tags_desc?tags=school&page=${currentPage.value}?pageSize=20`,
+                `/api/tweets/by_tags_desc?tags=school&page=${currentPage.value}&pageSize=12`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 2) {
             const data = await $fetch<TweetListApiResponse>(
-                `/api/tweets/by_tags_desc?tags=school,biaobai&page=${currentPage.value}?pageSize=20`,
+                `/api/tweets/by_tags_desc?tags=school,biaobai&page=${currentPage.value}&pageSize=12`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 3) {
             const data = await $fetch<TweetListApiResponse>(
-                `/api/tweets/by_tags_desc?tags=school,help&page=${currentPage.value}?pageSize=20`,
+                `/api/tweets/by_tags_desc?tags=school,help&page=${currentPage.value}&pageSize=12`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;
         } else if (tab.value === 4) {
             const data = await $fetch<TweetListApiResponse>(
-                `/api/tweets/by_tags_desc?tags=school,news&page=${currentPage.value}?pageSize=20`,
+                `/api/tweets/by_tags_desc?tags=school,news&page=${currentPage.value}?pageSize=10`,
             );
             tweets.value = data.data;
             pageCount.value = data.maxPages;

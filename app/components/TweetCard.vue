@@ -37,7 +37,7 @@
                 cover
             />
         </v-carousel>
-        <v-img v-if="video != null" :src="video" height="300px" />
+        <v-img v-if="video != null" :src="video" height="300px" cover />
         <v-card-text v-if="tweet.tags.length > 0" style="flex: none">
             <div class="tag-list-wrapper">
                 <div class="tag-list">

@@ -30,7 +30,7 @@
     import Vditor from 'vditor';
     import TagEditor from '../components/TagEditor.vue';
     import 'vditor/dist/index.css';
-    import type { AuthUser, ApiResponse } from '../../types/models';
+    import type { AuthUser, ApiResponse, PostTweetApiResponse } from '../../types/models';
     import { useTheme } from 'vuetify';
 
     const user = ref<AuthUser | null>(null);
@@ -52,7 +52,7 @@
             return;
         }
         try {
-            const data = await $fetch<ApiResponse<{ tweet_id: number }>>('/api/tweets/new', {
+            const data = await $fetch<PostTweetApiResponse>('/api/tweets/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,8 +65,8 @@
                 }),
             });
 
-            if (mediaEditorRef.value != null && data.data?.tweet_id) {
-                mediaEditorRef.value.upload(data.data.tweet_id);
+            if (mediaEditorRef.value != null && data.tweet_id) {
+                mediaEditorRef.value.upload(data.tweet_id);
             }
         } catch (err: unknown) {
             error.value = String(err);

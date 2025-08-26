@@ -147,6 +147,12 @@ export interface AuthApiResponse {
 /**
  * 推文相关API响应
  */
+export interface PostTweetApiResponse {
+    success: boolean;
+    message?: string;
+    tweet_id: number;
+}
+
 export interface TweetApiResponse {
     success: boolean;
     message?: string;

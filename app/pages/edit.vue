@@ -30,7 +30,7 @@
     import Vditor from 'vditor';
     import TagEditor from '../components/TagEditor.vue';
     import 'vditor/dist/index.css';
-    import type { AuthUser, ApiResponse, PostTweetApiResponse } from '../../types/models';
+    import type { AuthUser, PostTweetApiResponse } from '../../types/models';
     import { useTheme } from 'vuetify';
 
     const user = ref<AuthUser | null>(null);

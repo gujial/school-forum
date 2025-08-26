@@ -27,12 +27,32 @@
                 current: theme.global.name.value === 'dark' ? 'dark' : 'classic',
             },
             transform: (html) => {
-                const imgRegex = /<img[^>]*>/g;
                 const tocRegex = /\[toc\]/g;
-                const iframeRegex = /<iframe[^>]*>/g;
+                const iframeRegex = /<iframe[^>]*src=["']([^"']+)["'][^>]*><\/iframe>/g;
+                html = html.replace(iframeRegex, (_, src) => {
+                    try {
+                        const url = new URL(src);
+                        const hostname = url.hostname;
+
+                        let thumbnail = '';
+                        // Todo: 支持更多网站
+                        if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+                            // YouTube 缩略图
+                            const videoId =
+                                url.searchParams.get('v') || url.pathname.split('/').pop();
+                            thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                        } else if (hostname.includes('bilibili.com')) {
+                            return `<iframe src="${url.href + '&autoplay=0'}" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="false" width="100%" height="250px"></iframe>`;
+                        } else {
+                            throw createError('未找到对应图片');
+                        }
+
+                        return `<img src="${thumbnail}" alt="iframe preview" />`;
+                    } catch {
+                        return `[iframe]`;
+                    }
+                });
                 html = html.replace(tocRegex, () => `[${t('toc')}]`);
-                html = html.replace(imgRegex, () => `[${t('image')}]`);
-                html = html.replace(iframeRegex, () => `[iframe]`);
                 return html;
             },
         });
@@ -47,3 +67,24 @@
         { deep: true },
     );
 </script>
+<style scoped>
+    .iframe-placeholder {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .iframe-placeholder img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    .iframe-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 20px;
+    }
+</style>

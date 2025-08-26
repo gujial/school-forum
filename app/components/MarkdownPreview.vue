@@ -29,7 +29,7 @@
             transform: (html) => {
                 const imgRegex = /<img[^>]*>/g;
                 const tocRegex = /\[toc\]/g;
-                const iframeRegex = /<iframe[^>]*>/g
+                const iframeRegex = /<iframe[^>]*>/g;
                 html = html.replace(tocRegex, () => `[${t('toc')}]`);
                 html = html.replace(imgRegex, () => `[${t('image')}]`);
                 html = html.replace(iframeRegex, () => `[iframe]`);

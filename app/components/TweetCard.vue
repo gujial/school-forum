@@ -19,7 +19,7 @@
         </v-card-text>
         <v-card-text
             :id="`preview${tweet.tweet_id}`"
-            :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true }"
+            :class="{ 'text-content': !hasMedia, content: hasMedia, 'no-interaction': true }"
         >
             <MarkdownPreview :md="tweet.content" />
         </v-card-text>
@@ -37,8 +37,10 @@
                 cover
             />
         </v-carousel>
-        <v-img v-if="video != null" :src="video" max-height="230px" cover />
-        <v-card-text v-if="tweet.tags.length > 0" style="flex: none">
+        <v-carousel v-if="video != null" height="300px" cycle :show-arrows="false" hide-delimiters>
+            <v-carousel-item :src="video" cover />
+        </v-carousel>
+        <v-card-text v-if="tweet.tags.length > 0" style="flex: none; padding: 0">
             <div class="tag-list-wrapper">
                 <div class="tag-list">
                     <v-chip
@@ -280,3 +282,4 @@
         user-select: none;
     }
 </style>
+min-height: 50px;

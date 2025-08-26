@@ -85,7 +85,10 @@
                                 >{{ t('report') }}</v-btn
                             >
                             <v-btn
-                                v-if="currentUser && currentUser.user_id === reply.user_id"
+                                v-if="
+                                    currentUser &&
+                                    (currentUser.user_id === reply.user_id || currentUser.admin)
+                                "
                                 color="red"
                                 variant="text"
                                 @click="showDeleteDialog(reply)"

@@ -119,4 +119,23 @@
             applyFilter();
         }
     });
+
+        // 搜索防抖
+    let searchTimeout: ReturnType<typeof setTimeout>;
+    watch(keyword, () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPage.value = 1;
+            fetchTweets();
+        }, 500);
+    });
+
+    // 自动清理错误信息
+    watch(error, () => {
+        if (error.value) {
+            setTimeout(() => {
+                error.value = null;
+            }, 2000);
+        }
+    });
 </script>

@@ -141,6 +141,7 @@ export default defineI18nConfig(() => ({
             fileTooBig: 'File is too large.',
             fileCannotOver200M: 'File size can not over 200MB.',
             image: 'Image',
+            pleaseEnterKeyword: 'Please Enter Keyword.',
             $vuetify: {
                 input: {
                     prependAction: 'Add image',
@@ -324,6 +325,7 @@ export default defineI18nConfig(() => ({
             image: '图像',
             fileTooBig: '文件过大',
             fileCannotOver200M: '文件大小不能超过 200MB',
+            pleaseEnterKeyword: '请输入关键词',
             $vuetify: {
                 input: {
                     prependAction: '添加图片',

@@ -7,6 +7,7 @@
     import Vditor from 'vditor';
     import 'vditor/dist/index.css';
     import { useTheme } from 'vuetify';
+    const { t } = useI18n();
 
     interface Props {
         md: string;
@@ -27,7 +28,10 @@
             },
             transform: (html) => {
                 const imgRegex = /<img[^>]*>/g;
-                return html.replace(imgRegex, () => `[图片]`);
+                const tocRegex = /\[toc\]/g;
+                html = html.replace(tocRegex, () => `[${ t('toc') }]`)
+                html = html.replace(imgRegex, () => `[${ t('image') }]`);
+                return html
             },
         });
     };

@@ -137,6 +137,8 @@ export default defineI18nConfig(() => ({
             system: 'System',
             accessDenied: 'Access Denied',
             backToHome: 'Back to Home',
+            toc: 'Table of Content',
+            image: 'Image',
             $vuetify: {
                 input: {
                     prependAction: 'Add image',
@@ -316,6 +318,8 @@ export default defineI18nConfig(() => ({
             system: '跟随系统',
             accessDenied: '访问被拒绝',
             backToHome: '返回主页',
+            toc: '目录',
+            image: '图像',
             $vuetify: {
                 input: {
                     prependAction: '添加图片',

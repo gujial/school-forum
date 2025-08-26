@@ -23,6 +23,7 @@
         Vditor.preview(container.value, props.md, {
             mode: theme.global.name.value === 'dark' ? 'dark' : 'light',
             hljs: { style: theme.global.name.value === 'dark' ? 'github-dark' : 'github' },
+            markdown: { toc: true },
             theme: {
                 current: theme.global.name.value === 'dark' ? 'dark' : 'classic',
             },

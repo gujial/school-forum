@@ -19,7 +19,7 @@
         </v-card-text>
         <v-card-text
             :id="`preview${tweet.tweet_id}`"
-            :class="{ 'text-content': !hasMedia, content: hasMedia, 'no-interaction': true }"
+            :class="{ 'text-content': !hasMedia, 'content': hasMedia, 'no-interaction': true }"
         >
             <MarkdownPreview :md="tweet.content" />
         </v-card-text>
@@ -37,7 +37,7 @@
                 cover
             />
         </v-carousel>
-        <v-img v-if="video != null" :src="video" height="300px" cover />
+        <v-img v-if="video != null" :src="video" max-height="300px" cover />
         <v-card-text v-if="tweet.tags.length > 0" style="flex: none">
             <div class="tag-list-wrapper">
                 <div class="tag-list">
@@ -236,6 +236,7 @@
         /* 隐藏溢出内容 */
         text-overflow: ellipsis;
         /* 添加省略号 */
+        min-height: 50px;
     }
 
     ::v-deep(.vditor-reset p) {

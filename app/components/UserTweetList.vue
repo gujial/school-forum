@@ -17,7 +17,7 @@
 <script setup lang="ts">
     import { ref, watch, onMounted } from 'vue';
     import TweetCard from './TweetCard.vue';
-    import type { Tweet } from '~/types/models';
+    import type { Tweet } from '../../types/models';
 
     const props = defineProps<{
         userId: string | number;

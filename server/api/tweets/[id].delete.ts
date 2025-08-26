@@ -1,28 +1,42 @@
 import { useDatabase } from '../../util/database';
 import { unlink, rm } from 'fs/promises';
-import { join } from 'path';
+import { join, extname, basename } from 'path';
 import authMiddleware from '../../util/auth';
 import adminAuthMiddleware from '../../util/adminAuth';
 
 const removeFile = async (mediaUrl: string): Promise<void> => {
     try {
         const parts = mediaUrl.split('/');
+
         if (parts.length === 5) {
+            // 通用文件
             const filename = decodeURIComponent(parts.slice(4).join('/'));
             if (!filename) return;
+
             const filePath = join(process.cwd(), 'dynamic', 'media', filename);
             await unlink(filePath);
+
+            // 删除缓存文件
+            const name = basename(filename, extname(filename));
+            const cachePath = join(process.cwd(), 'dynamic', 'media_cache', `${name}.jpg`);
+            await unlink(cachePath).catch(() => {});
         } else {
+            // tweetId 目录下的文件
             const tweetId = parts[4];
             const filename = decodeURIComponent(parts.slice(5).join('/'));
             if (!tweetId || !filename) return;
+
             const filePath = join(process.cwd(), 'dynamic', 'media', tweetId, filename);
             await unlink(filePath);
+
+            // 删除缓存文件
+            const name = basename(filename, extname(filename));
+            const cachePath = join(process.cwd(), 'dynamic', 'media_cache', tweetId, `${name}.jpg`);
+            await unlink(cachePath).catch(() => {});
         }
     } catch (e) {
         console.error(e);
     }
-    return;
 };
 
 /**

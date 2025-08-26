@@ -37,7 +37,7 @@
                 cover
             />
         </v-carousel>
-        <video v-if="video != null" :src="video" height="300px" muted autoplay loop />
+        <v-img v-if="video != null" :src="video" height="300px" />
         <v-card-text v-if="tweet.tags.length > 0" style="flex: none">
             <div class="tag-list-wrapper">
                 <div class="tag-list">
@@ -179,10 +179,15 @@
             const media_data = await $fetch<MediaApiResponse>(`/api/media/${tweet.value.tweet_id}`);
             if (media_data.data && media_data.data.length > 0) {
                 if (media_data.data[0]?.media_type == 'video') {
-                    video.value = media_data.data[0].media_url;
+                    video.value = media_data.data[0].media_url.replace('/media/', '/cover/');
                 } else {
                     for (const data of media_data.data) {
-                        images.value.push(data as Media);
+                        // 替换图片 url
+                        const newData = {
+                            ...data,
+                            media_url: data.media_url.replace('/media/', '/cover/'),
+                        };
+                        images.value.push(newData as Media);
                     }
                 }
             }

@@ -29,9 +29,9 @@
             transform: (html) => {
                 const imgRegex = /<img[^>]*>/g;
                 const tocRegex = /\[toc\]/g;
-                html = html.replace(tocRegex, () => `[${ t('toc') }]`)
-                html = html.replace(imgRegex, () => `[${ t('image') }]`);
-                return html
+                html = html.replace(tocRegex, () => `[${t('toc')}]`);
+                html = html.replace(imgRegex, () => `[${t('image')}]`);
+                return html;
             },
         });
     };

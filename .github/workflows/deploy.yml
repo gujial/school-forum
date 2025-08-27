@@ -2,8 +2,8 @@ name: Build and Deploy to Server
 
 on:
   push:
-    branches:
-      - dev
+    tags:
+      - 'v*'
 
 jobs:
   build-and-deploy:

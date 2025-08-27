@@ -8,7 +8,13 @@ const requiredTables = [
   'Tweets',
   'Comments',
   'Media',
-  'Likes'
+  'Likes',
+  'Messages',
+  'Tags',
+  'Follows',
+  'Admins',
+  'Reports',
+  'TweetTags'
 ];
 
 // 检查表是否存在

@@ -63,10 +63,9 @@
                     </template>
 
                     <template #item.content="{ item }">
-                        <span
-                            v-if="item.content === '/likeMsg'"
-                            >{{ `${usernames[item.sender_id]}${t('likeYourTweet')}` }}</span
-                        >
+                        <span v-if="item.content === '/likeMsg'">{{
+                            `${usernames[item.sender_id]}${t('likeYourTweet')}`
+                        }}</span>
                         <span v-else>{{ item.content }}</span>
                     </template>
 

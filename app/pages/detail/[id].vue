@@ -65,11 +65,20 @@
                                 hide-delimiters
                                 @click.stop
                             >
-                                <v-carousel-item
-                                    v-for="image in images"
-                                    :key="image.media_id"
-                                    :src="image.media_url"
-                                />
+                                <v-carousel-item v-for="image in images" :key="image.media_id">
+                                    <v-img :src="image.media_url">
+                                        <template #placeholder>
+                                            <div
+                                                class="d-flex align-center justify-center fill-height"
+                                            >
+                                                <v-progress-circular
+                                                    color="grey-lighten-4"
+                                                    indeterminate
+                                                ></v-progress-circular>
+                                            </div>
+                                        </template>
+                                    </v-img>
+                                </v-carousel-item>
                             </v-carousel>
                             <video
                                 v-if="video != null"

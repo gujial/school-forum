@@ -30,12 +30,18 @@
             :show-arrows="false"
             hide-delimiters
         >
-            <v-carousel-item
-                v-for="image in images"
-                :key="image.media_id"
-                :src="image.media_url"
-                cover
-            />
+            <v-carousel-item v-for="image in images" :key="image.media_id">
+                <v-img :src="image.media_url">
+                    <template #placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                            <v-progress-circular
+                                color="grey-lighten-4"
+                                indeterminate
+                            ></v-progress-circular>
+                        </div>
+                    </template>
+                </v-img>
+            </v-carousel-item>
         </v-carousel>
         <v-carousel v-if="video != null" height="300px" cycle :show-arrows="false" hide-delimiters>
             <v-carousel-item :src="video" cover />

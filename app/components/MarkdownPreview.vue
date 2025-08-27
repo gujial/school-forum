@@ -42,12 +42,12 @@
                                 url.searchParams.get('v') || url.pathname.split('/').pop();
                             thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                         } else if (hostname.includes('bilibili.com')) {
-                            return `<iframe src="${url.href + '&autoplay=0'}" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="false" width="100%" height="250px"></iframe>`;
+                            return `<iframe src="${url.href + '&autoplay=0&quality=480p&danmaku=0'}" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="false" width="100%" height="250px"></iframe>`;
                         } else {
                             throw createError('未找到对应图片');
                         }
 
-                        return `<img src="${thumbnail}" alt="iframe preview" />`;
+                        return `<img src="${thumbnail}" alt="iframe preview" cover />`;
                     } catch {
                         return `[iframe]`;
                     }

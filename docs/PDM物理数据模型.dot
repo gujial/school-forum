@@ -72,7 +72,7 @@ digraph PDM {
         fk_indexes [label="外键索引:\n• Tweets.user_id → Users.user_id\n• Tweets.parent_id → Tweets.tweet_id\n• Comments.tweet_id → Tweets.tweet_id\n• Comments.user_id → Users.user_id\n• Comments.parent_id → Comments.comment_id\n• Media.tweet_id → Tweets.tweet_id\n• Likes.user_id → Users.user_id\n• Likes.tweet_id → Tweets.tweet_id\n• Messages.sender_id → Users.user_id\n• Messages.receiver_id → Users.user_id\n• Messages.tweet_id → Tweets.tweet_id\n• Messages.comment_id → Comments.comment_id\n• Reports.tweet_id → Tweets.tweet_id\n• Reports.comment_id → Comments.comment_id\n• Avatar.user_id → Users.user_id\n• Admins.user_id → Users.user_id\n• Follows.follower_id → Users.user_id\n• Follows.following_id → Users.user_id\n• TweetTags.tweet_id → Tweets.tweet_id\n• TweetTags.tag_id → Tags.tag_id", shape=note, fillcolor=lightyellow];
         
         // 性能索引
-        performance_indexes [label="性能优化索引:\n• Tweets.created_at (时间排序)\n• Tweets.user_id (用户推文查询)\n• Comments.created_at (评论时间排序)\n• Comments.tweet_id (推文评论查询)\n• Messages.created_at (消息时间排序)\n• Messages.sender_id (发送消息查询)\n• Messages.receiver_id (接收消息查询)", shape=note, fillcolor=lightyellow];
+        performance_indexes [label="性能优化索引:\n• Tweets.created_at (时间排序)\n• Tweets.user_id (用户帖子查询)\n• Comments.created_at (评论时间排序)\n• Comments.tweet_id (帖子评论查询)\n• Messages.created_at (消息时间排序)\n• Messages.sender_id (发送消息查询)\n• Messages.receiver_id (接收消息查询)", shape=note, fillcolor=lightyellow];
     }
     
     // 约束定义
@@ -103,7 +103,7 @@ digraph PDM {
     users -> messages [label="1:N (sender)"];
     users -> messages [label="1:N (receiver)"];
     
-    // 推文相关关系
+    // 帖子相关关系
     tweets -> comments [label="1:N"];
     tweets -> media [label="1:N"];
     tweets -> likes [label="1:N"];

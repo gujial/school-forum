@@ -1,0 +1,172 @@
+digraph BusinessFlow {
+    // 图形设置
+    rankdir=TB;
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+    
+    // 业务流程图
+    subgraph cluster_business_flow {
+        label="校园论坛平台业务流程图";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 用户注册登录流程
+        subgraph cluster_auth_flow {
+            label="用户认证流程";
+            style=filled;
+            fillcolor=lightgreen;
+            
+            start_auth [label="开始", shape=ellipse, fillcolor=lightblue];
+            register [label="用户注册", fillcolor=lightcyan];
+            login [label="用户登录", fillcolor=lightcyan];
+            verify_auth [label="身份验证", fillcolor=lightpink];
+            auth_success [label="认证成功", fillcolor=lightgreen];
+            auth_fail [label="认证失败", fillcolor=lightcoral];
+            end_auth [label="进入系统", shape=ellipse, fillcolor=lightblue];
+        }
+        
+        // 内容发布流程
+        subgraph cluster_content_flow {
+            label="内容发布流程";
+            style=filled;
+            fillcolor=lightpink;
+            
+            start_content [label="开始发布", shape=ellipse, fillcolor=lightblue];
+            create_content [label="创建内容", fillcolor=lightcyan];
+            upload_media [label="上传媒体", fillcolor=lightcyan];
+            add_tags [label="添加标签", fillcolor=lightcyan];
+            content_moderation [label="内容审核", fillcolor=lightgoldenrod];
+            moderation_pass [label="审核通过", fillcolor=lightgreen];
+            moderation_reject [label="审核拒绝", fillcolor=lightcoral];
+            publish_content [label="发布内容", fillcolor=lightgreen];
+            end_content [label="发布完成", shape=ellipse, fillcolor=lightblue];
+        }
+        
+        // 社交互动流程
+        subgraph cluster_social_flow {
+            label="社交互动流程";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            start_social [label="开始互动", shape=ellipse, fillcolor=lightblue];
+            view_content [label="浏览内容", fillcolor=lightcyan];
+            like_action [label="点赞操作", fillcolor=lightcyan];
+            comment_action [label="评论操作", fillcolor=lightcyan];
+            follow_action [label="关注操作", fillcolor=lightcyan];
+            share_action [label="分享操作", fillcolor=lightcyan];
+            end_social [label="互动完成", shape=ellipse, fillcolor=lightblue];
+        }
+        
+        // 消息通信流程
+        subgraph cluster_message_flow {
+            label="消息通信流程";
+            style=filled;
+            fillcolor=lightsteelblue;
+            
+            start_message [label="开始通信", shape=ellipse, fillcolor=lightblue];
+            compose_message [label="编写消息", fillcolor=lightcyan];
+            select_recipient [label="选择接收者", fillcolor=lightcyan];
+            send_message [label="发送消息", fillcolor=lightcyan];
+            message_delivery [label="消息投递", fillcolor=lightgoldenrod];
+            recipient_notify [label="接收者通知", fillcolor=lightcyan];
+            end_message [label="通信完成", shape=ellipse, fillcolor=lightblue];
+        }
+        
+        // 内容管理流程
+        subgraph cluster_management_flow {
+            label="内容管理流程";
+            style=filled;
+            fillcolor=lightgoldenrod;
+            
+            start_manage [label="开始管理", shape=ellipse, fillcolor=lightblue];
+            content_review [label="内容审查", fillcolor=lightcyan];
+            report_handling [label="举报处理", fillcolor=lightcyan];
+            content_action [label="内容操作\n(删除/修改)", fillcolor=lightcyan];
+            user_action [label="用户操作\n(警告/封禁)", fillcolor=lightcyan];
+            end_manage [label="管理完成", shape=ellipse, fillcolor=lightblue];
+        }
+        
+        // 搜索浏览流程
+        subgraph cluster_search_flow {
+            label="搜索浏览流程";
+            style=filled;
+            fillcolor=lightseagreen;
+            
+            start_search [label="开始搜索", shape=ellipse, fillcolor=lightblue];
+            input_query [label="输入查询", fillcolor=lightcyan];
+            search_execute [label="执行搜索", fillcolor=lightcyan];
+            filter_results [label="过滤结果", fillcolor=lightcyan];
+            display_results [label="显示结果", fillcolor=lightcyan];
+            end_search [label="搜索完成", shape=ellipse, fillcolor=lightblue];
+        }
+    }
+    
+    // 流程连接关系
+    
+    // 认证流程
+    start_auth -> register [label="新用户"];
+    start_auth -> login [label="老用户"];
+    register -> verify_auth;
+    login -> verify_auth;
+    verify_auth -> auth_success [label="验证通过"];
+    verify_auth -> auth_fail [label="验证失败"];
+    auth_fail -> login [label="重新登录"];
+    auth_success -> end_auth;
+    
+    // 内容发布流程
+    end_auth -> start_content;
+    start_content -> create_content;
+    create_content -> upload_media [label="可选"];
+    create_content -> add_tags [label="可选"];
+    upload_media -> content_moderation;
+    add_tags -> content_moderation;
+    create_content -> content_moderation [label="无媒体/标签"];
+    content_moderation -> moderation_pass [label="审核通过"];
+    content_moderation -> moderation_reject [label="审核拒绝"];
+    moderation_reject -> create_content [label="修改内容"];
+    moderation_pass -> publish_content;
+    publish_content -> end_content;
+    
+    // 社交互动流程
+    end_content -> start_social;
+    start_social -> view_content;
+    view_content -> like_action [label="点赞"];
+    view_content -> comment_action [label="评论"];
+    view_content -> follow_action [label="关注"];
+    view_content -> share_action [label="分享"];
+    like_action -> end_social;
+    comment_action -> end_social;
+    follow_action -> end_social;
+    share_action -> end_social;
+    
+    // 消息通信流程
+    start_social -> start_message [label="私信"];
+    start_message -> compose_message;
+    compose_message -> select_recipient;
+    select_recipient -> send_message;
+    send_message -> message_delivery;
+    message_delivery -> recipient_notify;
+    recipient_notify -> end_message;
+    
+    // 内容管理流程
+    start_social -> start_manage [label="举报"];
+    start_manage -> content_review;
+    content_review -> report_handling [label="有举报"];
+    content_review -> end_manage [label="无问题"];
+    report_handling -> content_action [label="内容违规"];
+    report_handling -> user_action [label="用户违规"];
+    content_action -> end_manage;
+    user_action -> end_manage;
+    
+    // 搜索浏览流程
+    start_social -> start_search [label="搜索"];
+    start_search -> input_query;
+    input_query -> search_execute;
+    search_execute -> filter_results;
+    filter_results -> display_results;
+    display_results -> end_search;
+    
+    // 样式设置
+    node [shape=box, style=filled, fontname="Arial", fontsize=9];
+    edge [fontname="Arial", fontsize=8];
+}

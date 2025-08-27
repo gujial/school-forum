@@ -34,7 +34,7 @@ digraph SchoolForumModules {
                 style=filled;
                 fillcolor=lightpink;
                 
-                tweet_management [label="推文管理\n(发布/编辑/删除)"];
+                tweet_management [label="帖子管理\n(发布/编辑/删除)"];
                 comment_system [label="评论系统\n(评论/回复/删除)"];
                 media_upload [label="媒体上传\n(图片/视频)"];
                 tag_system [label="标签系统"];
@@ -59,7 +59,7 @@ digraph SchoolForumModules {
                 style=filled;
                 fillcolor=lightsteelblue;
                 
-                tweet_search [label="推文搜索"];
+                tweet_search [label="帖子搜索"];
                 user_search [label="用户搜索"];
                 tag_search [label="标签搜索"];
             }
@@ -120,7 +120,7 @@ digraph SchoolForumModules {
         fillcolor=lightyellow;
         
         pages [label="页面组件\n(首页/详情/编辑/搜索等)"];
-        components [label="UI组件\n(推文卡片/评论区域/导航栏等)"];
+        components [label="UI组件\n(帖子卡片/评论区域/导航栏等)"];
         layouts [label="布局组件"];
         composables [label="组合式函数\n(认证/用户状态等)"];
     }

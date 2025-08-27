@@ -473,9 +473,9 @@
 <polyline fill="none" stroke="black" points="1238.78,-205.5 1232.78,-205.5"/>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-198" font-family="Arial" font-size="10.00">性能优化索引:</text>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-183" font-family="Arial" font-size="10.00">• Tweets.created_at (时间排序)</text>
-<text xml:space="preserve" text-anchor="middle" x="1145.28" y="-168" font-family="Arial" font-size="10.00">• Tweets.user_id (用户推文查询)</text>
+<text xml:space="preserve" text-anchor="middle" x="1145.28" y="-168" font-family="Arial" font-size="10.00">• Tweets.user_id (用户帖子查询)</text>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-153" font-family="Arial" font-size="10.00">• Comments.created_at (评论时间排序)</text>
-<text xml:space="preserve" text-anchor="middle" x="1145.28" y="-138" font-family="Arial" font-size="10.00">• Comments.tweet_id (推文评论查询)</text>
+<text xml:space="preserve" text-anchor="middle" x="1145.28" y="-138" font-family="Arial" font-size="10.00">• Comments.tweet_id (帖子评论查询)</text>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-123" font-family="Arial" font-size="10.00">• Messages.created_at (消息时间排序)</text>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-108" font-family="Arial" font-size="10.00">• Messages.sender_id (发送消息查询)</text>
 <text xml:space="preserve" text-anchor="middle" x="1145.28" y="-93" font-family="Arial" font-size="10.00">• Messages.receiver_id (接收消息查询)</text>

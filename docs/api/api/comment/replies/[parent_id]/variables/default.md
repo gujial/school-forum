@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/comment/replies/\[parent\_id\].ts:19](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/comment/replies/[parent_id].ts#L19)
+Defined in: [api/comment/replies/\[parent\_id\].ts:19](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/comment/replies/[parent_id].ts#L19)
 
 获取某条评论下的子评论（按时间正序）。
 

@@ -6,7 +6,7 @@
 
 # Interface: AuditResult
 
-Defined in: [util/contentModeration.ts:9](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/contentModeration.ts#L9)
+Defined in: [util/contentModeration.ts:9](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/util/contentModeration.ts#L9)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [util/contentModeration.ts:9](https://github.com/gujial/school-forum
 
 > **needs\_report**: `boolean`
 
-Defined in: [util/contentModeration.ts:10](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/contentModeration.ts#L10)
+Defined in: [util/contentModeration.ts:10](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/util/contentModeration.ts#L10)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [util/contentModeration.ts:10](https://github.com/gujial/school-foru
 
 > **reason**: `string`
 
-Defined in: [util/contentModeration.ts:11](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/contentModeration.ts#L11)
+Defined in: [util/contentModeration.ts:11](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/util/contentModeration.ts#L11)

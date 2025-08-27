@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/media/upload/images/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/media/upload/images/[id].post.ts#L23)
+Defined in: [api/media/upload/images/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/media/upload/images/[id].post.ts#L23)
 
 批量上传图片到指定推文目录，并记录到 `Media` 表。
 

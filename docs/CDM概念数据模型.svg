@@ -80,7 +80,7 @@
 <g id="node4" class="node">
 <title>tweet</title>
 <polygon fill="lightblue" stroke="black" points="237.88,-398.5 182.12,-398.5 182.12,-358.25 237.88,-358.25 237.88,-398.5"/>
-<text xml:space="preserve" text-anchor="middle" x="210" y="-383.1" font-family="Arial" font-size="12.00">推文</text>
+<text xml:space="preserve" text-anchor="middle" x="210" y="-383.1" font-family="Arial" font-size="12.00">帖子</text>
 <text xml:space="preserve" text-anchor="middle" x="210" y="-365.1" font-family="Arial" font-size="12.00">(Tweet)</text>
 </g>
 <!-- user&#45;&gt;tweet -->
@@ -89,7 +89,7 @@
 <path fill="none" stroke="black" d="M157.13,-505.29C162.96,-500.03 168.68,-493.98 173,-487.5 188.85,-463.75 198.57,-432.53 204.05,-409.75"/>
 <polygon fill="black" stroke="black" points="207.42,-410.69 206.2,-400.16 200.59,-409.15 207.42,-410.69"/>
 <text xml:space="preserve" text-anchor="middle" x="205.9" y="-478" font-family="Arial" font-size="10.00">1:N</text>
-<text xml:space="preserve" text-anchor="middle" x="205.9" y="-466" font-family="Arial" font-size="10.00">发布推文</text>
+<text xml:space="preserve" text-anchor="middle" x="205.9" y="-466" font-family="Arial" font-size="10.00">发布帖子</text>
 </g>
 <!-- comment -->
 <g id="node5" class="node">
@@ -200,7 +200,7 @@
 <path fill="none" stroke="black" d="M238.22,-388.05C247.99,-388.15 255.88,-384.93 255.88,-378.38 255.88,-374.69 253.38,-372.05 249.46,-370.47"/>
 <polygon fill="black" stroke="black" points="250.14,-367.04 239.72,-368.93 249.05,-373.95 250.14,-367.04"/>
 <text xml:space="preserve" text-anchor="middle" x="270.5" y="-382.38" font-family="Arial" font-size="10.00">1:0..1</text>
-<text xml:space="preserve" text-anchor="middle" x="270.5" y="-370.38" font-family="Arial" font-size="10.00">父推文</text>
+<text xml:space="preserve" text-anchor="middle" x="270.5" y="-370.38" font-family="Arial" font-size="10.00">父帖子</text>
 </g>
 <!-- tweet&#45;&gt;comment -->
 <g id="edge8" class="edge">
@@ -229,7 +229,7 @@
 <g id="node8" class="node">
 <title>tweet_tag</title>
 <polygon fill="lightblue" stroke="black" points="538,-398.5 450,-398.5 450,-358.25 538,-358.25 538,-398.5"/>
-<text xml:space="preserve" text-anchor="middle" x="494" y="-383.1" font-family="Arial" font-size="12.00">推文标签关联</text>
+<text xml:space="preserve" text-anchor="middle" x="494" y="-383.1" font-family="Arial" font-size="12.00">帖子标签关联</text>
 <text xml:space="preserve" text-anchor="middle" x="494" y="-365.1" font-family="Arial" font-size="12.00">(TweetTag)</text>
 </g>
 <!-- tweet&#45;&gt;tweet_tag -->
@@ -254,10 +254,10 @@
 <polygon fill="lightyellow" stroke="black" points="419.75,-150 354.25,-150 354.25,-34 425.75,-34 425.75,-144 419.75,-150"/>
 <polyline fill="none" stroke="black" points="419.75,-150 419.75,-144"/>
 <polyline fill="none" stroke="black" points="425.75,-144 419.75,-144"/>
-<text xml:space="preserve" text-anchor="middle" x="390" y="-134.6" font-family="Arial" font-size="12.00">推文属性:</text>
-<text xml:space="preserve" text-anchor="middle" x="390" y="-116.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="390" y="-134.6" font-family="Arial" font-size="12.00">帖子属性:</text>
+<text xml:space="preserve" text-anchor="middle" x="390" y="-116.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="390" y="-98.6" font-family="Arial" font-size="12.00">• 用户ID</text>
-<text xml:space="preserve" text-anchor="middle" x="390" y="-80.6" font-family="Arial" font-size="12.00">• 父推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="390" y="-80.6" font-family="Arial" font-size="12.00">• 父帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="390" y="-62.6" font-family="Arial" font-size="12.00">• 内容</text>
 <text xml:space="preserve" text-anchor="middle" x="390" y="-44.6" font-family="Arial" font-size="12.00">• 创建时间</text>
 </g>
@@ -291,7 +291,7 @@
 <polyline fill="none" stroke="black" points="335.75,-153 329.75,-153"/>
 <text xml:space="preserve" text-anchor="middle" x="300" y="-143.6" font-family="Arial" font-size="12.00">评论属性:</text>
 <text xml:space="preserve" text-anchor="middle" x="300" y="-125.6" font-family="Arial" font-size="12.00">• 评论ID</text>
-<text xml:space="preserve" text-anchor="middle" x="300" y="-107.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="300" y="-107.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="300" y="-89.6" font-family="Arial" font-size="12.00">• 用户ID</text>
 <text xml:space="preserve" text-anchor="middle" x="300" y="-71.6" font-family="Arial" font-size="12.00">• 父评论ID</text>
 <text xml:space="preserve" text-anchor="middle" x="300" y="-53.6" font-family="Arial" font-size="12.00">• 内容</text>
@@ -311,7 +311,7 @@
 <polyline fill="none" stroke="black" points="246.12,-135 240.12,-135"/>
 <text xml:space="preserve" text-anchor="middle" x="210" y="-125.6" font-family="Arial" font-size="12.00">媒体属性:</text>
 <text xml:space="preserve" text-anchor="middle" x="210" y="-107.6" font-family="Arial" font-size="12.00">• 媒体ID</text>
-<text xml:space="preserve" text-anchor="middle" x="210" y="-89.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="210" y="-89.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="210" y="-71.6" font-family="Arial" font-size="12.00">• 媒体URL</text>
 <text xml:space="preserve" text-anchor="middle" x="210" y="-53.6" font-family="Arial" font-size="12.00">• 媒体类型</text>
 </g>
@@ -382,7 +382,7 @@
 <path fill="none" stroke="black" d="M835.1,-398.89C830.59,-416.37 821.31,-440.5 803,-452.5 789.92,-461.07 606.79,-467.36 488.5,-463.9 401.94,-461.36 374.06,-485.48 294,-452.5 270.42,-442.78 248.95,-423.57 233.62,-407.14"/>
 <polygon fill="black" stroke="black" points="236.49,-405.09 227.2,-399.99 231.28,-409.77 236.49,-405.09"/>
 <text xml:space="preserve" text-anchor="middle" x="508" y="-478" font-family="Arial" font-size="10.00">N:1</text>
-<text xml:space="preserve" text-anchor="middle" x="508" y="-466" font-family="Arial" font-size="10.00">点赞推文</text>
+<text xml:space="preserve" text-anchor="middle" x="508" y="-466" font-family="Arial" font-size="10.00">点赞帖子</text>
 </g>
 <!-- like_attrs -->
 <g id="node19" class="node">
@@ -393,7 +393,7 @@
 <text xml:space="preserve" text-anchor="middle" x="852" y="-125.6" font-family="Arial" font-size="12.00">点赞属性:</text>
 <text xml:space="preserve" text-anchor="middle" x="852" y="-107.6" font-family="Arial" font-size="12.00">• 点赞ID</text>
 <text xml:space="preserve" text-anchor="middle" x="852" y="-89.6" font-family="Arial" font-size="12.00">• 用户ID</text>
-<text xml:space="preserve" text-anchor="middle" x="852" y="-71.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="852" y="-71.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="852" y="-53.6" font-family="Arial" font-size="12.00">• 创建时间</text>
 </g>
 <!-- like&#45;&gt;like_attrs -->
@@ -408,7 +408,7 @@
 <path fill="none" stroke="black" d="M751.62,-399C745,-416.55 732.8,-440.72 713,-452.5 699.4,-460.59 537.7,-467.87 437.5,-463.9 373.57,-461.36 352.9,-477.48 294,-452.5 270.52,-442.54 249.05,-423.33 233.7,-406.97"/>
 <polygon fill="black" stroke="black" points="236.57,-404.92 227.26,-399.85 231.38,-409.62 236.57,-404.92"/>
 <text xml:space="preserve" text-anchor="middle" x="457" y="-478" font-family="Arial" font-size="10.00">N:1</text>
-<text xml:space="preserve" text-anchor="middle" x="457" y="-466" font-family="Arial" font-size="10.00">关联推文</text>
+<text xml:space="preserve" text-anchor="middle" x="457" y="-466" font-family="Arial" font-size="10.00">关联帖子</text>
 </g>
 <!-- message&#45;&gt;comment -->
 <g id="edge21" class="edge">
@@ -428,7 +428,7 @@
 <text xml:space="preserve" text-anchor="middle" x="762" y="-134.6" font-family="Arial" font-size="12.00">• 消息ID</text>
 <text xml:space="preserve" text-anchor="middle" x="762" y="-116.6" font-family="Arial" font-size="12.00">• 发送者ID</text>
 <text xml:space="preserve" text-anchor="middle" x="762" y="-98.6" font-family="Arial" font-size="12.00">• 接收者ID</text>
-<text xml:space="preserve" text-anchor="middle" x="762" y="-80.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="762" y="-80.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="762" y="-62.6" font-family="Arial" font-size="12.00">• 评论ID</text>
 <text xml:space="preserve" text-anchor="middle" x="762" y="-44.6" font-family="Arial" font-size="12.00">• 内容</text>
 <text xml:space="preserve" text-anchor="middle" x="762" y="-26.6" font-family="Arial" font-size="12.00">• 创建时间</text>
@@ -447,7 +447,7 @@
 <polyline fill="none" stroke="black" points="707.75,-144 701.75,-144"/>
 <text xml:space="preserve" text-anchor="middle" x="672" y="-134.6" font-family="Arial" font-size="12.00">举报属性:</text>
 <text xml:space="preserve" text-anchor="middle" x="672" y="-116.6" font-family="Arial" font-size="12.00">• 举报ID</text>
-<text xml:space="preserve" text-anchor="middle" x="672" y="-98.6" font-family="Arial" font-size="12.00">• 推文ID</text>
+<text xml:space="preserve" text-anchor="middle" x="672" y="-98.6" font-family="Arial" font-size="12.00">• 帖子ID</text>
 <text xml:space="preserve" text-anchor="middle" x="672" y="-80.6" font-family="Arial" font-size="12.00">• 评论ID</text>
 <text xml:space="preserve" text-anchor="middle" x="672" y="-62.6" font-family="Arial" font-size="12.00">• 举报内容</text>
 <text xml:space="preserve" text-anchor="middle" x="672" y="-44.6" font-family="Arial" font-size="12.00">• 创建时间</text>

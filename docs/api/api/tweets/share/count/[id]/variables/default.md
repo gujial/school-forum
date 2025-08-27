@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/tweets/share/count/\[id\].ts:19](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/tweets/share/count/[id].ts#L19)
+Defined in: [api/tweets/share/count/\[id\].ts:19](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/tweets/share/count/[id].ts#L19)
 
 获取某条推文被转发/分享的数量（统计 parent_id 指向该推文的条数）。
 

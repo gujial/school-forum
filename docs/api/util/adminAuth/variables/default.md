@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<`void`\>\>
 
-Defined in: [util/adminAuth.ts:17](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/util/adminAuth.ts#L17)
+Defined in: [util/adminAuth.ts:17](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/util/adminAuth.ts#L17)
 
 管理员鉴权中间件：在基础登录校验后，检查当前用户是否存在于 `Admins` 表。
 不通过将抛出 401 错误。

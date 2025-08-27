@@ -8,7 +8,7 @@
 
 > **default**: `any`
 
-Defined in: [api/avatar/upload/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/avatar/upload/[id].post.ts#L23)
+Defined in: [api/avatar/upload/\[id\].post.ts:23](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/avatar/upload/[id].post.ts#L23)
 
 上传并替换指定用户的头像，删除旧头像文件并更新 `Avatar` 表。
 

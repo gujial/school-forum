@@ -1,0 +1,169 @@
+digraph InteractionPrototype {
+    // 图形设置
+    rankdir=LR;
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+    
+    // 交互原型图
+    subgraph cluster_interaction_prototype {
+        label="校园论坛平台交互原型图";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 主要页面
+        subgraph cluster_main_pages {
+            label="主要页面";
+            style=filled;
+            fillcolor=lightgreen;
+            
+            home_page [label="首页\n(Home)", fillcolor=lightblue];
+            login_page [label="登录页\n(Login)", fillcolor=lightblue];
+            register_page [label="注册页\n(Register)", fillcolor=lightblue];
+            profile_page [label="个人资料页\n(Profile)", fillcolor=lightblue];
+            tweet_detail [label="帖子详情页\n(Tweet Detail)", fillcolor=lightblue];
+            search_page [label="搜索页\n(Search)", fillcolor=lightblue];
+            messages_page [label="消息页\n(Messages)", fillcolor=lightblue];
+            admin_page [label="管理页\n(Admin)", fillcolor=lightblue];
+        }
+        
+        // 功能组件
+        subgraph cluster_components {
+            label="功能组件";
+            style=filled;
+            fillcolor=lightpink;
+            
+            nav_bar [label="导航栏\n(NavBar)", fillcolor=lightcyan];
+            tweet_card [label="帖子卡片\n(TweetCard)", fillcolor=lightcyan];
+            comment_area [label="评论区域\n(CommentArea)", fillcolor=lightcyan];
+            media_editor [label="媒体编辑器\n(MediaEditor)", fillcolor=lightcyan];
+            tag_editor [label="标签编辑器\n(TagEditor)", fillcolor=lightcyan];
+            avatar_editor [label="头像编辑器\n(AvatarEditor)", fillcolor=lightcyan];
+            follow_list [label="关注列表\n(FollowList)", fillcolor=lightcyan];
+            user_tweet_list [label="用户帖子列表\n(UserTweetList)", fillcolor=lightcyan];
+        }
+        
+        // 交互状态
+        subgraph cluster_interaction_states {
+            label="交互状态";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            logged_out [label="未登录状态", fillcolor=lightgoldenrod];
+            logged_in [label="已登录状态", fillcolor=lightgreen];
+            admin_mode [label="管理员模式", fillcolor=lightcoral];
+            editing [label="编辑状态", fillcolor=lightsteelblue];
+            uploading [label="上传状态", fillcolor=lightseagreen];
+            loading [label="加载状态", fillcolor=lightyellow];
+            error [label="错误状态", fillcolor=lightcoral];
+        }
+        
+        // 用户操作
+        subgraph cluster_user_actions {
+            label="用户操作";
+            style=filled;
+            fillcolor=lightsteelblue;
+            
+            click_action [label="点击操作", fillcolor=lightcyan];
+            scroll_action [label="滚动操作", fillcolor=lightcyan];
+            input_action [label="输入操作", fillcolor=lightcyan];
+            drag_drop [label="拖拽操作", fillcolor=lightcyan];
+            swipe_action [label="滑动操作", fillcolor=lightcyan];
+            long_press [label="长按操作", fillcolor=lightcyan];
+        }
+        
+        // 系统响应
+        subgraph cluster_system_responses {
+            label="系统响应";
+            style=filled;
+            fillcolor=lightseagreen;
+            
+            api_call [label="API调用", fillcolor=lightcyan];
+            data_update [label="数据更新", fillcolor=lightcyan];
+            ui_refresh [label="界面刷新", fillcolor=lightcyan];
+            notification [label="通知提示", fillcolor=lightcyan];
+            redirect [label="页面跳转", fillcolor=lightcyan];
+            modal_show [label="弹窗显示", fillcolor=lightcyan];
+        }
+    }
+    
+    // 页面导航关系
+    home_page -> login_page [label="点击登录"];
+    home_page -> register_page [label="点击注册"];
+    home_page -> profile_page [label="点击头像"];
+    home_page -> tweet_detail [label="点击帖子"];
+    home_page -> search_page [label="点击搜索"];
+    home_page -> messages_page [label="点击消息"];
+    
+    login_page -> home_page [label="登录成功"];
+    register_page -> home_page [label="注册成功"];
+    profile_page -> home_page [label="返回首页"];
+    tweet_detail -> home_page [label="返回首页"];
+    search_page -> home_page [label="返回首页"];
+    messages_page -> home_page [label="返回首页"];
+    
+    // 页面与组件关系
+    home_page -> nav_bar [label="包含"];
+    home_page -> tweet_card [label="显示"];
+    home_page -> user_tweet_list [label="显示"];
+    
+    tweet_detail -> comment_area [label="包含"];
+    tweet_detail -> media_editor [label="编辑时"];
+    
+    profile_page -> avatar_editor [label="编辑头像"];
+    profile_page -> follow_list [label="显示关注"];
+    profile_page -> user_tweet_list [label="显示帖子"];
+    
+    // 组件交互关系
+    nav_bar -> click_action [label="触发"];
+    tweet_card -> click_action [label="触发"];
+    comment_area -> input_action [label="触发"];
+    media_editor -> drag_drop [label="触发"];
+    tag_editor -> input_action [label="触发"];
+    avatar_editor -> click_action [label="触发"];
+    
+    // 操作与状态关系
+    click_action -> api_call [label="调用"];
+    input_action -> data_update [label="更新"];
+    drag_drop -> uploading [label="进入"];
+    scroll_action -> loading [label="触发"];
+    
+    // 状态与响应关系
+    logged_out -> redirect [label="跳转登录"];
+    logged_in -> ui_refresh [label="刷新界面"];
+    admin_mode -> modal_show [label="显示管理"];
+    editing -> ui_refresh [label="更新界面"];
+    uploading -> notification [label="显示进度"];
+    loading -> ui_refresh [label="加载完成"];
+    error -> modal_show [label="显示错误"];
+    
+    // 系统响应与状态关系
+    api_call -> data_update [label="成功"];
+    api_call -> error [label="失败"];
+    data_update -> ui_refresh [label="触发"];
+    notification -> ui_refresh [label="更新"];
+    
+    // 特殊交互流程
+    // 帖子发布流程
+    home_page -> media_editor [label="发布帖子"];
+    media_editor -> tag_editor [label="添加标签"];
+    tag_editor -> api_call [label="提交"];
+    
+    // 评论交互流程
+    tweet_detail -> comment_area [label="查看评论"];
+    comment_area -> input_action [label="发表评论"];
+    input_action -> api_call [label="提交评论"];
+    
+    // 关注交互流程
+    profile_page -> follow_list [label="查看关注"];
+    follow_list -> click_action [label="关注/取消"];
+    click_action -> api_call [label="更新关注"];
+    
+    // 搜索交互流程
+    search_page -> input_action [label="输入搜索"];
+    input_action -> api_call [label="执行搜索"];
+    api_call -> ui_refresh [label="显示结果"];
+    
+    // 样式设置
+    node [shape=box, style=filled, fontname="Arial", fontsize=9];
+    edge [fontname="Arial", fontsize=8];
+}

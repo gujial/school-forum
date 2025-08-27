@@ -1,0 +1,228 @@
+digraph UseCaseDiagram {
+    // 图形设置
+    rankdir=TB;
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+    
+    // 用例图
+    subgraph cluster_use_case_diagram {
+        label="校园论坛平台用例图";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 主要参与者
+        subgraph cluster_actors {
+            label="系统参与者";
+            style=filled;
+            fillcolor=lightgreen;
+            
+            // 主要参与者
+            user [label="普通用户\n(Student/Teacher)", shape=actor, fillcolor=lightblue];
+            admin [label="管理员\n(Administrator)", shape=actor, fillcolor=lightcoral];
+            guest [label="访客\n(Guest)", shape=actor, fillcolor=lightgray];
+            system [label="系统\n(System)", shape=actor, fillcolor=lightsteelblue];
+            llm_service [label="LLM服务\n(DeepSeek/Ollama)", shape=actor, fillcolor=lightseagreen];
+        }
+        
+        // 用户管理用例
+        subgraph cluster_user_management {
+            label="用户管理";
+            style=filled;
+            fillcolor=lightcyan;
+            
+            register [label="用户注册", shape=ellipse, fillcolor=lightyellow];
+            login [label="用户登录", shape=ellipse, fillcolor=lightyellow];
+            logout [label="用户登出", shape=ellipse, fillcolor=lightyellow];
+            update_profile [label="更新个人资料", shape=ellipse, fillcolor=lightyellow];
+            change_password [label="修改密码", shape=ellipse, fillcolor=lightyellow];
+            delete_account [label="删除账户", shape=ellipse, fillcolor=lightyellow];
+            upload_avatar [label="上传头像", shape=ellipse, fillcolor=lightyellow];
+            upload_bg [label="上传背景图", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 内容管理用例
+        subgraph cluster_content_management {
+            label="内容管理";
+            style=filled;
+            fillcolor=lightpink;
+            
+            create_tweet [label="发布帖子", shape=ellipse, fillcolor=lightyellow];
+            edit_tweet [label="编辑帖子", shape=ellipse, fillcolor=lightyellow];
+            delete_tweet [label="删除帖子", shape=ellipse, fillcolor=lightyellow];
+            add_comment [label="添加评论", shape=ellipse, fillcolor=lightyellow];
+            reply_comment [label="回复评论", shape=ellipse, fillcolor=lightyellow];
+            delete_comment [label="删除评论", shape=ellipse, fillcolor=lightyellow];
+            upload_media [label="上传媒体", shape=ellipse, fillcolor=lightyellow];
+            add_tags [label="添加标签", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 社交互动用例
+        subgraph cluster_social_interaction {
+            label="社交互动";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            follow_user [label="关注用户", shape=ellipse, fillcolor=lightyellow];
+            unfollow_user [label="取消关注", shape=ellipse, fillcolor=lightyellow];
+            like_tweet [label="点赞帖子", shape=ellipse, fillcolor=lightyellow];
+            unlike_tweet [label="取消点赞", shape=ellipse, fillcolor=lightyellow];
+            share_tweet [label="分享帖子", shape=ellipse, fillcolor=lightyellow];
+            send_message [label="发送私信", shape=ellipse, fillcolor=lightyellow];
+            view_followers [label="查看粉丝", shape=ellipse, fillcolor=lightyellow];
+            view_following [label="查看关注", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 搜索浏览用例
+        subgraph cluster_search_browse {
+            label="搜索浏览";
+            style=filled;
+            fillcolor=lightseagreen;
+            
+            search_tweets [label="搜索帖子", shape=ellipse, fillcolor=lightyellow];
+            search_users [label="搜索用户", shape=ellipse, fillcolor=lightyellow];
+            search_tags [label="搜索标签", shape=ellipse, fillcolor=lightyellow];
+            browse_timeline [label="浏览时间线", shape=ellipse, fillcolor=lightyellow];
+            view_user_profile [label="查看用户资料", shape=ellipse, fillcolor=lightyellow];
+            view_tweet_detail [label="查看帖子详情", shape=ellipse, fillcolor=lightyellow];
+            filter_by_tag [label="按标签筛选", shape=ellipse, fillcolor=lightyellow];
+            sort_by_time [label="按时间排序", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 内容审核用例
+        subgraph cluster_content_moderation {
+            label="内容审核";
+            style=filled;
+            fillcolor=lightgoldenrod;
+            
+            report_content [label="举报内容", shape=ellipse, fillcolor=lightyellow];
+            moderate_content [label="内容审核", shape=ellipse, fillcolor=lightyellow];
+            auto_moderation [label="自动审核", shape=ellipse, fillcolor=lightyellow];
+            review_reports [label="审核举报", shape=ellipse, fillcolor=lightyellow];
+            take_action [label="采取行动", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 系统管理用例
+        subgraph cluster_system_management {
+            label="系统管理";
+            style=filled;
+            fillcolor=lightsteelblue;
+            
+            manage_users [label="管理用户", shape=ellipse, fillcolor=lightyellow];
+            manage_content [label="管理内容", shape=ellipse, fillcolor=lightyellow];
+            view_statistics [label="查看统计", shape=ellipse, fillcolor=lightyellow];
+            system_monitoring [label="系统监控", shape=ellipse, fillcolor=lightyellow];
+            backup_data [label="数据备份", shape=ellipse, fillcolor=lightyellow];
+        }
+        
+        // 通知用例
+        subgraph cluster_notification {
+            label="通知系统";
+            style=filled;
+            fillcolor=lightpink;
+            
+            send_notification [label="发送通知", shape=ellipse, fillcolor=lightyellow];
+            receive_notification [label="接收通知", shape=ellipse, fillcolor=lightyellow];
+            mark_read [label="标记已读", shape=ellipse, fillcolor=lightyellow];
+            delete_notification [label="删除通知", shape=ellipse, fillcolor=lightyellow];
+        }
+    }
+    
+    // 参与者与用例的关系
+    
+    // 普通用户用例
+    user -> register;
+    user -> login;
+    user -> logout;
+    user -> update_profile;
+    user -> change_password;
+    user -> delete_account;
+    user -> upload_avatar;
+    user -> upload_bg;
+    user -> create_tweet;
+    user -> edit_tweet;
+    user -> delete_tweet;
+    user -> add_comment;
+    user -> reply_comment;
+    user -> delete_comment;
+    user -> upload_media;
+    user -> add_tags;
+    user -> follow_user;
+    user -> unfollow_user;
+    user -> like_tweet;
+    user -> unlike_tweet;
+    user -> share_tweet;
+    user -> send_message;
+    user -> view_followers;
+    user -> view_following;
+    user -> search_tweets;
+    user -> search_users;
+    user -> search_tags;
+    user -> browse_timeline;
+    user -> view_user_profile;
+    user -> view_tweet_detail;
+    user -> filter_by_tag;
+    user -> sort_by_time;
+    user -> report_content;
+    user -> receive_notification;
+    user -> mark_read;
+    user -> delete_notification;
+    
+    // 管理员用例
+    admin -> login;
+    admin -> logout;
+    admin -> moderate_content;
+    admin -> review_reports;
+    admin -> take_action;
+    admin -> manage_users;
+    admin -> manage_content;
+    admin -> view_statistics;
+    admin -> system_monitoring;
+    admin -> backup_data;
+    admin -> send_notification;
+    
+    // 访客用例
+    guest -> register;
+    guest -> login;
+    guest -> browse_timeline;
+    guest -> view_user_profile;
+    guest -> view_tweet_detail;
+    guest -> search_tweets;
+    guest -> search_users;
+    guest -> search_tags;
+    guest -> filter_by_tag;
+    guest -> sort_by_time;
+    
+    // 系统用例
+    system -> auto_moderation;
+    system -> send_notification;
+    system -> backup_data;
+    system -> system_monitoring;
+    
+    // LLM服务用例
+    llm_service -> auto_moderation;
+    
+    // 包含关系 (include)
+    create_tweet -> upload_media [label="<<include>>", style=dashed];
+    create_tweet -> add_tags [label="<<include>>", style=dashed];
+    add_comment -> moderate_content [label="<<include>>", style=dashed];
+    create_tweet -> moderate_content [label="<<include>>", style=dashed];
+    report_content -> review_reports [label="<<include>>", style=dashed];
+    auto_moderation -> moderate_content [label="<<include>>", style=dashed];
+    
+    // 扩展关系 (extend)
+    browse_timeline -> filter_by_tag [label="<<extend>>", style=dotted];
+    browse_timeline -> sort_by_time [label="<<extend>>", style=dotted];
+    view_tweet_detail -> add_comment [label="<<extend>>", style=dotted];
+    view_tweet_detail -> like_tweet [label="<<extend>>", style=dotted];
+    view_tweet_detail -> share_tweet [label="<<extend>>", style=dotted];
+    view_user_profile -> follow_user [label="<<extend>>", style=dotted];
+    view_user_profile -> send_message [label="<<extend>>", style=dotted];
+    
+    // 泛化关系 (generalization)
+    user -> guest [label="<<generalize>>", style=bold];
+    admin -> user [label="<<generalize>>", style=bold];
+    
+    // 样式设置
+    node [shape=box, style=filled, fontname="Arial", fontsize=9];
+    edge [fontname="Arial", fontsize=8];
+}

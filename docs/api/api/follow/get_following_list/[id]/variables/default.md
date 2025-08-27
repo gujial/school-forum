@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `data?`: `undefined`; `maxPages?`: `undefined`; `message`: `string`; `success`: `boolean`; `total?`: `undefined`; \} \| \{ `data`: `any`[]; `maxPages`: `number`; `message?`: `undefined`; `success`: `boolean`; `total`: `number`; \}\>\>
 
-Defined in: [api/follow/get\_following\_list/\[id\].ts:24](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/follow/get_following_list/[id].ts#L24)
+Defined in: [api/follow/get\_following\_list/\[id\].ts:24](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/follow/get_following_list/[id].ts#L24)
 
 获取指定用户的关注列表（分页）。
 

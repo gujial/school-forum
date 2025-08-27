@@ -29,7 +29,7 @@ digraph DataFlow {
         message_api [label="消息API\n(私信发送/接收)"];
         
         // 内容相关API
-        tweet_api [label="推文API\n(发布/编辑/删除)"];
+        tweet_api [label="帖子API\n(发布/编辑/删除)"];
         comment_api [label="评论API\n(评论/回复)"];
         media_api [label="媒体API\n(图片/视频上传)"];
         
@@ -38,7 +38,7 @@ digraph DataFlow {
         report_api [label="举报API\n(内容举报)"];
         
         // 搜索相关API
-        search_api [label="搜索API\n(推文/用户/标签)"];
+        search_api [label="搜索API\n(帖子/用户/标签)"];
     }
     
     // 内容审核层
@@ -66,13 +66,13 @@ digraph DataFlow {
     database -> user_api [label="6a. 返回用户数据"];
     user_api -> api_gateway [label="7a. 返回认证结果"];
     
-    // 推文发布流程
-    auth_middleware -> tweet_api [label="4b. 推文操作"];
+    // 帖子发布流程
+    auth_middleware -> tweet_api [label="4b. 帖子操作"];
     tweet_api -> content_moderation [label="5b. 内容审核"];
     content_moderation -> llm_service [label="6b. LLM审核"];
     llm_service -> content_moderation [label="7b. 审核结果"];
     content_moderation -> tweet_api [label="8b. 审核通过"];
-    tweet_api -> database [label="9b. 保存推文"];
+    tweet_api -> database [label="9b. 保存帖子"];
     database -> tweet_api [label="10b. 返回结果"];
     
     // 媒体上传流程

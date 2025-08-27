@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; `username`: `string`; \}\>\>
 
-Defined in: [api/user/modify\_username.put.ts:25](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/user/modify_username.put.ts#L25)
+Defined in: [api/user/modify\_username.put.ts:25](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/user/modify_username.put.ts#L25)
 
 修改当前用户的用户名。
 

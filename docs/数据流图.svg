@@ -99,7 +99,7 @@
 <title>search_api</title>
 <polygon fill="lightgrey" stroke="black" points="789.75,-380.3 703.25,-380.3 703.25,-342.3 789.75,-342.3 789.75,-380.3"/>
 <text xml:space="preserve" text-anchor="middle" x="746.5" y="-366.8" font-family="Arial" font-size="10.00">搜索API</text>
-<text xml:space="preserve" text-anchor="middle" x="746.5" y="-351.8" font-family="Arial" font-size="10.00">(推文/用户/标签)</text>
+<text xml:space="preserve" text-anchor="middle" x="746.5" y="-351.8" font-family="Arial" font-size="10.00">(帖子/用户/标签)</text>
 </g>
 <!-- frontend&#45;&gt;search_api -->
 <g id="edge31" class="edge">
@@ -204,7 +204,7 @@
 <g id="node9" class="node">
 <title>tweet_api</title>
 <polygon fill="lightgrey" stroke="black" points="789.75,-604.3 703.25,-604.3 703.25,-566.3 789.75,-566.3 789.75,-604.3"/>
-<text xml:space="preserve" text-anchor="middle" x="746.5" y="-590.8" font-family="Arial" font-size="10.00">推文API</text>
+<text xml:space="preserve" text-anchor="middle" x="746.5" y="-590.8" font-family="Arial" font-size="10.00">帖子API</text>
 <text xml:space="preserve" text-anchor="middle" x="746.5" y="-575.8" font-family="Arial" font-size="10.00">(发布/编辑/删除)</text>
 </g>
 <!-- auth_middleware&#45;&gt;tweet_api -->
@@ -212,7 +212,7 @@
 <title>auth_middleware&#45;&gt;tweet_api</title>
 <path fill="none" stroke="blue" d="M555.42,-778.84C562.49,-753.52 578.37,-709.57 608,-684.8 632.55,-664.29 655.48,-687.98 677,-664.3 692.54,-647.21 672.86,-631.57 687,-613.3 689,-610.72 691.31,-608.36 693.81,-606.2"/>
 <polygon fill="blue" stroke="blue" points="695.65,-609.19 701.76,-600.54 691.59,-603.49 695.65,-609.19"/>
-<text xml:space="preserve" text-anchor="middle" x="642.5" y="-689.75" font-family="Arial" font-size="9.00">4b. 推文操作</text>
+<text xml:space="preserve" text-anchor="middle" x="642.5" y="-689.75" font-family="Arial" font-size="9.00">4b. 帖子操作</text>
 </g>
 <!-- comment_api -->
 <g id="node10" class="node">
@@ -296,7 +296,7 @@
 <title>tweet_api&#45;&gt;database</title>
 <path fill="none" stroke="blue" d="M702.95,-570.98C696.87,-567.34 691.25,-562.84 687,-557.3 672.27,-538.11 695.61,-519.26 677,-503.8 654.95,-485.49 623.14,-491.29 596.97,-501.58"/>
 <polygon fill="blue" stroke="blue" points="595.73,-498.3 587.9,-505.45 598.48,-504.74 595.73,-498.3"/>
-<text xml:space="preserve" text-anchor="middle" x="642.5" y="-508.75" font-family="Arial" font-size="9.00">9b. 保存推文</text>
+<text xml:space="preserve" text-anchor="middle" x="642.5" y="-508.75" font-family="Arial" font-size="9.00">9b. 保存帖子</text>
 </g>
 <!-- comment_api&#45;&gt;content_moderation -->
 <g id="edge21" class="edge">

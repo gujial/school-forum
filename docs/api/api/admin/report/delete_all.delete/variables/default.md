@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<\{ `message`: `string`; `success`: `boolean`; \}\>\>
 
-Defined in: [api/admin/report/delete\_all.delete.ts:18](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/admin/report/delete_all.delete.ts#L18)
+Defined in: [api/admin/report/delete\_all.delete.ts:18](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/admin/report/delete_all.delete.ts#L18)
 
 管理端清空全部举报记录。
 

@@ -8,7 +8,7 @@
 
 > **default**: `EventHandler`\<`EventHandlerRequest`, `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>\>
 
-Defined in: [api/files/media/\[tweetId\]/\[filename\].ts:20](https://github.com/gujial/school-forum/blob/46eca051e02385d54a0c540369b17bb449ad978a/server/api/files/media/[tweetId]/[filename].ts#L20)
+Defined in: [api/files/media/\[tweetId\]/\[filename\].ts:20](https://github.com/gujial/school-forum/blob/b5556fe3e8a472a3deef560b7e825ac0f4c95b87/server/api/files/media/[tweetId]/[filename].ts#L20)
 
 读取某条推文目录下的媒体文件。
 

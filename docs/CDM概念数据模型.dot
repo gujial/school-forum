@@ -1,0 +1,140 @@
+digraph CDM {
+    // 图形设置
+    rankdir=TB;
+    node [shape=box, style=filled, fontname="Arial", fontsize=12];
+    edge [fontname="Arial", fontsize=10];
+    
+    // 实体定义 - 分层布局
+    subgraph cluster_entities {
+        label="概念数据模型 - 校园论坛平台";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 第一层：用户相关实体
+        subgraph cluster_user_entities {
+            label="用户管理域";
+            style=filled;
+            fillcolor=lightgreen;
+            
+            user [label="用户\n(User)", fillcolor=lightblue];
+            avatar [label="头像\n(Avatar)", fillcolor=lightblue];
+            admin [label="管理员\n(Admin)", fillcolor=lightblue];
+        }
+        
+        // 第二层：内容相关实体
+        subgraph cluster_content_entities {
+            label="内容管理域";
+            style=filled;
+            fillcolor=lightpink;
+            
+            tweet [label="推文\n(Tweet)", fillcolor=lightblue];
+            comment [label="评论\n(Comment)", fillcolor=lightblue];
+            media [label="媒体\n(Media)", fillcolor=lightblue];
+            tag [label="标签\n(Tag)", fillcolor=lightblue];
+        }
+        
+        // 第三层：关联实体
+        subgraph cluster_association_entities {
+            label="关联实体";
+            style=filled;
+            fillcolor=lightcyan;
+            
+            tweet_tag [label="推文标签关联\n(TweetTag)", fillcolor=lightblue];
+            follow [label="关注关系\n(Follow)", fillcolor=lightblue];
+        }
+        
+        // 第四层：互动相关实体
+        subgraph cluster_interaction_entities {
+            label="社交互动域";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            like [label="点赞\n(Like)", fillcolor=lightblue];
+            message [label="私信\n(Message)", fillcolor=lightblue];
+            report [label="举报\n(Report)", fillcolor=lightblue];
+        }
+    }
+    
+    // 实体属性 - 右侧布局
+    subgraph cluster_attributes {
+        label="主要属性";
+        style=filled;
+        fillcolor=lightcyan;
+        
+        // 用户属性
+        user_attrs [label="用户属性:\n• 用户ID\n• 用户名\n• 邮箱\n• 密码\n• 背景图\n• 创建时间", shape=note, fillcolor=lightyellow];
+        
+        // 推文属性
+        tweet_attrs [label="推文属性:\n• 推文ID\n• 用户ID\n• 父推文ID\n• 内容\n• 创建时间", shape=note, fillcolor=lightyellow];
+        
+        // 评论属性
+        comment_attrs [label="评论属性:\n• 评论ID\n• 推文ID\n• 用户ID\n• 父评论ID\n• 内容\n• 创建时间", shape=note, fillcolor=lightyellow];
+        
+        // 媒体属性
+        media_attrs [label="媒体属性:\n• 媒体ID\n• 推文ID\n• 媒体URL\n• 媒体类型", shape=note, fillcolor=lightyellow];
+        
+        // 标签属性
+        tag_attrs [label="标签属性:\n• 标签ID\n• 标签名称", shape=note, fillcolor=lightyellow];
+        
+        // 关注属性
+        follow_attrs [label="关注属性:\n• 关注者ID\n• 被关注者ID", shape=note, fillcolor=lightyellow];
+        
+        // 点赞属性
+        like_attrs [label="点赞属性:\n• 点赞ID\n• 用户ID\n• 推文ID\n• 创建时间", shape=note, fillcolor=lightyellow];
+        
+        // 消息属性
+        message_attrs [label="消息属性:\n• 消息ID\n• 发送者ID\n• 接收者ID\n• 推文ID\n• 评论ID\n• 内容\n• 创建时间", shape=note, fillcolor=lightyellow];
+        
+        // 举报属性
+        report_attrs [label="举报属性:\n• 举报ID\n• 推文ID\n• 评论ID\n• 举报内容\n• 创建时间", shape=note, fillcolor=lightyellow];
+    }
+    
+    // 完整的实体关系连接
+    // 用户相关连接
+    user -> avatar [label="1:1\n拥有头像"];
+    user -> admin [label="1:0..1\n管理员权限"];
+    user -> tweet [label="1:N\n发布推文"];
+    user -> comment [label="1:N\n发表评论"];
+    user -> like [label="1:N\n点赞操作"];
+    user -> message [label="1:N\n发送消息"];
+    user -> report [label="1:N\n举报内容"];
+    
+    // 内容相关连接
+    tweet -> comment [label="1:N\n包含评论"];
+    tweet -> media [label="1:N\n包含媒体"];
+    tweet -> tweet_tag [label="M:N\n关联标签"];
+    tweet_tag -> tag [label="N:1\n标签分类"];
+    
+    // 社交互动连接
+    user -> follow [label="M:N\n关注关系"];
+    follow -> user [label="M:N\n被关注"];
+    like -> tweet [label="N:1\n点赞推文"];
+    user -> message [label="1:N\n接收消息"];
+    
+    // 层级关系
+    comment -> comment [label="1:0..1\n父评论"];
+    tweet -> tweet [label="1:0..1\n父推文"];
+    
+    // 举报关系
+    tweet -> report [label="1:N\n被举报"];
+    comment -> report [label="1:N\n被举报"];
+    
+    // 消息关联
+    message -> tweet [label="N:1\n关联推文"];
+    message -> comment [label="N:1\n关联评论"];
+    
+    // 属性关联 - 使用虚线减少视觉干扰
+    user -> user_attrs [style=dashed, color=gray];
+    tweet -> tweet_attrs [style=dashed, color=gray];
+    comment -> comment_attrs [style=dashed, color=gray];
+    media -> media_attrs [style=dashed, color=gray];
+    tag -> tag_attrs [style=dashed, color=gray];
+    follow -> follow_attrs [style=dashed, color=gray];
+    like -> like_attrs [style=dashed, color=gray];
+    message -> message_attrs [style=dashed, color=gray];
+    report -> report_attrs [style=dashed, color=gray];
+    
+    // 样式设置
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+}

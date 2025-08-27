@@ -1,0 +1,144 @@
+digraph PDM {
+    // 图形设置
+    rankdir=TB;
+    node [shape=record, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+    
+    // 物理数据模型
+    subgraph cluster_pdm {
+        label="物理数据模型 - 校园论坛平台 (OceanBase)";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 用户相关表
+        subgraph cluster_user_tables {
+            label="用户管理表";
+            style=filled;
+            fillcolor=lightgreen;
+            
+            users [label="{Users|+ user_id: BIGINT (PK, AI)\l+ username: VARCHAR(50) UNIQUE NOT NULL\l+ email: VARCHAR(100) UNIQUE NOT NULL\l+ password: VARCHAR(255) NOT NULL\l+ bg_url: TEXT\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+            
+            avatar [label="{Avatar|+ user_id: BIGINT (PK, FK)\l+ avatar_url: TEXT\l}"];
+            
+            admins [label="{Admins|+ user_id: BIGINT (PK, FK)\l}"];
+            
+            follows [label="{Follows|+ follower_id: BIGINT (PK, FK)\l+ following_id: BIGINT (PK, FK)\l}"];
+        }
+        
+        // 内容相关表
+        subgraph cluster_content_tables {
+            label="内容管理表";
+            style=filled;
+            fillcolor=lightpink;
+            
+            tweets [label="{Tweets|+ tweet_id: BIGINT (PK, AI)\l+ user_id: BIGINT NOT NULL (FK)\l+ parent_id: BIGINT (FK)\l+ content: TEXT\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+            
+            comments [label="{Comments|+ comment_id: BIGINT (PK, AI)\l+ tweet_id: BIGINT NOT NULL (FK)\l+ user_id: BIGINT NOT NULL (FK)\l+ parent_id: BIGINT (FK)\l+ content: TEXT NOT NULL\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+            
+            media [label="{Media|+ media_id: BIGINT (PK, AI)\l+ tweet_id: BIGINT (FK)\l+ media_url: TEXT NOT NULL\l+ media_type: VARCHAR(10) NOT NULL\l}"];
+            
+            tags [label="{TAGS|+ tag_id: BIGINT (PK, AI)\l+ name: VARCHAR(50) UNIQUE NOT NULL\l}"];
+            
+            tweet_tags [label="{TweetTags|+ tweet_id: BIGINT (PK, FK)\l+ tag_id: BIGINT (PK, FK)\l}"];
+        }
+        
+        // 互动相关表
+        subgraph cluster_interaction_tables {
+            label="社交互动表";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            likes [label="{Likes|+ like_id: BIGINT (PK, AI)\l+ user_id: BIGINT NOT NULL (FK)\l+ tweet_id: BIGINT NOT NULL (FK)\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+            
+            messages [label="{Messages|+ message_id: BIGINT (PK, AI)\l+ sender_id: BIGINT NOT NULL (FK)\l+ receiver_id: BIGINT NOT NULL (FK)\l+ tweet_id: BIGINT (FK)\l+ comment_id: BIGINT (FK)\l+ content: TEXT NOT NULL\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+            
+            reports [label="{Reports|+ report_id: BIGINT (PK, AI)\l+ tweet_id: BIGINT (FK)\l+ comment_id: BIGINT (FK)\l+ report_content: TEXT\l+ created_at: DATETIME DEFAULT CURRENT_TIMESTAMP\l}"];
+        }
+    }
+    
+    // 索引定义
+    subgraph cluster_indexes {
+        label="索引设计";
+        style=filled;
+        fillcolor=lightcyan;
+        
+        // 主键索引
+        pk_indexes [label="主键索引:\n• Users.user_id (PK)\n• Tweets.tweet_id (PK)\n• Comments.comment_id (PK)\n• Media.media_id (PK)\n• Tags.tag_id (PK)\n• Likes.like_id (PK)\n• Messages.message_id (PK)\n• Reports.report_id (PK)", shape=note, fillcolor=lightyellow];
+        
+        // 唯一索引
+        unique_indexes [label="唯一索引:\n• Users.username (UNIQUE)\n• Users.email (UNIQUE)\n• Tags.name (UNIQUE)\n• Likes(user_id, tweet_id) (UNIQUE)\n• Follows(follower_id, following_id) (UNIQUE)\n• TweetTags(tweet_id, tag_id) (UNIQUE)", shape=note, fillcolor=lightyellow];
+        
+        // 外键索引
+        fk_indexes [label="外键索引:\n• Tweets.user_id → Users.user_id\n• Tweets.parent_id → Tweets.tweet_id\n• Comments.tweet_id → Tweets.tweet_id\n• Comments.user_id → Users.user_id\n• Comments.parent_id → Comments.comment_id\n• Media.tweet_id → Tweets.tweet_id\n• Likes.user_id → Users.user_id\n• Likes.tweet_id → Tweets.tweet_id\n• Messages.sender_id → Users.user_id\n• Messages.receiver_id → Users.user_id\n• Messages.tweet_id → Tweets.tweet_id\n• Messages.comment_id → Comments.comment_id\n• Reports.tweet_id → Tweets.tweet_id\n• Reports.comment_id → Comments.comment_id\n• Avatar.user_id → Users.user_id\n• Admins.user_id → Users.user_id\n• Follows.follower_id → Users.user_id\n• Follows.following_id → Users.user_id\n• TweetTags.tweet_id → Tweets.tweet_id\n• TweetTags.tag_id → Tags.tag_id", shape=note, fillcolor=lightyellow];
+        
+        // 性能索引
+        performance_indexes [label="性能优化索引:\n• Tweets.created_at (时间排序)\n• Tweets.user_id (用户推文查询)\n• Comments.created_at (评论时间排序)\n• Comments.tweet_id (推文评论查询)\n• Messages.created_at (消息时间排序)\n• Messages.sender_id (发送消息查询)\n• Messages.receiver_id (接收消息查询)", shape=note, fillcolor=lightyellow];
+    }
+    
+    // 约束定义
+    subgraph cluster_constraints {
+        label="约束设计";
+        style=filled;
+        fillcolor=lightgoldenrod;
+        
+        // 非空约束
+        not_null_constraints [label="非空约束:\n• Users.username, email, password\n• Tweets.user_id, content\n• Comments.tweet_id, user_id, content\n• Media.media_url, media_type\n• Tags.name\n• Likes.user_id, tweet_id\n• Messages.sender_id, receiver_id, content\n• Reports.report_content", shape=note, fillcolor=lightyellow];
+        
+        // 默认值约束
+        default_constraints [label="默认值约束:\n• created_at: CURRENT_TIMESTAMP\n• 所有时间字段自动设置", shape=note, fillcolor=lightyellow];
+        
+        // 检查约束
+        check_constraints [label="检查约束:\n• Media.media_type IN ('image', 'video', 'all')\n• 时间字段格式验证", shape=note, fillcolor=lightyellow];
+    }
+    
+    // 表关系连接
+    // 用户相关关系
+    users -> avatar [label="1:1"];
+    users -> admins [label="1:0..1"];
+    users -> follows [label="1:N (follower)"];
+    users -> follows [label="1:N (following)"];
+    users -> tweets [label="1:N"];
+    users -> comments [label="1:N"];
+    users -> likes [label="1:N"];
+    users -> messages [label="1:N (sender)"];
+    users -> messages [label="1:N (receiver)"];
+    
+    // 推文相关关系
+    tweets -> comments [label="1:N"];
+    tweets -> media [label="1:N"];
+    tweets -> likes [label="1:N"];
+    tweets -> reports [label="1:N"];
+    tweets -> tweet_tags [label="1:N"];
+    tweets -> tweets [label="1:0..1 (parent)"];
+    
+    // 评论相关关系
+    comments -> comments [label="1:0..1 (parent)"];
+    comments -> reports [label="1:N"];
+    
+    // 标签相关关系
+    tags -> tweet_tags [label="1:N"];
+    
+    // 索引关联
+    users -> pk_indexes [style=dashed, color=gray];
+    tweets -> pk_indexes [style=dashed, color=gray];
+    comments -> pk_indexes [style=dashed, color=gray];
+    media -> pk_indexes [style=dashed, color=gray];
+    tags -> pk_indexes [style=dashed, color=gray];
+    likes -> pk_indexes [style=dashed, color=gray];
+    messages -> pk_indexes [style=dashed, color=gray];
+    reports -> pk_indexes [style=dashed, color=gray];
+    
+    // 约束关联
+    users -> not_null_constraints [style=dashed, color=gray];
+    tweets -> not_null_constraints [style=dashed, color=gray];
+    comments -> not_null_constraints [style=dashed, color=gray];
+    media -> not_null_constraints [style=dashed, color=gray];
+    tags -> not_null_constraints [style=dashed, color=gray];
+    likes -> not_null_constraints [style=dashed, color=gray];
+    messages -> not_null_constraints [style=dashed, color=gray];
+    reports -> not_null_constraints [style=dashed, color=gray];
+    
+    // 样式设置
+    node [shape=record, style=filled, fontname="Arial", fontsize=9];
+    edge [fontname="Arial", fontsize=8];
+}

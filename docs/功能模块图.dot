@@ -1,0 +1,173 @@
+digraph SchoolForumModules {
+    // 图形设置
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue, fontname="Arial", fontsize=12];
+    edge [fontname="Arial", fontsize=10];
+    
+    // 主系统
+    subgraph cluster_main {
+        label="校园论坛平台系统";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        // 核心功能模块
+        subgraph cluster_core {
+            label="核心功能模块";
+            style=filled;
+            fillcolor=lightcyan;
+            
+            // 用户管理
+            subgraph cluster_user_management {
+                label="用户管理模块";
+                style=filled;
+                fillcolor=lightgreen;
+                
+                user_auth [label="用户认证\n(登录/注册/登出)"];
+                user_profile [label="用户资料管理\n(头像/背景/信息)"];
+                user_settings [label="账户设置\n(密码/邮箱/用户名)"];
+                user_delete [label="账户删除"];
+            }
+            
+            // 内容管理
+            subgraph cluster_content_management {
+                label="内容管理模块";
+                style=filled;
+                fillcolor=lightpink;
+                
+                tweet_management [label="推文管理\n(发布/编辑/删除)"];
+                comment_system [label="评论系统\n(评论/回复/删除)"];
+                media_upload [label="媒体上传\n(图片/视频)"];
+                tag_system [label="标签系统"];
+            }
+            
+            // 社交功能
+            subgraph cluster_social_features {
+                label="社交功能模块";
+                style=filled;
+                fillcolor=lightcoral;
+                
+                follow_system [label="关注系统\n(关注/取消关注)"];
+                follower_list [label="粉丝列表"];
+                following_list [label="关注列表"];
+                like_system [label="点赞系统"];
+                share_system [label="分享系统"];
+            }
+            
+            // 搜索功能
+            subgraph cluster_search {
+                label="搜索功能模块";
+                style=filled;
+                fillcolor=lightsteelblue;
+                
+                tweet_search [label="推文搜索"];
+                user_search [label="用户搜索"];
+                tag_search [label="标签搜索"];
+            }
+            
+            // 消息系统
+            subgraph cluster_messaging {
+                label="消息系统模块";
+                style=filled;
+                fillcolor=lightgoldenrod;
+                
+                private_message [label="私信系统\n(发送/接收/删除)"];
+                message_management [label="消息管理"];
+            }
+        }
+        
+        // 管理功能模块
+        subgraph cluster_admin {
+            label="管理功能模块";
+            style=filled;
+            fillcolor=lightcoral;
+            
+            admin_auth [label="管理员认证"];
+            user_management [label="用户管理"];
+            content_moderation [label="内容审核"];
+            report_management [label="举报管理"];
+            system_monitoring [label="系统监控"];
+        }
+        
+        // 文件服务模块
+        subgraph cluster_file_service {
+            label="文件服务模块";
+            style=filled;
+            fillcolor=lightseagreen;
+            
+            avatar_files [label="头像文件服务"];
+            bg_files [label="背景文件服务"];
+            media_files [label="媒体文件服务"];
+            file_upload [label="文件上传服务"];
+        }
+        
+        // 安全与审核模块
+        subgraph cluster_security {
+            label="安全与审核模块";
+            style=filled;
+            fillcolor=lightpink;
+            
+            content_moderation_util [label="内容审核工具"];
+            auth_util [label="认证工具"];
+            admin_auth_util [label="管理员认证工具"];
+            report_system [label="举报系统"];
+        }
+    }
+    
+    // 前端界面模块
+    subgraph cluster_frontend {
+        label="前端界面模块";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        pages [label="页面组件\n(首页/详情/编辑/搜索等)"];
+        components [label="UI组件\n(推文卡片/评论区域/导航栏等)"];
+        layouts [label="布局组件"];
+        composables [label="组合式函数\n(认证/用户状态等)"];
+    }
+    
+    // 数据库模块
+    subgraph cluster_database {
+        label="数据库模块";
+        style=filled;
+        fillcolor=lightgray;
+        
+        database_util [label="数据库工具"];
+        data_models [label="数据模型"];
+        data_functions [label="数据库函数"];
+    }
+    
+    // 连接关系
+    // 核心模块之间的连接
+    user_management -> content_management;
+    content_management -> social_features;
+    social_features -> messaging;
+    content_management -> search;
+    
+    // 前端与后端API的连接
+    frontend -> core;
+    frontend -> admin;
+    frontend -> file_service;
+    
+    // 管理模块的连接
+    admin -> user_management;
+    admin -> content_moderation;
+    admin -> report_management;
+    
+    // 文件服务的连接
+    file_service -> user_management;
+    file_service -> content_management;
+    
+    // 安全模块的连接
+    security -> user_management;
+    security -> content_management;
+    security -> admin;
+    
+    // 数据库连接
+    database -> core;
+    database -> admin;
+    database -> file_service;
+    
+    // 样式设置
+    node [shape=box, style=filled, fillcolor=lightblue, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+}

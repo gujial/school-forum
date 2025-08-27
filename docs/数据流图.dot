@@ -1,0 +1,144 @@
+digraph DataFlow {
+    // 图形设置
+    rankdir=LR;
+    node [shape=box, style=filled, fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9, color=blue];
+    
+    // 外部实体
+    user [label="用户", shape=ellipse, fillcolor=lightgreen];
+    admin [label="管理员", shape=ellipse, fillcolor=lightcoral];
+    
+    // 前端界面
+    frontend [label="前端界面\n(Vue.js + Nuxt)", shape=box, fillcolor=lightblue];
+    
+    // API网关层
+    api_gateway [label="API网关\n(H3 + Nuxt)", shape=box, fillcolor=lightyellow];
+    
+    // 认证中间件
+    auth_middleware [label="认证中间件\n(JWT验证)", shape=box, fillcolor=lightpink];
+    
+    // 业务逻辑层
+    subgraph cluster_business_logic {
+        label="业务逻辑层";
+        style=filled;
+        fillcolor=lightcyan;
+        
+        // 用户相关API
+        user_api [label="用户API\n(登录/注册/资料)"];
+        follow_api [label="关注API\n(关注/取消关注)"];
+        message_api [label="消息API\n(私信发送/接收)"];
+        
+        // 内容相关API
+        tweet_api [label="推文API\n(发布/编辑/删除)"];
+        comment_api [label="评论API\n(评论/回复)"];
+        media_api [label="媒体API\n(图片/视频上传)"];
+        
+        // 管理相关API
+        admin_api [label="管理API\n(用户管理/内容审核)"];
+        report_api [label="举报API\n(内容举报)"];
+        
+        // 搜索相关API
+        search_api [label="搜索API\n(推文/用户/标签)"];
+    }
+    
+    // 内容审核层
+    content_moderation [label="内容审核\n(LLM API调用)", shape=box, fillcolor=lightgoldenrod];
+    
+    // 数据库层
+    database [label="数据库\n(OceanBase)", shape=cylinder, fillcolor=lightgray];
+    
+    // 文件存储层
+    file_storage [label="文件存储\n(本地文件系统)", shape=box, fillcolor=lightseagreen];
+    
+    // 外部服务
+    llm_service [label="LLM服务\n(DeepSeek API 或 ollama API)", shape=box, fillcolor=lightsteelblue];
+    
+    // 数据流向定义
+    
+    // 用户操作流程
+    user -> frontend [label="1. 用户操作"];
+    frontend -> api_gateway [label="2. HTTP请求"];
+    api_gateway -> auth_middleware [label="3. 身份验证"];
+    
+    // 认证流程
+    auth_middleware -> user_api [label="4a. 用户认证"];
+    user_api -> database [label="5a. 查询用户信息"];
+    database -> user_api [label="6a. 返回用户数据"];
+    user_api -> api_gateway [label="7a. 返回认证结果"];
+    
+    // 推文发布流程
+    auth_middleware -> tweet_api [label="4b. 推文操作"];
+    tweet_api -> content_moderation [label="5b. 内容审核"];
+    content_moderation -> llm_service [label="6b. LLM审核"];
+    llm_service -> content_moderation [label="7b. 审核结果"];
+    content_moderation -> tweet_api [label="8b. 审核通过"];
+    tweet_api -> database [label="9b. 保存推文"];
+    database -> tweet_api [label="10b. 返回结果"];
+    
+    // 媒体上传流程
+    auth_middleware -> media_api [label="4c. 媒体上传"];
+    media_api -> file_storage [label="5c. 保存文件"];
+    file_storage -> media_api [label="6c. 返回文件路径"];
+    media_api -> database [label="7c. 保存媒体记录"];
+    database -> media_api [label="8c. 返回结果"];
+    
+    // 评论流程
+    auth_middleware -> comment_api [label="4d. 评论操作"];
+    comment_api -> content_moderation [label="5d. 内容审核"];
+    content_moderation -> comment_api [label="6d. 审核通过"];
+    comment_api -> database [label="7d. 保存评论"];
+    database -> comment_api [label="8d. 返回结果"];
+    
+    // 关注流程
+    auth_middleware -> follow_api [label="4e. 关注操作"];
+    follow_api -> database [label="5e. 更新关注关系"];
+    database -> follow_api [label="6e. 返回结果"];
+    
+    // 消息流程
+    auth_middleware -> message_api [label="4f. 消息操作"];
+    message_api -> database [label="5f. 保存消息"];
+    database -> message_api [label="6f. 返回结果"];
+    
+    // 搜索流程
+    frontend -> search_api [label="4g. 搜索请求"];
+    search_api -> database [label="5g. 查询数据"];
+    database -> search_api [label="6g. 返回搜索结果"];
+    
+    // 管理流程
+    admin -> frontend [label="1. 管理操作"];
+    frontend -> admin_api [label="2. 管理请求"];
+    admin_api -> auth_middleware [label="3. 管理员验证"];
+    auth_middleware -> admin_api [label="4. 验证通过"];
+    admin_api -> database [label="5. 执行管理操作"];
+    database -> admin_api [label="6. 返回操作结果"];
+    
+    // 举报流程
+    frontend -> report_api [label="4h. 举报请求"];
+    report_api -> database [label="5h. 保存举报"];
+    database -> report_api [label="6h. 返回结果"];
+    
+    // 数据查询流程
+    api_gateway -> database [label="4i. 数据查询"];
+    database -> api_gateway [label="5i. 返回数据"];
+    api_gateway -> frontend [label="6i. 响应结果"];
+    
+    // 文件访问流程
+    frontend -> file_storage [label="4j. 文件访问"];
+    file_storage -> frontend [label="5j. 返回文件"];
+    
+    // 样式设置
+    node [shape=box, style=filled, fontname="Arial", fontsize=9];
+    edge [fontname="Arial", fontsize=8, color=blue];
+    
+    // 添加图例
+    subgraph cluster_legend {
+        label="图例";
+        style=filled;
+        fillcolor=lightyellow;
+        
+        legend1 [label="外部实体", shape=ellipse, fillcolor=lightgreen];
+        legend2 [label="系统组件", shape=box, fillcolor=lightblue];
+        legend3 [label="数据存储", shape=cylinder, fillcolor=lightgray];
+        legend4 [label="数据流向", shape=none, label="箭头表示数据流向"];
+    }
+}

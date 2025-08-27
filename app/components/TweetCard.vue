@@ -44,7 +44,18 @@
             </v-carousel-item>
         </v-carousel>
         <v-carousel v-if="video != null" height="300px" cycle :show-arrows="false" hide-delimiters>
-            <v-carousel-item :src="video" cover />
+            <v-carousel-item>
+                <v-img :src="video" cover>
+                    <template #placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                            <v-progress-circular
+                                color="grey-lighten-4"
+                                indeterminate
+                            ></v-progress-circular>
+                        </div>
+                    </template>
+                </v-img>
+            </v-carousel-item>
         </v-carousel>
         <v-card-text v-if="tweet.tags.length > 0" style="flex: none; padding: 0">
             <div class="tag-list-wrapper">

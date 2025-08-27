@@ -62,6 +62,14 @@
                         <span v-else>-</span>
                     </template>
 
+                    <template #item.content="{ item }">
+                        <span
+                            v-if="item.content === '/likeMsg'"
+                            >{{ `${usernames[item.sender_id]}${t('likeYourTweet')}` }}</span
+                        >
+                        <span v-else>{{ item.content }}</span>
+                    </template>
+
                     <template #item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
                             <v-icon

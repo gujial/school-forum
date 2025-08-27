@@ -142,6 +142,7 @@ export default defineI18nConfig(() => ({
             fileCannotOver200M: 'File size can not over 200MB.',
             image: 'Image',
             pleaseEnterKeyword: 'Please Enter Keyword.',
+            likeYourTweet: 'liked this tweet.',
             $vuetify: {
                 input: {
                     prependAction: 'Add image',
@@ -326,6 +327,7 @@ export default defineI18nConfig(() => ({
             fileTooBig: '文件过大',
             fileCannotOver200M: '文件大小不能超过 200MB',
             pleaseEnterKeyword: '请输入关键词',
+            likeYourTweet: '为这个帖子点赞',
             $vuetify: {
                 input: {
                     prependAction: '添加图片',

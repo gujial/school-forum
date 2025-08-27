@@ -323,6 +323,18 @@
             await $fetch(`/api/tweets/like/${tweet.value.tweet_id}`);
             updateLike();
             await fetchCounts();
+
+            await $fetch('/api/message/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tweet_id: tweet.value.tweet_id,
+                    receiver_id: tweet.value.user_id,
+                    content: '/likeMsg',
+                }),
+            });
         } catch (err: unknown) {
             const statusCode = (err as { statusCode?: number })?.statusCode;
             if (statusCode === 401) {

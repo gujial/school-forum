@@ -31,7 +31,7 @@
             hide-delimiters
         >
             <v-carousel-item v-for="image in images" :key="image.media_id">
-                <v-img :src="image.media_url">
+                <v-img :src="image.media_url" cover>
                     <template #placeholder>
                         <div class="d-flex align-center justify-center fill-height">
                             <v-progress-circular

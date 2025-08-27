@@ -78,7 +78,7 @@ docker compose up -d
 
 ## 技术栈
 
-- [nuxt3](https://nuxt.com/)
+- [nuxt4](https://nuxt.com/)
 - [nitro](https://nitro.unjs.io/)
 - [vue](https://vuejs.org/)
 - [vuetify](https://vuetifyjs.com/zh-Hans/)

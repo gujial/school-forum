@@ -1,9 +1,18 @@
 <template>
     <v-card
         :image="bgSrc"
+        :loading="loading"
         class="d-flex justify-space-between align-center card avatar-bg-mask"
         @click="navigateTo(localePath('/profile/' + props.userId))"
     >
+        <template #loader="{ isActive }">
+            <v-progress-linear
+                :active="isActive"
+                color="primary"
+                height="4"
+                indeterminate
+            ></v-progress-linear>
+        </template>
         <div class="bg-mask" />
         <v-row class="align-center" no-gutters>
             <v-col cols="6" sm="auto" class="d-flex">
@@ -58,6 +67,7 @@
     const bgSrc = ref<string>('/card-image.jpg');
     const user = ref<User | null>(null);
     const { t } = useI18n();
+    const loading = ref(false);
 
     const localePath = useLocalePath();
 

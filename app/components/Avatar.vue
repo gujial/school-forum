@@ -1,5 +1,17 @@
 <template>
-    <v-card :image="bgSrc" class="d-flex justify-space-between align-center card avatar-bg-mask">
+    <v-card
+        :loading="loading"
+        :image="bgSrc"
+        class="d-flex justify-space-between align-center card avatar-bg-mask"
+    >
+        <template #loader="{ isActive }">
+            <v-progress-linear
+                :active="isActive"
+                color="primary"
+                height="4"
+                indeterminate
+            ></v-progress-linear>
+        </template>
         <div class="bg-mask" />
         <v-row class="align-center" no-gutters>
             <v-col cols="12" sm="auto" class="d-flex">
@@ -25,6 +37,7 @@
     const props = defineProps<{ user: { user_id: number } }>();
     const src = ref('/icon.png');
     const bgSrc = ref('/card-image.jpg');
+    const loading = ref(false);
 
     const updateAvatar = async () => {
         try {

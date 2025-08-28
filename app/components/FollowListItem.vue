@@ -8,7 +8,16 @@
         <v-row class="align-center" no-gutters>
             <v-col cols="6" sm="auto" class="d-flex">
                 <v-avatar size="120" class="mx-2">
-                    <v-img cover :src="src" />
+                    <v-img cover :src="src">
+                        <template #placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular
+                                    color="grey-lighten-4"
+                                    indeterminate
+                                ></v-progress-circular>
+                            </div>
+                        </template>
+                    </v-img>
                 </v-avatar>
             </v-col>
             <v-col cols="6" sm="auto" class="d-flex justify-space-between">

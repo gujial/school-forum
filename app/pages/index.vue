@@ -3,7 +3,16 @@
         <v-card :image="bgSrc" class="d-flex align-center head-card avatar-bg-mask" color="black">
             <div class="bg-mask" />
             <v-avatar v-if="src.length > 0" size="200">
-                <v-img cover :src="src" />
+                <v-img cover :src="src">
+                    <template #placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                            <v-progress-circular
+                                color="grey-lighten-4"
+                                indeterminate
+                            ></v-progress-circular>
+                        </div>
+                    </template>
+                </v-img>
             </v-avatar>
             <v-container>
                 <v-card-title>{{ t('welcome') + ' ' + username }}</v-card-title>

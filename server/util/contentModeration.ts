@@ -40,7 +40,7 @@ export async function moderateContent(content: string): Promise<AuditResult> {
         // 用正则匹配第一个花括号到最后一个花括号之间的内容
         const match = raw.match(/\{[\s\S]*\}/);
         const jsonStr = match ? match[0] : '{}';
-        
+
         return JSON.parse(jsonStr) as AuditResult;
     } catch (e) {
         console.error('解析审核结果失败:', e);

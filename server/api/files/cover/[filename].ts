@@ -41,6 +41,14 @@ export default defineEventHandler(async (event) => {
         const ext = extname(decodedFilename).toLowerCase().replace('.', '');
         const cachePath = getCachePath(decodedFilename);
 
+        if (ext === 'svg') {
+            const buffer = readFileSync(filePath);
+            event.node.res.setHeader('Content-Type', 'image/svg+xml');
+            event.node.res.setHeader('Content-Length', buffer.length.toString());
+            event.node.res.setHeader('Cache-Control', 'public, max-age=31536000');
+            return buffer;
+        }
+
         // 缓存命中
         if (existsSync(cachePath)) {
             const buffer = readFileSync(cachePath);

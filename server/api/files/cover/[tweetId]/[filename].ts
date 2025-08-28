@@ -43,6 +43,14 @@ export default defineEventHandler(async (event) => {
         const ext = extname(decodedFilename).toLowerCase().replace('.', '');
         const cachePath = getCachePath(tweetId, decodedFilename);
 
+        if (ext === 'svg') {
+            const buffer = readFileSync(filePath);
+            event.node.res.setHeader('Content-Type', 'image/svg+xml');
+            event.node.res.setHeader('Content-Length', buffer.length.toString());
+            event.node.res.setHeader('Cache-Control', 'public, max-age=31536000');
+            return buffer;
+        }
+
         // 直接返回缓存
         if (existsSync(cachePath)) {
             const buffer = readFileSync(cachePath);

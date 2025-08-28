@@ -36,7 +36,12 @@ export async function moderateContent(content: string): Promise<AuditResult> {
 
     try {
         const raw = response.choices[0].message?.content?.trim() || '{}';
-        return JSON.parse(raw) as AuditResult;
+
+        // 用正则匹配第一个花括号到最后一个花括号之间的内容
+        const match = raw.match(/\{[\s\S]*\}/);
+        const jsonStr = match ? match[0] : '{}';
+        
+        return JSON.parse(jsonStr) as AuditResult;
     } catch (e) {
         console.error('解析审核结果失败:', e);
         return { needs_report: false, reason: '审核失败，默认通过' };

@@ -69,6 +69,8 @@ export default defineEventHandler(async (event) => {
             contentType = 'video/quicktime';
         } else if (ext === 'webm') {
             contentType = 'video/webm';
+        } else if (ext === 'svg') {
+            contentType = 'image/svg+xml';
         }
 
         // 设置响应头

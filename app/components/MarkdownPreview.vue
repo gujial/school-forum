@@ -20,7 +20,10 @@
     const render = () => {
         if (!container.value) return;
 
-        Vditor.preview(container.value, props.md, {
+        const lines = props.md.split(/\r?\n/).slice(0, 8);
+        const previewMd = lines.join('\n');
+
+        Vditor.preview(container.value, previewMd, {
             mode: theme.global.name.value === 'dark' ? 'dark' : 'light',
             hljs: { style: theme.global.name.value === 'dark' ? 'github-dark' : 'github' },
             theme: {

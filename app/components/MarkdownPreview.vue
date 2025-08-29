@@ -17,11 +17,51 @@
     const container = ref<HTMLDivElement | null>(null);
     const theme = useTheme();
 
+    const getPreviewMarkdown = (md: string, maxBlocks = 4) => {
+        const blocks: string[] = [];
+        const lines = md.split(/\r?\n/);
+        let buffer: string[] = [];
+        let inCodeBlock = false;
+
+        for (const line of lines) {
+            if (line.startsWith('```')) {
+                inCodeBlock = !inCodeBlock;
+                buffer.push(line);
+                if (!inCodeBlock) {
+                    blocks.push(buffer.join('\n'));
+                    buffer = [];
+                }
+                continue;
+            }
+
+            if (inCodeBlock) {
+                buffer.push(line);
+                continue;
+            }
+
+            // 普通行或 HTML
+            buffer.push(line);
+            // 如果遇到空行或 HTML 结束标签
+            if (line.trim() === '' || line.trim().endsWith('>')) {
+                blocks.push(buffer.join('\n'));
+                buffer = [];
+            }
+
+            if (blocks.length >= maxBlocks) break;
+        }
+
+        // 收尾
+        if (buffer.length && blocks.length < maxBlocks) {
+            blocks.push(buffer.join('\n'));
+        }
+
+        return blocks.slice(0, maxBlocks).join('\n');
+    };
+
     const render = () => {
         if (!container.value) return;
 
-        const lines = props.md.split(/\r?\n/).slice(0, 8);
-        const previewMd = lines.join('\n');
+        const previewMd = getPreviewMarkdown(props.md);
 
         Vditor.preview(container.value, previewMd, {
             mode: theme.global.name.value === 'dark' ? 'dark' : 'light',

@@ -1,12 +1,11 @@
 <template>
-    <v-card :image="bgSrc" :loading="loading" class="card avatar-bg-mask">
-        <template #loader="{ isActive }">
-            <v-progress-linear
-                :active="isActive"
-                color="primary"
-                height="4"
-                indeterminate
-            ></v-progress-linear>
+    <v-card class="card avatar-bg-mask">
+        <template #image="">
+            <v-img cover :src="bgSrc">
+                <template #placeholder>
+                    <v-progress-linear color="primary" height="4" indeterminate></v-progress-linear>
+                </template>
+            </v-img>
         </template>
         <div class="bg-mask" />
         <v-row class="align-center" no-gutters>
@@ -116,7 +115,6 @@
     const dialog = ref<boolean>(false);
     const file = ref<File | null>(null);
     const bgFile = ref<File | null>(null);
-    const loading = ref(false);
 
     // ==== 方法 ====
     const submit = async (): Promise<void> => {

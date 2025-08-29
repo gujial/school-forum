@@ -2,22 +2,26 @@
     <v-card
         v-if="user != null"
         class="mb-3"
-        :prepend-avatar="avatar_url"
         :title="user.username"
         :subtitle="userTime"
-        :loading="loading"
         style="display: flex; flex-direction: column"
         :height="props.height || '500px'"
         :max-height="props.maxHeight || '500px'"
         @click="goToDetail"
     >
-        <template #loader="{ isActive }">
-            <v-progress-linear
-                :active="isActive"
-                color="primary"
-                height="4"
-                indeterminate
-            ></v-progress-linear>
+        <template #prepend="">
+            <v-avatar>
+                <v-img cover :src="avatar_url">
+                <template #placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
+                        <v-progress-circular
+                            color="grey-lighten-4"
+                            indeterminate
+                        ></v-progress-circular>
+                    </div>
+                </template>
+            </v-img>
+            </v-avatar>
         </template>
         <v-divider />
         <v-alert v-if="error != null" type="error">
@@ -137,7 +141,6 @@
     const userTime = ref('');
     const { t } = useI18n();
     const route = useRoute();
-    const loading = ref(false);
 
     const goToDetail = () => {
         router.push(localePath(`/detail/${tweet.value.tweet_id}?from=${route.path}`));

@@ -1,18 +1,16 @@
 <template>
     <v-container>
-        <v-card
-            :loading="loading"
-            :image="bgSrc"
-            class="d-flex align-center head-card avatar-bg-mask"
-            color="black"
-        >
-            <template #loader="{ isActive }">
-                <v-progress-linear
-                    :active="isActive"
-                    color="primary"
-                    height="4"
-                    indeterminate
-                ></v-progress-linear>
+        <v-card class="d-flex align-center head-card avatar-bg-mask" color="black">
+            <template #image="">
+                <v-img cover :src="bgSrc">
+                    <template #placeholder>
+                        <v-progress-linear
+                            color="primary"
+                            height="4"
+                            indeterminate
+                        ></v-progress-linear>
+                    </template>
+                </v-img>
             </template>
             <div class="bg-mask" />
             <v-avatar v-if="src.length > 0" size="200">
@@ -129,7 +127,6 @@
     const bgSrc = ref<string>('/card-image.jpg');
     const tab = ref<number>(0);
     const { t } = useI18n();
-    const loading = ref(false);
 
     const updateTweets = async () => {
         if (tab.value === 0) {

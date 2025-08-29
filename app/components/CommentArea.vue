@@ -25,7 +25,16 @@
         >
             <template #prepend>
                 <v-avatar size="40" @click="navigateTo(`/profile/${users[index]?.user_id}`)">
-                    <v-img v-if="avatars[index]" :src="avatars[index]" />
+                    <v-img v-if="avatars[index]" :src="avatars[index]">
+                        <template #placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular
+                                    color="grey-lighten-4"
+                                    indeterminate
+                                ></v-progress-circular>
+                            </div>
+                        </template>
+                    </v-img>
                 </v-avatar>
             </template>
             <v-card-text>

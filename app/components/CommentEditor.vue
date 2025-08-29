@@ -1,10 +1,19 @@
 <template>
-    <v-card
-        v-if="user != null && user.user_id != -1"
-        :prepend-avatar="avatar_url"
-        :title="user.username"
-        :subtitle="user.email"
-    >
+    <v-card v-if="user != null && user.user_id != -1" :title="user.username" :subtitle="user.email">
+        <template #prepend="">
+            <v-avatar>
+            <v-img cover :src="avatar_url">
+                <template #placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
+                        <v-progress-circular
+                            color="grey-lighten-4"
+                            indeterminate
+                        ></v-progress-circular>
+                    </div>
+                </template>
+            </v-img>
+            </v-avatar>
+        </template>
         <v-alert v-if="error != null" type="error">
             {{ error }}
         </v-alert>

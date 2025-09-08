@@ -374,4 +374,6 @@ FLUSH PRIVILEGES;
 INSERT INTO Users (user_id, username, email, password) VALUES
 (1, 'admin', 'admin', '$2b$10$Hrl6HxggObHjW2y4aeYJf.AbkqZAfoY34dGjpndRfj8QL5.FKJWhS');
 
+INSERT INTO Avatar (avatar_url, user_id) VALUES ('/icon.png', 1);
+
 INSERT INTO Admins (user_id) VALUES (1);

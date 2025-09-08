@@ -67,4 +67,4 @@ else
     exit 1
 fi
 
-echo "✅ 初始化脚本执行完毕"
+echo "初始化脚本执行完毕"

@@ -29,7 +29,7 @@
     import Avatar from '../../components/Avatar.vue';
     import UserTweetList from '../../components/UserTweetList.vue';
     import moment from 'moment-timezone';
-    import type { User } from '~/types/models';
+    import type { User } from '../../../types/models';
     import { navigateTo } from '#app';
 
     const route = useRoute();

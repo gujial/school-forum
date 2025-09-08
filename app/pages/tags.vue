@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
     import TweetCard from '../components/TweetCard.vue';
-    import type { Tweet } from '~/types/models';
+    import type { Tweet } from '../../types/models';
 
     const tagInput = ref<string>('');
     const order = ref<string>('desc');

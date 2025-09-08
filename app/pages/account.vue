@@ -165,7 +165,7 @@
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue';
     import Avatar from '../components/AvatarEditor.vue';
-    import type { Tweet, ApiResponse } from '~/types/models';
+    import type { Tweet, ApiResponse } from '../../types/models';
     import { navigateTo } from '#app';
 
     // ==== 状态 ====

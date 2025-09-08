@@ -3,7 +3,7 @@
 import { defineEventHandler, readBody, createError } from 'h3';
 import bcrypt from 'bcryptjs';
 import { useDatabase } from '../../util/database';
-import type { User } from '~/types/models';
+import type { User } from '../../../types/models';
 
 interface RegisterBody {
     username: string;

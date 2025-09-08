@@ -17,7 +17,7 @@ services:
       - "2881:2881"   # SQL port
       - "2883:2883"   # RPC port
     volumes:
-      - ob_data:/root/data
+      - ob_data:/root/ob
     networks:
       - school-forum-network
 
@@ -34,7 +34,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-forum_pass}
       - DB_NAME=${DB_NAME:-school_forum}
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key}
-      - LLM_API_URL=${LLM_API_URL:-https://api.deepseek.com}
+      - LLM_API_URL=${LLM_API_URL:-http://host.docker.internal:11434/v1}
       - LLM_MODEL=${LLM_MODEL:-deepseek-chat}
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     ports:

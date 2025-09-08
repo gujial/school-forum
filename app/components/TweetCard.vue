@@ -216,9 +216,9 @@
             );
             if (!avatar_data.data) {
                 avatar_url.value = '/icon.png';
-                return;
+            } else {
+                avatar_url.value = avatar_data.data;
             }
-            avatar_url.value = avatar_data.data;
 
             const media_data = await $fetch<MediaApiResponse>(`/api/media/${tweet.value.tweet_id}`);
             if (media_data.data && media_data.data.length > 0) {

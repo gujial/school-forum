@@ -1,0 +1,1 @@
+sudo docker compose up -d && sudo docker exec -it school-forum-oceanbase bash /docker-entrypoint-initdb.d/init-db.sh

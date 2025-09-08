@@ -131,6 +131,7 @@
             });
             sheet.value = false;
             await updateAvatar();
+            fetchAuthUser();
         } catch (err: unknown) {
             console.error('Upload failed:', err);
         }
@@ -150,6 +151,7 @@
             });
             bgSheet.value = false;
             await updateBg();
+            fetchAuthUser();
         } catch (err: unknown) {
             console.error('Upload bg failed:', err);
         }

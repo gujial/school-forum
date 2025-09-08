@@ -16,8 +16,6 @@ services:
     ports:
       - "2881:2881"   # SQL port
       - "2883:2883"   # RPC port
-    volumes:
-      - ob_data:/root/ob
     networks:
       - school-forum-network
 
@@ -39,18 +37,10 @@ services:
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     ports:
       - "3000:3000"
-    volumes:
-      - app_data:/app/dynamic
     depends_on:
       - oceanbase
     networks:
       - school-forum-network
-
-volumes:
-  ob_data:
-    driver: local
-  app_data:
-    driver: local
 
 networks:
   school-forum-network:

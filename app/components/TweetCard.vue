@@ -152,7 +152,8 @@
             updateLike();
             await fetchCounts();
 
-            await $fetch('/api/message/send', {
+            if (isLike.value) {
+                await $fetch('/api/message/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -163,6 +164,7 @@
                     content: '/likeMsg',
                 }),
             });
+            }
         } catch (err: unknown) {
             if ((err as { statusCode?: number })?.statusCode === 401) {
                 navigateTo(localePath('/login'));

@@ -1,0 +1,47 @@
+@startuml
+title 用户管理子系统 - 实体类图
+
+class User {
+    +user_id : BIGINT
+    +username : VARCHAR
+    +email : VARCHAR
+    +password : VARCHAR
+    +bg_url : TEXT
+    +created_at : DATETIME
+
+    +login()
+    +logout()
+    +register()
+    +updateProfile()
+    +uploadAvatar()
+    +follow(userId)
+    +unfollow(userId)
+}
+
+class Avatar {
+    +user_id : BIGINT
+    +avatar_url : TEXT
+    +updateAvatar()
+}
+
+class Admin {
+    +user_id : BIGINT
+    +reviewReport()
+    +deleteTweet()
+    +deleteComment()
+    +banUser()
+}
+
+class Follow {
+    +follower_id : BIGINT
+    +following_id : BIGINT
+    +addFollow()
+    +removeFollow()
+}
+
+User "1" -- "1" Avatar
+User "1" -- "0..1" Admin
+User "1" -- "0..*" Follow : follower >
+User "1" -- "0..*" Follow : following >
+
+@enduml

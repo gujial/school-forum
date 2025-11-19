@@ -1,0 +1,47 @@
+@startuml
+title 帖子管理子系统 - 实体类图
+
+class Tweet {
+    +tweet_id : BIGINT
+    +user_id : BIGINT
+    +parent_id : BIGINT
+    +content : TEXT
+    +created_at : DATETIME
+
+    +create()
+    +edit()
+    +delete()
+    +addTag()
+    +addMedia()
+}
+
+class Media {
+    +media_id : BIGINT
+    +tweet_id : BIGINT
+    +media_url : TEXT
+    +media_type : VARCHAR
+
+    +upload()
+    +delete()
+}
+
+class Tag {
+    +tag_id : BIGINT
+    +name : VARCHAR
+    +create()
+    +rename()
+    +delete()
+}
+
+class TweetTag {
+    +tweet_id : BIGINT
+    +tag_id : BIGINT
+    +bind()
+    +unbind()
+}
+
+Tweet "1" -- "0..*" Media
+Tweet "1" -- "0..*" TweetTag
+TweetTag "*" -- "1" Tag
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+title 社交互动 - 实体类图
+
+class Like {
+    +like_id : BIGINT
+    +user_id : BIGINT
+    +tweet_id : BIGINT
+    +add()
+    +remove()
+}
+
+class Message {
+    +message_id : BIGINT
+    +sender_id : BIGINT
+    +receiver_id : BIGINT
+    +content : TEXT
+    +created_at : DATETIME
+
+    +send()
+    +delete()
+}
+
+class Report {
+    +report_id : BIGINT
+    +tweet_id : BIGINT
+    +comment_id : BIGINT
+    +report_content : TEXT
+    +submit()
+    +review()
+}
+
+@enduml

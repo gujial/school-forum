@@ -1,0 +1,74 @@
+@startuml
+title 帖子管理子系统
+
+allowmixing
+
+actor User
+
+' =======================
+' Boundary
+' =======================
+class TweetUI <<boundary>> {
+    +inputContent()
+    +uploadMedia()
+    +selectTag()
+    +submitTweet()
+}
+
+class TweetDetailUI <<boundary>> {
+    +displayTweet()
+    +editTweet()
+    +deleteTweet()
+}
+
+' =======================
+' Control
+' =======================
+class TweetController <<control>> {
+    +createTweet()
+    +editTweet()
+    +deleteTweet()
+    +addMedia()
+    +assignTag()
+}
+
+' =======================
+' Entity
+' =======================
+class TweetEntity <<entity>> {
+    +tweet_id
+    +user_id
+    +content
+}
+
+class MediaEntity <<entity>> {
+    +media_id
+    +media_url
+    +media_type
+}
+
+class TagEntity <<entity>> {
+    +tag_id
+    +name
+}
+
+class TweetTagEntity <<entity>> {
+    +tweet_id
+    +tag_id
+}
+
+' =======================
+' Connections
+' =======================
+User --> TweetUI
+User --> TweetDetailUI
+
+TweetUI --> TweetController
+TweetDetailUI --> TweetController
+
+TweetController --> TweetEntity
+TweetController --> MediaEntity
+TweetController --> TagEntity
+TweetController --> TweetTagEntity
+
+@enduml

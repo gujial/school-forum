@@ -1,0 +1,81 @@
+@startuml
+title 社交互动子系统
+
+allowmixing
+
+actor User
+actor AdminUser
+
+' =======================
+' Boundary
+' =======================
+class LikeButtonUI <<boundary>> {
+    +clickLike()
+    +clickUnlike()
+}
+
+class MessageUI <<boundary>> {
+    +inputMessage()
+    +sendMessage()
+}
+
+class ReportUI <<boundary>> {
+    +selectTarget()
+    +inputReason()
+    +submitReport()
+}
+
+' =======================
+' Control
+' =======================
+class InteractionController <<control>> {
+    +likeTweet()
+    +unlikeTweet()
+    +sendMessage()
+    +submitReport()
+}
+
+class ReportReviewController <<control>> {
+    +reviewReport()
+}
+
+' =======================
+' Entity
+' =======================
+class LikeEntity <<entity>> {
+    +user_id
+    +tweet_id
+}
+
+class MessageEntity <<entity>> {
+    +sender_id
+    +receiver_id
+    +content
+}
+
+class ReportEntity <<entity>> {
+    +report_id
+    +tweet_id
+    +comment_id
+    +reason
+}
+
+' =======================
+' Connections
+' =======================
+User --> LikeButtonUI
+User --> MessageUI
+User --> ReportUI
+
+LikeButtonUI --> InteractionController
+MessageUI --> InteractionController
+ReportUI --> InteractionController
+
+InteractionController --> LikeEntity
+InteractionController --> MessageEntity
+InteractionController --> ReportEntity
+
+AdminUser --> ReportReviewController
+ReportReviewController --> ReportEntity
+
+@enduml

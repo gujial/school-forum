@@ -1,0 +1,85 @@
+@startuml
+title 用户管理子系统
+
+allowmixing
+
+actor User
+actor AdminUser
+
+' =======================
+' Boundary Layer
+' =======================
+class LoginUI <<boundary>> {
+    +inputUsername()
+    +inputPassword()
+    +clickLogin()
+}
+
+class RegisterUI <<boundary>> {
+    +inputUserInfo()
+    +clickRegister()
+}
+
+class UserProfileUI <<boundary>> {
+    +editProfile()
+    +changeAvatar()
+    +followUser()
+}
+
+' =======================
+' Control Layer
+' =======================
+class UserController <<control>> {
+    +login()
+    +register()
+    +updateProfile()
+    +changeAvatar()
+    +follow()
+    +unfollow()
+}
+
+' =======================
+' Entity Layer
+' =======================
+class UserEntity <<entity>> {
+    +user_id
+    +username
+    +email
+    +password
+    +login()
+    +follow()
+}
+
+class AvatarEntity <<entity>> {
+    +user_id
+    +avatar_url
+}
+
+class FollowEntity <<entity>> {
+    +follower_id
+    +following_id
+}
+
+class AdminEntity <<entity>> {
+    +user_id
+    +reviewReport()
+}
+
+' =======================
+' Connections
+' =======================
+User --> LoginUI
+User --> RegisterUI
+User --> UserProfileUI
+
+LoginUI --> UserController
+RegisterUI --> UserController
+UserProfileUI --> UserController
+
+UserController --> UserEntity
+UserController --> AvatarEntity
+UserController --> FollowEntity
+
+AdminUser --> AdminEntity
+
+@enduml

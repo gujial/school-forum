@@ -1,0 +1,19 @@
+@startuml
+title 评论系统 - 实体类图
+
+class Comment {
+    +comment_id : BIGINT
+    +tweet_id : BIGINT
+    +user_id : BIGINT
+    +parent_id : BIGINT
+    +content : TEXT
+    +created_at : DATETIME
+
+    +create()
+    +reply()
+    +delete()
+}
+
+Tweet "1" -- "0..*" Comment
+
+@enduml

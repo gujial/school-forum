@@ -1,0 +1,76 @@
+@startuml
+
+left to right direction
+skinparam linetype ortho
+
+package "User Service" {
+    interface IUserAuth {
+        + register()
+        + login()
+    }
+
+    interface IUserProfile {
+        + getUser()
+        + updateUser()
+        + deleteUser()
+        + uploadAvatar()
+    }
+
+    interface IUserFollow {
+        + follow()
+        + unfollow()
+        + getFollowers()
+        + getFollowing()
+    }
+}
+
+package "Tweet Service" {
+    interface ITweet {
+        + createTweet()
+        + getTweet()
+        + deleteTweet()
+        + getUserTweets()
+    }
+
+    interface IMedia {
+        + uploadMedia()
+        + getMedia()
+    }
+}
+
+package "Comment Service" {
+    interface IComment {
+        + createComment()
+        + getComment()
+        + deleteComment()
+        + getTweetComments()
+    }
+}
+
+package "Interaction Service" {
+    interface ILike {
+        + likeTweet()
+        + unlikeTweet()
+        + getLikes()
+    }
+
+    interface IMessage {
+        + sendMessage()
+        + getMessages()
+    }
+
+    interface IReport {
+        + report()
+        + getReports()
+    }
+}
+
+package "Tag Service" {
+    interface ITag {
+        + getTweetsByTag()
+        + addTagsToTweet()
+        + searchTags()
+    }
+}
+
+@enduml

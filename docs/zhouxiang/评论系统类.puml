@@ -1,0 +1,52 @@
+@startuml
+title 评论子系统
+
+allowmixing
+
+actor User
+
+' =======================
+' Boundary
+' =======================
+class CommentUI <<boundary>> {
+    +enterContent()
+    +reply()
+    +submitComment()
+}
+
+class CommentListUI <<boundary>> {
+    +showComments()
+}
+
+' =======================
+' Control
+' =======================
+class CommentController <<control>> {
+    +addComment()
+    +replyComment()
+    +getComments()
+    +deleteComment()
+}
+
+' =======================
+' Entity
+' =======================
+class CommentEntity <<entity>> {
+    +comment_id
+    +tweet_id
+    +user_id
+    +content
+}
+
+' =======================
+' Connections
+' =======================
+User --> CommentUI
+User --> CommentListUI
+
+CommentUI --> CommentController
+CommentListUI --> CommentController
+
+CommentController --> CommentEntity
+
+@enduml

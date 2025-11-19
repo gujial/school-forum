@@ -1,0 +1,204 @@
+@startuml
+skinparam classAttributeIconSize 0
+left to right direction
+' ================================
+' 用户管理域
+' ================================
+
+class User {
+    +BIGINT user_id
+    +VARCHAR username
+    +VARCHAR email
+    +VARCHAR password
+    +TEXT bg_url
+    +DATETIME created_at
+
+    -- methods --
+    +login()
+    +logout()
+    +register()
+    +updateProfile()
+    +uploadAvatar()
+    +follow(userId)
+    +unfollow(userId)
+    +getFollowers()
+    +getFollowing()
+    +sendMessage(toUserId, content)
+    +reportTweet(tweetId, content)
+    +reportComment(commentId, content)
+}
+
+class Avatar {
+    +BIGINT user_id
+    +TEXT avatar_url
+
+    -- methods --
+    +updateAvatar()
+}
+
+class Admin {
+    +BIGINT user_id
+
+    -- methods --
+    +reviewReport(reportId)
+    +deleteTweet(tweetId)
+    +deleteComment(commentId)
+    +banUser(userId)
+}
+
+class Follow {
+    +BIGINT follower_id
+    +BIGINT following_id
+
+    -- methods --
+    +addFollow()
+    +removeFollow()
+}
+
+' ================================
+' 内容管理域
+' ================================
+
+class Tweet {
+    +BIGINT tweet_id
+    +BIGINT user_id
+    +BIGINT parent_id
+    +TEXT content
+    +DATETIME created_at
+
+    -- methods --
+    +create()
+    +edit(content)
+    +delete()
+    +addTag(tagId)
+    +removeTag(tagId)
+    +addMedia(url, type)
+    +like(userId)
+    +unlike(userId)
+    +comment(userId, content)
+    +forward(userId)
+}
+
+class Comment {
+    +BIGINT comment_id
+    +BIGINT tweet_id
+    +BIGINT user_id
+    +BIGINT parent_id
+    +TEXT content
+    +DATETIME created_at
+
+    -- methods --
+    +create()
+    +reply(userId, content)
+    +delete()
+}
+
+class Media {
+    +BIGINT media_id
+    +BIGINT tweet_id
+    +TEXT media_url
+    +VARCHAR media_type
+
+    -- methods --
+    +upload()
+    +delete()
+}
+
+class Tag {
+    +BIGINT tag_id
+    +VARCHAR name
+
+    -- methods --
+    +create()
+    +rename(name)
+    +delete()
+}
+
+class TweetTag {
+    +BIGINT tweet_id
+    +BIGINT tag_id
+
+    -- methods --
+    +bind()
+    +unbind()
+}
+
+' ================================
+' 社交互动域
+' ================================
+
+class Like {
+    +BIGINT like_id
+    +BIGINT user_id
+    +BIGINT tweet_id
+    +DATETIME created_at
+
+    -- methods --
+    +add()
+    +remove()
+}
+
+class Message {
+    +BIGINT message_id
+    +BIGINT sender_id
+    +BIGINT receiver_id
+    +BIGINT tweet_id
+    +BIGINT comment_id
+    +TEXT content
+    +DATETIME created_at
+
+    -- methods --
+    +send()
+    +delete()
+    +markAsRead()
+}
+
+class Report {
+    +BIGINT report_id
+    +BIGINT tweet_id
+    +BIGINT comment_id
+    +TEXT report_content
+    +DATETIME created_at
+
+    -- methods --
+    +submit()
+    +review()
+}
+
+' ================================
+' 关系定义（带多重性）
+' ================================
+
+User "1" -- "1" Avatar : has >
+User "1" -- "0..1" Admin : role >
+
+User "1" -- "0..*" Tweet : posts >
+User "1" -- "0..*" Comment : writes >
+User "1" -- "0..*" Like : likes >
+User "1" -- "0..*" Message : sends > 
+User "1" -- "0..*" Message : receives > 
+User "1" -- "0..*" Report : reports >
+
+User "1" -- "0..*" Follow : follower >
+User "1" -- "0..*" Follow : following >
+
+Tweet "1" -- "0..*" Comment : has >
+Tweet "1" -- "0..*" Media : has >
+Tweet "1" -- "0..*" Like : liked >
+Tweet "1" -- "0..*" Report : reported >
+Tweet "1" -- "0..*" TweetTag : tagged >
+
+Tweet "0..1" -- "0..*" Tweet : parent >
+
+Comment "0..1" -- "0..*" Comment : parent >
+
+TweetTag "1" -- "1" Tweet
+TweetTag "1" -- "1" Tag
+
+Message "0..*" -- "0..1" Tweet : refers >
+Message "0..*" -- "0..1" Comment : refers >
+
+Report "0..*" -- "0..1" Tweet : refers >
+Report "0..*" -- "0..1" Comment : refers >
+
+@enduml

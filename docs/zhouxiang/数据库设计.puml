@@ -1,0 +1,124 @@
+@startuml
+
+left to right direction
+
+entity Users {
+    * user_id : BIGINT <<PK>>
+    --
+    username : VARCHAR(50)
+    email : VARCHAR(100)
+    password : VARCHAR(255)
+    bg_url : TEXT
+    created_at : DATETIME
+}
+
+entity Avatar {
+    * user_id : BIGINT <<PK, FK>>
+    --
+    avatar_url : TEXT
+}
+
+entity Tweets {
+    * tweet_id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    parent_id : BIGINT
+    content : TEXT
+    created_at : DATETIME
+}
+
+entity Comments {
+    * comment_id : BIGINT <<PK>>
+    --
+    tweet_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    parent_id : BIGINT
+    content : TEXT
+    created_at : DATETIME
+}
+
+entity Media {
+    * media_id : BIGINT <<PK>>
+    --
+    tweet_id : BIGINT <<FK>>
+    media_url : TEXT
+    media_type : VARCHAR(10)
+}
+
+entity Likes {
+    * like_id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    tweet_id : BIGINT <<FK>>
+    created_at : DATETIME
+}
+
+entity Messages {
+    * message_id : BIGINT <<PK>>
+    --
+    sender_id : BIGINT <<FK>>
+    receiver_id : BIGINT <<FK>>
+    tweet_id : BIGINT <<FK>>
+    comment_id : BIGINT <<FK>>
+    content : TEXT
+    created_at : DATETIME
+}
+
+entity TAGS {
+    * tag_id : BIGINT <<PK>>
+    --
+    name : VARCHAR(50)
+}
+
+entity TweetTags {
+    * tweet_id : BIGINT <<PK, FK>>
+    * tag_id : BIGINT <<PK, FK>>
+}
+
+entity Follows {
+    * follower_id : BIGINT <<PK, FK>>
+    * following_id : BIGINT <<PK, FK>>
+}
+
+entity Admins {
+    * user_id : BIGINT <<PK, FK>>
+}
+
+entity Reports {
+    * report_id : BIGINT <<PK>>
+    --
+    tweet_id : BIGINT <<FK>>
+    comment_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    content : TEXT
+    created_at : DATETIME
+}
+
+' -------------------------
+' Relationships
+' -------------------------
+
+Users ||--o{ Avatar : "1 - 1"
+Users ||--o{ Tweets : "1 - many"
+Users ||--o{ Comments : "1 - many"
+Users ||--o{ Likes : "1 - many"
+Users ||--o{ Messages : "sender"
+Users ||--o{ Messages : "receiver"
+Users ||--o{ Follows : "follower"
+Users ||--o{ Follows : "following"
+Users ||--o{ Admins : "admin"
+Users ||--o{ Reports : "1 - many"
+
+Tweets ||--o{ Comments : "1 - many"
+Tweets ||--o{ Media : "1 - many"
+Tweets ||--o{ Likes : "1 - many"
+Tweets ||--o{ Messages : "message tweet"
+Tweets ||--o{ TweetTags : "1 - many"
+Tweets ||--o{ Reports : "1 - many"
+
+Comments ||--o{ Messages : "message comment"
+Comments ||--o{ Reports : "comment report"
+
+TAGS ||--o{ TweetTags : "1 - many"
+
+@enduml

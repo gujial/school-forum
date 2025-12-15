@@ -1,0 +1,55 @@
+@startuml
+title 构件图 - 消息与通知子系统
+skinparam componentStyle uml2
+skinparam backgroundColor white
+
+package "客户端" {
+    [WebSocket Client] as WSClient
+}
+
+package "消息通知子系统 (Message Subsystem)" {
+    interface "IMessageAPI" as IMsg
+    interface "IWSServer" as IWS
+
+    component [消息控制器\n(Message Controller)] as MsgCtrl
+    component [WebSocket网关\n(Socket Gateway)] as WSGateway
+
+    component [私信服务\n(Chat Service)] as ChatService
+    component [通知服务\n(Notification Service)] as NotifyService
+    component [在线状态管理器\n(Presence Manager)] as PresenceMgr
+}
+
+queue "消息队列 (Redis/RabbitMQ)" {
+    [离线消息队列] as MsgQueue
+    [通知事件总线] as EventBus
+}
+
+database "MySQL" {
+    [私信记录 (Messages)] as MsgDB
+    [通知记录 (Notifications)] as NotifyDB
+}
+
+' 外部触发
+[互动子系统] ..> EventBus : 发布点赞/评论事件
+
+' 连接关系
+WSClient <..> IWS : 实时连接
+WSClient ..> IMsg : 历史消息查询
+
+IWS - WSGateway
+IMsg - MsgCtrl
+
+WSGateway --> PresenceMgr : 维护连接状态
+WSGateway --> ChatService : 转发实时消息
+WSGateway --> NotifyService : 推送实时通知
+
+MsgCtrl --> ChatService : 查历史记录
+MsgCtrl --> NotifyService : 标记已读
+
+ChatService --> MsgDB : 持久化私信
+ChatService --> MsgQueue : 缓存离线消息
+
+NotifyService --> NotifyDB : 持久化通知
+NotifyService <.. EventBus : 监听业务事件
+
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+title 构件图 - 后台管理与审核子系统
+skinparam componentStyle uml2
+skinparam backgroundColor white
+
+package "后台管理界面 (Admin UI)" {
+    [管理控制台] as AdminUI
+}
+
+package "管理子系统 (Admin Subsystem)" {
+    interface "IAdminAPI" as IAdmin
+    interface "ISearchAPI" as ISearch
+
+    component [管理控制器\n(Admin Controller)] as AdminCtrl
+    component [举报控制器\n(Report Controller)] as ReportCtrl
+    component [搜索控制器\n(Search Controller)] as SearchCtrl
+
+    component [审核服务\n(Moderation Service)] as ModService
+    component [举报服务\n(Report Service)] as ReportService
+    component [索引同步服务\n(Indexer Service)] as Indexer
+}
+
+package "外部/其他子系统" {
+    component [用户服务] as ExtUser
+    component [内容服务] as ExtContent
+}
+
+database "MySQL" {
+    [举报记录 (Reports)] as ReportDB
+    [审核日志 (Audit Logs)] as AuditDB
+}
+
+database "搜索引擎 (Elasticsearch/Meili)" {
+    [全文索引 (Indices)] as ES
+}
+
+' 关系
+AdminUI ..> IAdmin : 管理操作
+AdminUI ..> ISearch : 搜索内容
+
+IAdmin - AdminCtrl
+IAdmin - ReportCtrl
+ISearch - SearchCtrl
+
+' 举报处理流程
+ReportCtrl --> ReportService
+ReportService --> ReportDB : 存取举报单
+ReportService --> ModService : 提交审核
+
+' 审核逻辑
+AdminCtrl --> ModService
+ModService --> ExtContent : 执行删除/屏蔽
+ModService --> ExtUser : 执行封号/禁言
+ModService --> AuditDB : 记录操作日志
+
+' 搜索逻辑
+Indexer ..> ExtContent : 监听数据变更
+Indexer --> ES : 同步索引数据
+SearchCtrl --> ES : 执行搜索查询
+
+@enduml

@@ -1,0 +1,92 @@
+@startuml
+title “可圈可点”校园论坛平台 - 系统部署图
+skinparam linetype ortho
+skinparam node {
+    BackgroundColor White
+    BorderColor Black
+}
+skinparam databaseBackgroundColor WhiteSmoke
+
+' --- 客户端层 ---
+node "客户端设备 (Client Tier)" as ClientTier {
+    agent "PC 浏览器\n(Chrome/Firefox)" as Browser
+    agent "移动端浏览器\n(iOS/Android)" as Mobile
+}
+
+' --- 反向代理层 ---
+node "反向代理服务器 (Reverse Proxy)" as ProxyServer {
+    component "Nginx" as Nginx <<Load Balancer>>
+}
+
+' --- 应用服务器层 (Docker环境) ---
+node "应用服务器 (Application Server) \nOS: Linux (Ubuntu/CentOS)" as AppServer {
+    
+    label "Docker Runtime Environment"
+    
+    package "前端容器 (Frontend)" {
+        component "Nuxt.js Server\n(SSR Mode)" as NuxtApp
+    }
+    
+    package "后端容器 (Backend)" {
+        component "API Server\n(Node.js/NestJS)" as BackendApp
+        component "Socket.IO Server\n(WebSocket)" as WSServer
+    }
+
+    ' 内部连接
+    BackendApp -[hidden]- WSServer
+}
+
+' --- 数据持久化层 ---
+node "数据持久化层 (Data Tier)" as DataServer {
+    
+    database "MySQL/PostgreSQL\n(主业务数据)" as RDBMS
+    
+    database "Redis\n(缓存 & 消息队列)" as Redis
+    
+    database "MinIO / OSS / 文件系统\n(对象存储: 图片/视频)" as ObjectStore
+    
+    database "Meilisearch / ES\n(全文搜索引擎)" as SearchEngine
+}
+
+' --- 外部服务 ---
+cloud "外部服务 (External Services)" {
+    [SMTP 邮件服务器] as EmailSvc
+    [LLM 服务 (DeepSeek/Ollama)] as LLMSvc
+}
+
+' --- 部署流水线 ---
+node "CI/CD 环境" as CICD {
+    component "GitHub Actions / GitLab CI" as Runner
+    artifact "Docker Image" as Image
+}
+
+' --- 连接关系 ---
+
+' 1. 客户端访问
+Browser --> Nginx : HTTPS / WSS (443)
+Mobile --> Nginx : HTTPS / WSS (443)
+
+' 2. 代理转发
+Nginx --> NuxtApp : HTTP (3000)
+Nginx --> BackendApp : HTTP (8080)
+Nginx --> WSServer : WS (8080)
+Nginx --> ObjectStore : HTTP (9000) [媒体资源直接访问]
+
+' 3. 前后端交互 (SSR中，Nuxt服务端会请求API)
+NuxtApp --> BackendApp : HTTP (Internal Network)
+
+' 4. 后端与数据层
+BackendApp --> RDBMS : TCP/JDBC (3306/5432)
+BackendApp --> Redis : TCP (6379)
+BackendApp --> SearchEngine : HTTP (7700/9200)
+BackendApp --> ObjectStore : S3 API / HTTP / 文件系统
+
+' 5. 后端与外部服务
+BackendApp --> EmailSvc : SMTP
+BackendApp --> LLMSvc : HTTP/REST (内容审核)
+
+' 6. 部署关系
+Runner ..> Image : Build
+Image ..> AppServer : Deploy (docker-compose up)
+
+@enduml

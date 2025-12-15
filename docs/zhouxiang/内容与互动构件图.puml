@@ -1,0 +1,57 @@
+@startuml
+title 构件图 - 内容与互动子系统
+skinparam componentStyle uml2
+skinparam backgroundColor white
+
+package "内容管理子系统 (Content Subsystem)" {
+    interface "IPostAPI" as IPost
+    interface "ICommentAPI" as IComment
+    interface "IMediaAPI" as IMedia
+
+    component [帖子控制器\n(Post Controller)] as PostCtrl
+    component [评论控制器\n(Comment Controller)] as CommentCtrl
+    component [互动控制器\n(Interaction Controller)] as InteractCtrl
+
+    component [内容服务\n(Post Service)] as PostService
+    component [评论服务\n(Comment Service)] as CommentService
+    component [点赞服务\n(Like Service)] as LikeService
+    component [标签服务\n(Tag Service)] as TagService
+    
+    component [文件上传服务\n(Upload Service)] as UploadService
+}
+
+cloud "对象存储 (MinIO/OSS/文件系统)" {
+    [媒体文件存储] as FileStore
+}
+
+database "MySQL / PostgreSQL" {
+    [帖子表 (Posts)] as PostDB
+    [评论表 (Comments)] as CommentDB
+    [点赞记录 (Likes)] as LikeDB
+    [标签表 (Tags)] as TagDB
+}
+
+' 接口定义
+IPost - PostCtrl
+IComment - CommentCtrl
+IMedia - InteractCtrl
+
+' 控制器与服务
+PostCtrl --> PostService
+PostCtrl --> TagService
+PostCtrl --> UploadService
+CommentCtrl --> CommentService
+InteractCtrl --> LikeService
+
+' 服务逻辑
+PostService --> PostDB : CRUD
+PostService ..> TagService : 关联标签
+CommentService --> CommentDB : 读写评论
+LikeService --> LikeDB : 记录点赞
+UploadService --> FileStore : 存取图片/视频
+
+' 跨服务调用
+CommentService ..> PostService : 验证帖子存在
+LikeService ..> PostService : 更新点赞数
+
+@enduml

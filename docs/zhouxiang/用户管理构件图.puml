@@ -1,0 +1,48 @@
+@startuml
+title 构件图 - 用户管理子系统
+skinparam componentStyle uml2
+skinparam backgroundColor white
+
+package "前端应用 (Client)" {
+    [用户界面组件] as UI
+}
+
+package "用户管理子系统 (User Subsystem)" {
+    interface "IAuthService" as IAuth
+    interface "IUserProfile" as IProfile
+    interface "ISocialGraph" as ISocial
+
+    component [认证控制器\n(Auth Controller)] as AuthCtrl
+    component [用户控制器\n(User Controller)] as UserCtrl
+
+    component [认证服务\n(Auth Service)] as AuthService
+    component [用户资料服务\n(Profile Service)] as ProfileService
+    component [社交关系服务\n(Social Graph Service)] as RelationService
+    
+    component [令牌管理器\n(Token Manager)] as TokenMgr
+}
+
+database "MySQL" {
+    [用户表 (Users)] as UserDB
+    [关注表 (Follows)] as RelationDB
+}
+
+' 关系连接
+UI ..> IAuth : 登录/注册
+UI ..> IProfile : 修改资料
+UI ..> ISocial : 关注/取关
+
+IAuth - AuthCtrl
+IProfile - UserCtrl
+ISocial - UserCtrl
+
+AuthCtrl --> AuthService
+UserCtrl --> ProfileService
+UserCtrl --> RelationService
+
+AuthService --> TokenMgr : 生成/解析JWT
+AuthService --> UserDB : 读写账号信息
+ProfileService --> UserDB : 更新资料
+RelationService --> RelationDB : 维护关注列表
+
+@enduml

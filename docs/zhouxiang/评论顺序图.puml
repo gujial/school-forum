@@ -1,0 +1,39 @@
+@startuml
+title 用户评论或回复顺序图
+
+actor User
+participant CommentUI
+participant CommentController
+participant UserStatusChecker
+participant ContentReviewSystem
+database CommentDB
+participant NotificationSystem
+
+User -> CommentUI : 1. 输入评论/回复内容(postId/parentCommentId, content)
+User -> CommentUI : 2. 提交评论(content, targetId)
+
+CommentUI -> CommentController : submitComment(content, targetId)
+
+CommentController -> UserStatusChecker : 3. 校验用户登录状态
+UserStatusChecker --> CommentController : 4. 返回登录状态(status)
+
+alt 已登录
+    CommentController -> ContentReviewSystem : 5. 审核评论内容
+    ContentReviewSystem --> CommentController : 6. 返回审核结果(result)
+
+    alt 审核通过
+        CommentController -> CommentDB : 7. 保存评论信息(userId, content, targetId)
+        CommentController -> CommentDB : 8. 更新回复计数(targetId)
+        CommentDB --> CommentController : 9. 返回评论ID(commentId)
+        CommentController -> NotificationSystem : 10. 发送回复通知(targetId, commentId)
+        CommentController -> CommentUI : 11. 显示评论/回复成功(commentId)
+    else 不合法
+        CommentController -> CommentUI : 提示评论内容不合法
+    end
+else 未登录
+    CommentController -> CommentUI : 提示用户先登录
+end
+
+CommentUI --> User : 展示评论/回复结果并刷新列表
+
+@enduml

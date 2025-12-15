@@ -1,0 +1,48 @@
+@startuml
+title 用户评论或回复通讯图
+
+' 设置样式：使用直角线，白色背景
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":User" as User
+object ":CommentUI" as UI
+object ":CommentController" as Ctrl
+object ":UserStatusChecker" as Auth
+object ":ContentReviewSystem" as Review
+object ":NotificationSystem" as Notify
+object ":CommentDB" as DB
+
+' 2. 布局辅助 (使用 hidden 线条调整右侧两个系统的位置)
+' 让 Review 在 Notify 的上方
+Review -[hidden]down- Notify
+
+' 3. 定义链接 (Links) 与 消息 (Messages)
+
+' [左侧] 用户与界面的交互：输入 -> 展示结果
+User -right- UI : 1: inputCommentContent(postId, content) > \n 11: showCommentSuccess(commentId) <
+
+' [左中] 界面 -> 控制器
+UI -right- Ctrl : 2: submitComment(content, targetId) >
+
+' [上方] 控制器 <-> 权限校验
+Ctrl -up- Auth : 3: checkLoginStatus(userId) > \n 4: returnLoginStatus(status) <
+
+' [右上方] 控制器 <-> 内容审核
+Ctrl -right- Review : 5: reviewCommentContent(content) > \n 6: returnReviewResult(result) <
+
+' [右下方] 控制器 -> 通知系统
+Ctrl -right- Notify : 10: sendReplyNotification(targetId, commentId) >
+
+' [下方] 控制器 <-> 数据库
+' 注意：第8步在这里被设计为数据库的内部动作(自调用)，或者紧接着第7步发生
+Ctrl -down- DB : 7: saveCommentInfo(userId, content, targetId) > \n 9: returnCommentResult(commentId) <
+
+' [下方] 数据库自调用：更新关联数据的计数
+DB -right- DB : 8: updateReplyCount(targetId)
+
+@enduml

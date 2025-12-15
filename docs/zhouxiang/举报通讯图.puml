@@ -1,0 +1,55 @@
+@startuml
+title 用户举报内容及管理员处理通讯图
+
+' 设置样式：使用直角线，白色背景
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":AI" as AI
+object ":User" as User
+object ":ReportUI" as UI
+object ":ReportController" as Ctrl
+object ":ReportDB" as DB
+object ":Admin" as Admin
+object ":ContentManager" as ContentMgr
+object ":NotificationSystem" as Notify
+
+' 2. 布局辅助 (隐藏线条调整位置)
+' 强制 ContentMgr 和 Notify 在 Ctrl 的上方或右侧
+ContentMgr -[hidden]down- Notify
+Notify -[hidden]down- Ctrl
+
+' 3. 定义链接 (Links) 与 消息 (Messages)
+
+' [左侧] 用户阶段：提交举报
+' User -> UI
+User -right- UI : 1: selectReportedTarget(targetId, type) > \n 2: inputReportReason(reason) > \n 8: showReportSuccess(reportId) <
+
+' UI -> Controller
+UI -right- Ctrl : 3: submitReport(userId, targetId, type, reason) >
+AI -right- Ctrl : 4: autoAnalyzeReportContent(reason) >
+
+' [下方] 数据持久化
+' Controller <-> DB
+Ctrl -down- DB : 4: saveReportRecord(info) > \n 6: returnReportResult(reportId) < \n 12: updateReportStatus(reportId, status) >
+
+' [下方] 数据库自处理
+DB -right- DB : 5: autoFilterOrMark()
+
+' [中心] 控制器内部逻辑：推送到管理员队列
+Ctrl -left- Ctrl : 7: pushReportToAdminQueue(reportId)
+
+' [右侧] 管理员阶段：处理举报
+' Admin <-> Controller
+' 步骤9由管理员发起，步骤14是处理结果反馈
+Admin -left- Ctrl : 9: viewReportedDetails(reportId) > \n 10: judgeViolation(reportId, decision) > \n 14: showProcessResult(reportId) <
+
+' [上方/右上方] 执行处罚与通知
+Ctrl -up- ContentMgr : 11: executeProcessing(targetId, action) >
+Ctrl -up- Notify : 13: sendProcessNotification(reportId, userId, targetUserId) >
+
+@enduml

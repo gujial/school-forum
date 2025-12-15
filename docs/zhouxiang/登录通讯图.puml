@@ -1,0 +1,36 @@
+@startuml
+title 用户登录通讯图
+
+' 设置样式：使用直角线，使图表更整洁
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":User" as User
+object ":LoginUI" as UI
+object ":LoginController" as Ctrl
+object ":UserDB" as DB
+object ":SessionManager" as SM
+
+' 2. 定义对象间的链接 (Links) 与 消息 (Messages)
+' 布局逻辑：User -> UI -> Controller -> (分发给 DB 和 SessionManager)
+
+' 用户与界面的交互：选择模式、输入信息、最终展示结果
+User -right- UI : 1: selectLoginMode(mode) > \n 2: inputLoginInfo(mode, info) > \n 9: showLoginResult(result, token) <
+
+' 界面与控制器的交互：请求验证
+UI -right- Ctrl : 3: requestLoginAuth(mode, info) >
+
+' 控制器与数据库的交互：验证账号/验证码
+Ctrl -down- DB : 4: verifyLoginInfo(mode, info) > \n 5: returnVerifyResult(result) <
+
+' 控制器与会话管理的交互：生成Token
+Ctrl -right- SM : 6: generateSession(userId) > \n 8: returnSessionToken(token) <
+
+' 会话管理的内部自调用：创建记录
+SM -right- SM : 7: createSessionRecord(userId, token)
+
+@enduml

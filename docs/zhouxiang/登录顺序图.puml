@@ -1,0 +1,31 @@
+@startuml
+title 用户登录顺序图
+
+actor User
+participant LoginUI
+participant LoginController
+database UserDB
+participant SessionManager
+
+User -> LoginUI : 1. selectLoginMode(mode)
+
+User -> LoginUI : 2. inputLoginInfo(mode, info)
+
+LoginUI -> LoginController : 3. requestLoginAuth(mode, info)
+
+LoginController -> UserDB : 4. verifyLoginInfo(mode, info)
+
+UserDB --> LoginController : 5. returnVerifyResult(result)
+
+alt 验证通过
+    LoginController -> SessionManager : 6. generateSession(userId)
+    SessionManager -> SessionManager : 7. createSessionRecord(userId, token)
+    SessionManager --> LoginController : 8. returnSessionToken(token)
+    LoginController -> LoginUI : 9. showLoginResult(success, token)
+else 验证失败
+    LoginController -> LoginUI : 9. showLoginResult(failure, null)
+end
+
+LoginUI --> User : 显示登录结果\n成功则跳转论坛首页
+
+@enduml

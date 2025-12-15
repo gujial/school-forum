@@ -1,0 +1,43 @@
+@startuml
+title 用户举报内容及管理员处理顺序图
+
+actor User
+actor Admin
+participant AI
+participant ReportUI
+participant ReportController
+database ReportDB
+participant ContentManager
+participant NotificationSystem
+
+' 用户提交举报
+User -> ReportUI : 1. 选择举报目标(targetId, type)
+User -> ReportUI : 2. 输入举报理由(reason)
+User -> ReportUI : 3. 提交举报(userId, targetId, type, reason)
+
+ReportUI -> ReportController : submitReport(userId, targetId, type, reason)
+AI -> ReportController : autoAnalyzeReportContent(reason)
+
+' 保存举报记录
+ReportController -> ReportDB : 4. 保存举报记录(info)
+ReportDB -> ReportDB : 5. 自动过滤或标记(autoFilterOrMark)
+ReportDB --> ReportController : 6. 返回举报提交结果(reportId)
+
+' 推送至管理员队列
+ReportController -> Admin : 7. 推送举报工单(reportId)
+
+' 向用户显示举报提交成功
+ReportController -> ReportUI : 8. 显示举报成功(reportId)
+ReportUI --> User : 展示举报提交结果
+
+' 管理员处理举报
+Admin -> ReportController : 9. 查看举报详情(reportId)
+Admin -> ReportController : 10. 判定违规(reportId, decision)
+
+ReportController -> ContentManager : 11. 执行处理操作(targetId, action)
+ReportController -> ReportDB : 12. 更新举报状态(reportId, status)
+ReportController -> NotificationSystem : 13. 发送处理结果通知(reportId, userId, targetUserId)
+
+ReportController -> Admin : 14. 展示举报处理结果(reportId)
+
+@enduml

@@ -1,0 +1,54 @@
+@startuml
+title 用户一对一私信顺序图
+
+actor UserA
+actor UserB
+participant MessageUI as A_UI
+participant MessageUI as B_UI
+participant MessageController
+participant UserStatusChecker
+database MessageDB
+participant PrivacyManager
+
+' 1. 用户 A 选择联系人
+UserA -> A_UI : 1. 选择联系人(receiverId)
+
+' 2. 检查接收方隐私设置
+A_UI -> PrivacyManager : 2. 检查隐私设置(senderId, receiverId)
+PrivacyManager --> A_UI : 3. 返回隐私结果(allow)
+
+alt 允许发送私信
+    ' 4. 用户 A 输入消息
+    UserA -> A_UI : 4. 输入消息内容(content)
+
+    ' 5. 发送消息请求
+    A_UI -> MessageController : 5. sendMessage(senderId, receiverId, content)
+
+    ' 6. 校验发送方登录状态
+    MessageController -> UserStatusChecker : 6. checkLoginStatus(senderId)
+    UserStatusChecker --> MessageController : 7. returnLoginStatus(status)
+
+    alt 已登录
+        ' 8. 保存消息
+        MessageController -> MessageDB : 8. saveMessageInfo(senderId, receiverId, content)
+        ' 9. 标记未读
+        MessageDB -> MessageDB : 9. markUnread(receiverId, messageId)
+        ' 10. 返回发送结果
+        MessageDB --> MessageController : 10. returnSendResult(messageId)
+
+        ' 11. 推送消息通知
+        MessageController -> B_UI : 11. pushMessageNotification(receiverId, messageId)
+
+        ' 12. 向发送方展示发送成功
+        MessageController -> A_UI : 12. showMessageSent(messageId)
+
+        ' 13. 接收方展示接收消息
+        B_UI --> UserB : 13. showReceivedMessage(message)
+    else 未登录
+        MessageController -> A_UI : 提示用户先登录
+    end
+else 禁止发送
+    A_UI -> UserA : 提示对方不允许私信
+end
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+title 用户一对一私信通讯图
+
+' 设置样式：使用直角线，白色背景，使图表清晰
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":UserA" as UserA
+object ":UserB" as UserB
+object ":MessageUI" as UI
+object ":MessageController" as Ctrl
+object ":PrivacyManager" as Privacy
+object ":UserStatusChecker" as Auth
+object ":MessageDB" as DB
+
+' 2. 布局辅助 (使用 hidden 线条微调位置)
+' 强制 Auth 在 Ctrl 上方，DB 在 Ctrl 下方
+Auth -[hidden]down- Ctrl
+Ctrl -[hidden]down- DB
+
+' 3. 定义链接 (Links) 与 消息 (Messages)
+
+' [左侧] UserA 与 UI 的交互：选择人、输入、看到发送结果
+UserA -right- UI : 1: selectContact(receiverId) > \n 4: inputMessageContent(content) > \n 12: showMessageSent(messageId) <
+
+' [上方] UI 直接调用隐私管理器 (在发送给 Controller 之前)
+UI -up- Privacy : 2: checkPrivacySetting(senderId, receiverId) > \n 3: returnPrivacyResult(allow) <
+
+' [左中] UI 提交给控制器
+UI -right- Ctrl : 5: sendMessage(senderId, receiverId, content) >
+
+' [中上] 控制器进行登录校验
+Ctrl -up- Auth : 6: checkLoginStatus(senderId) > \n 7: returnLoginStatus(status) <
+
+' [右侧] 控制器通知 UserB (推送通知)
+' 注：步骤 13 通常由 UserB 的 UI 展示，但通讯图中为体现流程流向，常表示为数据流向接收者
+Ctrl -right- UserB : 11: pushMessageNotification(receiverId, messageId) > \n 13: showReceivedMessage(message) >
+
+' [下方] 控制器与数据库交互
+Ctrl -down- DB : 8: saveMessageInfo(senderId, receiverId, content) > \n 10: returnSendResult(messageId) <
+
+' [下方] 数据库自调用：标记未读
+DB -right- DB : 9: markUnread(receiverId, messageId)
+
+@enduml

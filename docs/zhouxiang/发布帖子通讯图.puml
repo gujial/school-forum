@@ -1,0 +1,44 @@
+@startuml
+title 用户在指定板块发布图文帖通讯图
+
+' 设置样式：使用正交线（直线拐角），背景白色
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":User" as User
+object ":PostUI" as UI
+object ":PostController" as Ctrl
+object ":UserStatusChecker" as Auth
+object ":ContentReviewSystem" as Review
+object ":SectionManager" as Section
+object ":PostDB" as DB
+
+' 2. 布局辅助 (隐藏线条用于强制调整位置)
+' 让 Review 和 Section 都在右侧，但在不同高度
+Review -[hidden]down- Section
+
+' 3. 定义链接 (Links) 与 消息 (Messages)
+
+' [左侧] 用户与界面的交互
+User -right- UI : 1: inputPostContent(title, content, media) > \n 2: selectPostSection(sectionId) > \n 11: showPostSuccess(postId, section) <
+
+' [左中] 界面提交给控制器
+UI -right- Ctrl : 3: submitPost(content, sectionId) >
+
+' [上方] 控制器进行权限校验
+Ctrl -up- Auth : 4: checkLoginStatus(userId) > \n 5: returnLoginStatus(status) <
+
+' [右上方] 控制器调用内容审核
+Ctrl -right- Review : 6: reviewPostContent(content) > \n 7: returnReviewResult(result) <
+
+' [右下方] 控制器通知板块管理 (注意：这里使用down-right的视觉效果，通过连接Section对象)
+Ctrl -right- Section : 9: updateSectionStats(sectionId) >
+
+' [下方] 控制器与数据库交互
+Ctrl -down- DB : 8: savePostInfo(userId, content, sectionId, media) > \n 10: returnPostResult(postId) <
+
+@enduml

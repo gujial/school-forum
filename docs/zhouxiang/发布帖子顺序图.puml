@@ -1,0 +1,40 @@
+@startuml
+title 用户在指定板块发布图文帖顺序图
+
+actor User
+participant PostUI
+participant PostController
+participant UserStatusChecker
+participant ContentReviewSystem
+database PostDB
+participant SectionManager
+
+User -> PostUI : 1. inputPostContent(title, content, media)
+User -> PostUI : 2. selectPostSection(sectionId)
+
+User -> PostUI : 3. submitPost(content, sectionId)
+
+PostUI -> PostController : submitPost(content, sectionId)
+
+PostController -> UserStatusChecker : 4. checkLoginStatus(userId)
+UserStatusChecker --> PostController : 5. returnLoginStatus(status)
+
+alt 已登录
+    PostController -> ContentReviewSystem : 6. reviewPostContent(content)
+    ContentReviewSystem --> PostController : 7. returnReviewResult(result)
+
+    alt 审核通过
+        PostController -> PostDB : 8. savePostInfo(userId, content, sectionId, media)
+        PostController -> SectionManager : 9. updateSectionStats(sectionId)
+        PostDB --> PostController : 10. returnPostResult(postId)
+        PostController -> PostUI : 11. showPostSuccess(postId, section)
+    else 需修改
+        PostController -> PostUI : 提示内容需修改
+    end
+else 未登录
+    PostController -> PostUI : 提示用户先登录
+end
+
+PostUI --> User : 显示发帖结果 / 跳转帖子详情页
+
+@enduml

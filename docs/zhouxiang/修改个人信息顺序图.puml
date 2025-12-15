@@ -1,0 +1,53 @@
+@startuml
+title 用户修改个人信息顺序图
+
+actor User
+participant ProfileUI
+participant ProfileController
+participant UserStatusChecker
+participant ContentReviewSystem
+database UserDB
+participant FileStorage
+
+' 用户选择修改项
+User -> ProfileUI : 1. 选择修改项(item: nickname/signature/avatar)
+User -> ProfileUI : 2. 输入新的信息(newValue)
+
+' 提交修改请求
+ProfileUI -> ProfileController : 3. submitModify(item, newValue)
+
+' 校验用户登录状态
+ProfileController -> UserStatusChecker : 4. checkLoginStatus(userId)
+UserStatusChecker --> ProfileController : 5. 返回登录状态(status)
+
+alt 已登录
+    ' 校验信息格式
+    ProfileController -> ProfileController : 6. validateInfoFormat(item, newValue)
+
+    ' 若包含敏感内容，调用审核系统
+    ProfileController -> ContentReviewSystem : 7. reviewSensitiveInfo(newValue)
+    ContentReviewSystem --> ProfileController : 8. returnReviewResult(result)
+
+    alt 修改头像
+        ' 保存头像文件
+        ProfileController -> FileStorage : 9. saveAvatarFile(file)
+        FileStorage --> ProfileController : 返回文件URL
+    end
+
+    ' 更新用户信息
+    ProfileController -> UserDB : 10. updateUserInfo(userId, item, newValue/URL)
+    UserDB --> ProfileController : 11. returnModifyResult(result)
+
+    alt 需管理员审核
+        ProfileController -> ProfileController : 12. submitToAdminReview(userId, item, newValue)
+    end
+
+    ' 向用户展示修改结果
+    ProfileController -> ProfileUI : 13. showModifyResult(result, status)
+else 未登录
+    ProfileController -> ProfileUI : 提示用户先登录
+end
+
+ProfileUI --> User : 展示修改结果
+
+@enduml

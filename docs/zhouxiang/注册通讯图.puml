@@ -1,0 +1,32 @@
+@startuml
+title 新用户注册通讯图
+
+' 定义样式，使其更整洁
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":User" as User
+object ":RegisterUI" as UI
+object ":RegisterController" as Ctrl
+object ":UserDB" as DB
+object ":NotificationSystem" as System
+
+' 2. 定义对象间的链接 (Links) 并附加消息 (Messages)
+' 使用方向箭头字符 (<, >) 在文本中指示消息流向
+
+User -right- UI : 1: inputRegisterInfo(email/studentId, password) > \n 9: showRegisterResult(result, notice) <
+
+UI -right- Ctrl : 2: validateRegisterInfo(info) >
+
+Ctrl -down- DB : 3: checkDuplicateAndValidity(info) > \n 4: returnValidateResult(result) < \n 5: createUserAccount(info) > \n 7: returnCreateResult(userId) <
+
+' 自调用消息 (Self-Call)
+DB -right- DB : 6: saveUserInfo(info)
+
+Ctrl -right- System : 8: sendActivationNotice(userId, email) >
+
+@enduml

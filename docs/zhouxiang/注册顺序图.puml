@@ -1,0 +1,31 @@
+@startuml
+title 新用户注册顺序图
+
+actor User
+participant RegisterUI
+participant RegisterController
+database UserDB
+participant NotificationSystem
+
+User -> RegisterUI : inputRegisterInfo(email/studentId, password)
+
+RegisterUI -> RegisterController : validateRegisterInfo(info)
+
+RegisterController -> UserDB : checkDuplicateAndValidity(info)
+
+UserDB --> RegisterController : returnValidateResult(result)
+
+alt 验证通过
+    RegisterController -> UserDB : createUserAccount(info)
+    UserDB -> UserDB : saveUserInfo(info)\n生成 userId
+    UserDB --> RegisterController : returnCreateResult(userId)
+    RegisterController -> NotificationSystem : sendActivationNotice(userId, email)
+    NotificationSystem --> RegisterController : noticeStatus
+    RegisterController -> RegisterUI : showRegisterResult(success, notice)
+else 验证失败（重复 / 不合法）
+    RegisterController -> RegisterUI : showRegisterResult(failure, reason)
+end
+
+RegisterUI --> User : 显示注册结果
+
+@enduml

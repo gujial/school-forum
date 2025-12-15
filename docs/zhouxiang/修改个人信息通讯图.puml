@@ -1,0 +1,50 @@
+@startuml
+title 用户修改个人信息通讯图
+
+' 设置样式：使用直角线，白色背景
+skinparam linestyle ortho
+skinparam rectangle {
+    BackgroundColor White
+    BorderColor Black
+}
+
+' 1. 定义参与交互的对象
+object ":User" as User
+object ":ProfileUI" as UI
+object ":ProfileController" as Ctrl
+object ":UserStatusChecker" as Auth
+object ":ContentReviewSystem" as Review
+object ":FileStorage" as File
+object ":UserDB" as DB
+
+' 2. 布局辅助 (使用 hidden 线条调整位置)
+' 让 Auth 在 Ctrl 上方
+Auth -[hidden]down- Ctrl
+' 让 Review 和 File 都在 Ctrl 右侧，且 Review 在 File 上方
+Review -[hidden]down- File
+
+' 3. 定义链接 (Links) 与 消息 (Messages)
+
+' [左侧] User <-> UI
+User -right- UI : 1: selectModifyItem(item) > \n 2: inputNewInfo(newValue) > \n 13: showModifyResult(result, status) <
+
+' [左中] UI -> Controller
+UI -right- Ctrl : 3: submitModify(item, newValue) >
+
+' [上方] Controller <-> Auth (身份验证)
+Ctrl -up- Auth : 4: checkLoginStatus(userId) > \n 5: returnLoginStatus(status) <
+
+' [中心] Controller 自调用 (本地格式校验 & 提交审核逻辑)
+Ctrl -left- Ctrl : 6: validateInfoFormat(item, newValue) \n 12: submitToAdminReview(userId, item, newValue)
+
+' [右上方] Controller <-> Review (内容审核)
+Ctrl -right- Review : 7: reviewSensitiveInfo(newValue) > \n 8: returnReviewResult(result) <
+
+' [右下方] Controller -> FileStorage (头像文件存储)
+' 注意：这里通常由控制器发起上传
+Ctrl -right- File : 9: saveAvatarFile(file) >
+
+' [下方] Controller <-> DB (数据更新)
+Ctrl -down- DB : 10: updateUserInfo(userId, item, newValue) > \n 11: returnModifyResult(result) <
+
+@enduml

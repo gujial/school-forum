@@ -1,0 +1,34 @@
+@startuml
+title 活动图：私信聊天
+skinparam backgroundColor white
+
+|用户A (发送方)|
+start
+:选择联系人 (用户B);
+:进入私信界面;
+
+|系统|
+:检查用户B的隐私设置;
+
+if (允许私信?) then (否)
+    :提示"对方不允许接收私信";
+    stop
+else (是)
+    |用户A (发送方)|
+    :输入私信内容;
+    :点击发送;
+    
+    |系统|
+    :保存私信记录;
+    :标记状态为未读;
+    
+    if (用户B在线?) then (是)
+        :实时推送消息通知;
+    else (否)
+        :存入离线消息队列;
+    endif
+    
+    :反馈发送成功;
+    stop
+endif
+@enduml

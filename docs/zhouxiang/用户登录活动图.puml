@@ -1,0 +1,35 @@
+@startuml
+title 活动图：用户登录
+skinparam backgroundColor white
+
+|用户|
+start
+:进入登录界面;
+:选择登录方式;
+
+if (选择方式) then (账号密码)
+    :输入账号(邮箱/学号) + 密码;
+else (邮箱验证码)
+    :输入邮箱;
+    :点击获取验证码;
+    |系统|
+    :发送验证码至邮箱;
+    |用户|
+    :输入接收到的验证码;
+endif
+
+:点击登录按钮;
+
+|系统|
+:验证登录凭证;
+
+if (验证通过?) then (否)
+    :提示账号或凭证错误;
+    stop
+else (是)
+    :生成登录会话 (Session/Token);
+    :激活登录状态;
+    :跳转至论坛首页;
+    stop
+endif
+@enduml

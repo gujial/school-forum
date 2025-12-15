@@ -1,0 +1,47 @@
+@startuml
+title Level 1: 校园论坛平台 - 子系统概览图
+left to right direction
+skinparam packageStyle rectangle
+
+actor "访客" as Guest
+actor "普通用户" as User
+actor "管理员" as Admin
+actor "后台系统代理" as SystemAgent
+actor "LLM服务" as LLM
+
+rectangle "校园论坛平台" {
+    package "用户管理子系统" as Pkg_User
+    package "内容管理子系统" as Pkg_Content
+    package "社交互动子系统" as Pkg_Social
+    package "搜索浏览子系统" as Pkg_Search
+    package "内容审核子系统" as Pkg_Mod
+    package "系统管理子系统" as Pkg_Sys
+    package "通知子系统" as Pkg_Notify
+}
+
+' 继承关系
+User -|> Guest
+Admin -|> User
+
+' 关系映射
+Guest --> Pkg_Search
+Guest --> Pkg_User : 注册/浏览
+
+User --> Pkg_User
+User --> Pkg_Content
+User --> Pkg_Social
+User --> Pkg_Search
+User --> Pkg_Notify
+User --> Pkg_Mod : 举报
+
+Admin --> Pkg_Mod : 人工审核
+Admin --> Pkg_Sys
+Admin --> Pkg_Notify : 发送全员通知
+
+SystemAgent --> Pkg_Sys : 监控/备份
+SystemAgent --> Pkg_Mod : 触发自动审核
+SystemAgent --> Pkg_Notify
+
+LLM --> Pkg_Mod : 智能识别
+
+@enduml

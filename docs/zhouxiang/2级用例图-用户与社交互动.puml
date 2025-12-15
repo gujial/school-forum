@@ -1,0 +1,53 @@
+@startuml
+title Level 2.1: 用户与社交互动用例图
+left to right direction
+
+actor "访客" as Guest
+actor "普通用户" as User
+
+rectangle "用户与社交模块" {
+    
+    ' 用户管理
+    usecase "用户注册" as UC_Register
+    usecase "用户登录" as UC_Login
+    usecase "更新个人资料" as UC_Profile
+    usecase "上传头像/背景" as UC_Avatar
+    
+    ' 搜索浏览
+    usecase "浏览时间线" as UC_Browse
+    usecase "查看帖子详情" as UC_ViewTweet
+    usecase "按标签筛选" as UC_Filter
+    usecase "按时间排序" as UC_Sort
+    usecase "查看用户资料" as UC_ViewProfile
+    
+    ' 社交互动
+    usecase "关注用户" as UC_Follow
+    usecase "发送私信" as UC_Msg
+    usecase "点赞帖子" as UC_Like
+    usecase "分享帖子" as UC_Share
+}
+
+' 关系
+Guest <|-- User
+
+Guest --> UC_Register
+Guest --> UC_Browse
+Guest --> UC_ViewTweet
+Guest --> UC_ViewProfile
+
+User --> UC_Login
+User --> UC_Profile
+User --> UC_Follow
+User --> UC_Msg
+User --> UC_Like
+
+' Include / Extend
+UC_Profile ..> UC_Avatar : <<include>>
+UC_Browse <.. UC_Filter : <<extend>>
+UC_Browse <.. UC_Sort : <<extend>>
+UC_ViewTweet <.. UC_Like : <<extend>>
+UC_ViewTweet <.. UC_Share : <<extend>>
+UC_ViewProfile <.. UC_Follow : <<extend>>
+UC_ViewProfile <.. UC_Msg : <<extend>>
+
+@enduml

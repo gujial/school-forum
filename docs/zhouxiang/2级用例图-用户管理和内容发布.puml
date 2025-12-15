@@ -1,0 +1,36 @@
+@startuml
+title Level 2.2: 内容管理与发布用例图
+left to right direction
+
+actor "普通用户" as User
+actor "系统审核服务" as SysMod
+
+rectangle "内容管理模块" {
+    usecase "发布帖子" as UC_Create
+    usecase "上传多媒体" as UC_Media
+    usecase "添加标签" as UC_Tags
+    usecase "编辑帖子" as UC_Edit
+    usecase "删除帖子" as UC_Delete
+    
+    usecase "添加评论" as UC_Comment
+    usecase "回复评论" as UC_Reply
+    
+    usecase "触发内容审核" as UC_TriggerMod
+}
+
+User --> UC_Create
+User --> UC_Edit
+User --> UC_Delete
+User --> UC_Comment
+User --> UC_Reply
+
+' 关键业务逻辑关系
+UC_Create ..> UC_Media : <<include>>
+UC_Create ..> UC_Tags : <<include>>
+UC_Create ..> UC_TriggerMod : <<include>>
+UC_Edit ..> UC_TriggerMod : <<include>>
+UC_Comment ..> UC_TriggerMod : <<include>>
+
+UC_TriggerMod --> SysMod
+
+@enduml

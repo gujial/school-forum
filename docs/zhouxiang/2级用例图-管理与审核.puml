@@ -1,0 +1,43 @@
+@startuml
+title Level 2.3: 管理与审核用例图
+left to right direction
+
+actor "普通用户" as User
+actor "管理员" as Admin
+actor "LLM服务" as LLM
+actor "系统代理" as Sys
+
+rectangle "后台管理与审核模块" {
+    
+    ' 内容审核
+    usecase "举报违规内容" as UC_Report
+    usecase "审核内容" as UC_Moderate
+    usecase "自动审核" as UC_AutoMod
+    usecase "审核举报工单" as UC_ReviewReport
+    usecase "采取处罚行动\n(封禁/删除)" as UC_Action
+    
+    ' 系统管理
+    usecase "系统监控" as UC_Monitor
+    usecase "数据备份" as UC_Backup
+    usecase "查看统计报表" as UC_Stats
+    usecase "发送系统通知" as UC_Notify
+}
+
+User --> UC_Report
+Admin --> UC_Moderate
+Admin --> UC_ReviewReport
+Admin --> UC_Action
+Admin --> UC_Stats
+Admin --> UC_Notify
+
+' 自动化与AI
+Sys --> UC_Monitor
+Sys --> UC_Backup
+LLM --> UC_AutoMod
+
+' 关系
+UC_Report ..> UC_ReviewReport : <<include>>
+UC_AutoMod ..> UC_Moderate : <<include>>
+UC_ReviewReport ..> UC_Action : <<extend>> (若确认违规)
+
+@enduml

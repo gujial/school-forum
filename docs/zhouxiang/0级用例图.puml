@@ -1,0 +1,29 @@
+@startuml
+title Level 0: 校园论坛平台 - 系统上下文图
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "访客\n(Guest)" as Guest
+actor "普通用户\n(User)" as User
+actor "管理员\n(Admin)" as Admin
+actor "外部LLM服务\n(DeepSeek/Ollama)" as LLM
+
+rectangle "校园论坛平台" {
+    usecase "使用论坛基础功能\n(浏览/搜索)" as UC_Base
+    usecase "使用论坛核心服务\n(发帖/互动/私信)" as UC_Core
+    usecase "执行系统管理与审核\n(运维/风控)" as UC_Admin
+    usecase "辅助内容审核" as UC_AI
+}
+
+' 继承关系
+User -|> Guest
+Admin -|> User
+
+' 交互关系
+Guest --> UC_Base
+User --> UC_Core
+Admin --> UC_Admin
+LLM --> UC_AI : 提供智能支持
+
+@enduml

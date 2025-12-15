@@ -1,0 +1,101 @@
+@startuml
+title 校园论坛平台 - PIM 图
+
+' --- 样式设置 ---
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+' --- 核心实体类 ---
+
+class User {
+    user_id: Integer
+    username: String
+    email: String
+    created_at: DateTime
+    is_admin: Boolean
+    role: UserRole
+}
+
+class Admin {
+    admin_id: Integer
+    created_at: DateTime
+}
+
+class Tweet {
+    tweet_id: Integer
+    content: String
+    created_at: DateTime
+    updated_at: DateTime
+    tags: List<String>
+}
+
+class Comment {
+    comment_id: Integer
+    content: String
+    created_at: DateTime
+    username_snapshot: String
+    avatar_snapshot: String
+}
+
+class Media {
+    media_id: Integer
+    media_url: String
+    media_type: MediaType
+    created_at: DateTime
+}
+
+class Message {
+    message_id: Integer
+    content: String
+    created_at: DateTime
+    is_read: Boolean
+}
+
+class Report {
+    report_id: Integer
+    content: String
+    created_at: DateTime
+    status: ReportStatus
+    target_type: ReportTargetType
+}
+
+' --- 关联关系类 (Associative Entities) ---
+' 实际上这些在PIM中通常表示为多对多关系，但在你的模型中有独立的接口定义(Follow, Like)
+' 这里用关联类或直接连线表示均可，为了清晰，这里作为关系线上的属性处理
+
+' --- 关系定义 ---
+
+' 1. 用户与管理员 (继承/角色关系)
+User <|-- Admin : Is A
+
+' 2. 用户发布内容
+User "1" -- "0..*" Tweet : 发布 >
+User "1" -- "0..*" Comment : 发布 >
+
+' 3. 推文结构
+Tweet "1" *-- "0..*" Media : 包含 >
+Tweet "1" *-- "0..*" Comment : 拥有 >
+
+' 4. 自关联 (引用/转发/回复)
+Tweet "0..1" -- "0..*" Tweet : 转发/引用 (parent_id) >
+Comment "0..1" -- "0..*" Comment : 回复 (parent_id) >
+
+' 5. 社交互动
+User "0..*" -- "0..*" User : 关注 (Follow) >
+User "0..*" -- "0..*" Tweet : 点赞 (Like) >
+
+' 6. 消息通信
+User "1" -- "0..*" Message : 发送 >
+User "1" -- "0..*" Message : 接收 >
+' 消息可能关联到具体的帖子或评论（上下文）
+Message "0..*" ..> Tweet : 关联 >
+Message "0..*" ..> Comment : 关联 >
+
+' 7. 举报系统
+User "1" -- "0..*" Report : 提交 >
+Report "0..*" ..> Tweet : 举报对象 >
+Report "0..*" ..> Comment : 举报对象 >
+
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+title 用户账号生命周期状态图
+scale 600 width
+
+[*] --> Unregistered : 访问平台
+
+state Unregistered {
+    [*] --> Guest : 游客浏览
+    Guest --> Registering : 点击注册
+    Registering --> Guest : 取消
+}
+
+state "正常状态 (Active)" as Active {
+    [*] --> Offline : 注册成功
+    Offline --> Online : 登录鉴权
+    Online --> Offline : 退出登录/Session过期
+    Online --> Online : 修改资料/头像
+}
+
+state "受限状态 (Restricted)" as Restricted {
+    state "被封禁 (Banned)" as Banned
+    state "禁言中 (Muted)" as Muted
+}
+
+Unregistered --> Active : 注册/验证通过
+Active --> Restricted : 违规/管理员操作
+Restricted --> Active : 解封/到期
+Active --> Deleted : 用户注销账号
+Restricted --> Deleted : 严重违规销号
+
+Deleted --> [*]
+
+note right of Active
+  对应需求：
+  - 用户鉴权
+  - 资料管理
+  - 互动功能
+end note
+
+note right of Restricted
+  对应需求：
+  - 管理员权限控制
+  - 举报管理功能
+end note
+
+@enduml

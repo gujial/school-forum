@@ -1,0 +1,48 @@
+@startuml
+title 帖子内容生命周期状态图
+
+[*] --> Editing : 用户点击发帖
+
+state Editing {
+    [*] --> Draft : 输入文本/上传媒体
+    Draft --> Draft : 添加标签/分类
+}
+
+state "已发布 (Published)" as Published {
+    state "正常展示 (Normal)" as Normal
+    state "置顶推荐 (Pinned)" as Pinned
+    
+    [*] --> Normal
+    Normal --> Pinned : 管理员置顶/热门算法
+    Pinned --> Normal : 取消置顶
+    
+    Normal --> Normal : 用户编辑/修改
+    Normal --> Normal : 被转发/评论/点赞
+}
+
+state "审核/异常 (UnderReview)" as Review {
+    state "被举报 (Reported)" as Reported
+    state "待审核 (Pending)" as Pending
+}
+
+state "已移除 (Removed)" as Removed {
+    state "用户删除 (UserDeleted)" as UserDel
+    state "违规删除 (AdminDeleted)" as AdminDel
+}
+
+Editing --> Published : 点击发布
+Published --> Review : 触发敏感词/用户举报
+Review --> Published : 审核通过/无违规
+Review --> Removed : 审核不通过/确认违规
+Published --> Removed : 用户主动删除
+
+Removed --> [*]
+
+note left of Published
+  对应需求：
+  - 展示文本/多媒体
+  - 时间排序/分页
+  - 标签分类展示
+end note
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+title 举报与审核处理状态图
+
+' 显式定义状态别名，避免语法歧义
+state "提交举报 (Submitted)" as Submitted
+
+[*] --> Submitted : 用户/LLM发起举报
+
+state "待处理 (Pending)" as Pending {
+    state "队列中 (Queued)" as Queued
+    state "自动过滤 (AutoFiltered)" as AutoFiltered
+    
+    Submitted --> Queued : 系统记录
+    Queued --> AutoFiltered : 触发自动规则
+}
+
+state "处理中 (Processing)" as Processing {
+    state "人工审核 (UnderReview)" as UnderReview
+    
+    Queued --> UnderReview : 管理员介入
+    AutoFiltered --> UnderReview : 疑似违规
+}
+
+state "已结案 (Resolved)" as Resolved {
+    state "有效举报 (Valid)" as Valid {
+        state "警告用户 (WarnUser)" as WarnUser
+        state "删除内容 (DeleteContent)" as DeleteContent
+        state "封禁账号 (BanUser)" as BanUser
+        
+        ' 简单的内部流程
+        [*] --> WarnUser
+        WarnUser --> DeleteContent
+        DeleteContent --> BanUser
+    }
+    
+    state "无效举报 (Invalid)" as Invalid {
+        state "忽略 (Dismissed)" as Dismissed
+        state "恶意举报 (MaliciousReport)" as MaliciousReport
+        
+        [*] --> Dismissed
+        Dismissed --> MaliciousReport
+    }
+}
+
+' 跨状态流转
+UnderReview --> Valid : 判定违规
+UnderReview --> Invalid : 判定合规
+AutoFiltered --> Invalid : 判定无风险
+
+Valid --> [*] : 发送处理通知
+Invalid --> [*] : 流程结束
+
+note right of Valid
+  对应需求：
+  - 举报管理功能
+  - 消息系统(通知)
+end note
+
+@enduml

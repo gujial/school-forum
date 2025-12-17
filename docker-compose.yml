@@ -42,6 +42,8 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
+    volumes:
+      - ./data:/app/dynamic
     depends_on:
       - oceanbase
     networks:

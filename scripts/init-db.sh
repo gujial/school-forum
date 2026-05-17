@@ -33,6 +33,12 @@ echo "OceanBase 已启动，连接成功！开始执行初始化..."
 # 执行 SQL 初始化脚本（带重试逻辑）
 if [ -f "/docker-entrypoint-initdb.d/init.sql" ]; then
     echo "执行数据库初始化脚本..."
+    rendered_sql="/tmp/init-rendered.sql"
+
+    sed \
+        -e "s/__DB_NAME__/${OB_TENANT_NAME:-school_forum}/g" \
+        -e "s/__DB_PASSWORD__/${DB_PASSWORD:-forum_pass}/g" \
+        /docker-entrypoint-initdb.d/init.sql > "$rendered_sql"
     
     # SQL 执行重试参数
     sql_attempt=1
@@ -43,7 +49,7 @@ if [ -f "/docker-entrypoint-initdb.d/init.sql" ]; then
         echo "[SQL 尝试 $sql_attempt/$max_sql_attempts] 执行初始化SQL..."
         
         # 执行SQL并捕获输出
-        if output=$(obclient -h${DB_HOST:-oceanbase} -P${DB_PORT:-2881} -uroot@${OB_TENANT_NAME:-school_forum} < /docker-entrypoint-initdb.d/init.sql 2>&1); then
+        if output=$(obclient -h${DB_HOST:-oceanbase} -P${DB_PORT:-2881} -uroot@${OB_TENANT_NAME:-school_forum} < "$rendered_sql" 2>&1); then
             echo "数据库初始化成功完成"
             echo "执行输出: $output"
             break

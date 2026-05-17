@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS school_forum;
-USE school_forum;
+CREATE DATABASE IF NOT EXISTS __DB_NAME__;
+USE __DB_NAME__;
 
 CREATE TABLE IF NOT EXISTS Users (
                        user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -365,8 +365,9 @@ END$$
 DELIMITER ;
 
 /*Oceanbase创建用户*/
-CREATE USER 'forum_user' IDENTIFIED BY 'forum_pass';
-GRANT ALL PRIVILEGES ON *.* TO 'forum_user';
+CREATE USER IF NOT EXISTS 'forum_user' IDENTIFIED BY '__DB_PASSWORD__';
+ALTER USER 'forum_user' IDENTIFIED BY '__DB_PASSWORD__';
+GRANT ALL PRIVILEGES ON __DB_NAME__.* TO 'forum_user';
 FLUSH PRIVILEGES;
 /**/
 

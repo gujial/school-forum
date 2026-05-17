@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { executeQuery, testConnection } from '../server/config/database.js';
+import { executeQuery, testConnection } from '../server/config/database.runtime.js';
 
 // 需要检查的表列表
 const requiredTables = [

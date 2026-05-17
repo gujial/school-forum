@@ -16,6 +16,12 @@
                                 {{ t('reportManage') }}
                             </v-list-item-title>
                         </v-list-item>
+
+                        <v-list-item :to="localePath('/dashboard/post-report')">
+                            <v-list-item-title>
+                                帖子数据报告
+                            </v-list-item-title>
+                        </v-list-item>
                     </v-list>
                 </v-card>
             </v-col>
